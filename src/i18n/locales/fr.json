@@ -1,0 +1,43 @@
+{
+  "site": {
+    "name": "ENGLISEASY",
+    "title": "Apprenez l'anglais en ligne"
+  },
+  "nav": {
+    "about": "À propos",
+    "levels": "Niveaux",
+    "contact": "Contact",
+    "proSpace": "Espace Étudiant",
+    "logout": "Déconnexion",
+    "admin": "Administration"
+  },
+  "hero": {
+    "title": "Maîtrisez l'anglais",
+    "description": "Rejoignez nos cours dirigés par des experts et libérez votre potentiel avec des parcours d'apprentissage personnalisés",
+    "startButton": "Commencez à apprendre",
+    "imageAlt": "Maîtrisez votre anglais"
+  },
+  "about": {
+    "welcome": "Bienvenue sur ENGLISEASY",
+    "description": "Fondé par Mansour, un entrepreneur dévoué, ENGLISEASY ByMansour répond au besoin croissant d'une éducation en anglais accessible et de haute qualité. Ce qui a commencé comme un projet passionnel s'est transformé en une plateforme d'apprentissage en ligne complète, offrant des cours du soir et le week-end aux étudiants du monde entier. Rejoignez-nous pour améliorer vos compétences en anglais dans un environnement flexible et encourageant !",
+    "stats": {
+      "courses": "10+ Cours",
+      "students": "10+ Étudiants",
+      "levels": "3 Niveaux"
+    }
+  },
+  "studentSpace": {
+    "title": "Espace Étudiant",
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "passwordRequirements": "Minimum 8 caractères avec 1 majuscule",
+    "alreadyHaveAccount": "Déjà un compte ? Connectez-vous",
+    "needAccount": "Besoin d'un compte ? Inscrivez-vous",
+    "loginSuccess": "Connexion réussie !",
+    "registerSuccess": "Inscription réussie !",
+    "invalidCredentials": "Identifiants invalides",
+    "emailExists": "Cet email existe déjà"
+  }
+}

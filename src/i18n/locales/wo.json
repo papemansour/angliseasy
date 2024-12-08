@@ -1,0 +1,22 @@
+{
+  "site": {
+    "name": "ENGLISEASY",
+    "title": "Jàng Anglais ci Internet"
+  },
+  "nav": {
+    "about": "Ci mbiru",
+    "levels": "Tolluwaayi",
+    "contact": "Jokkoo",
+    "proSpace": "Barab Pro",
+    "logout": "Génn"
+  },
+  "about": {
+    "welcome": "Dalal ak jamm ci ENGLISEASY",
+    "description": "Mansour moo ko sos, ku xam liggéey bi, ENGLISEASY ByMansour dafay toppatoo soxlay jàng anglais bu yomb te rafet. Li tambali woon ni xalaat mu baax dafa soppliku léegi di ab jàngalekaay bu mat sëkk, di jàngal ci ngoon ak bésu noflaay ñi bëgg jàng ci àdduna bi yépp. Añ-leen ci nun ngir yokk seen xam-xam ci anglais ci biir ab wàll bu yomb te dëgër!",
+    "stats": {
+      "courses": "10+ Kur yi",
+      "students": "10+ Njàngkat yi",
+      "levels": "3 Tolluwaayi"
+    }
+  }
+}

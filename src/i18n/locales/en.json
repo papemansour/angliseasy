@@ -1,0 +1,43 @@
+{
+  "site": {
+    "name": "ENGLISEASY",
+    "title": "Learn English Online"
+  },
+  "nav": {
+    "about": "About",
+    "levels": "Levels",
+    "contact": "Contact",
+    "proSpace": "Student Space",
+    "logout": "Logout",
+    "admin": "Admin"
+  },
+  "hero": {
+    "title": "Master Your English",
+    "description": "Join our expert-led courses and unlock your potential with personalized learning paths",
+    "startButton": "Start Learning Now",
+    "imageAlt": "Master your English"
+  },
+  "about": {
+    "welcome": "Welcome to ENGLISEASY",
+    "description": "Founded by Mansour, a dedicated entrepreneur, ENGLISEASY ByMansour addresses the growing need for accessible, high-quality English education. What started as a passion project has evolved into a comprehensive online learning platform, offering evening and weekend courses to students worldwide. Join us to improve your English skills in a flexible and supportive environment!",
+    "stats": {
+      "courses": "10+ Courses",
+      "students": "10+ Students",
+      "levels": "3 Levels"
+    }
+  },
+  "studentSpace": {
+    "title": "Student Safe Space",
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "passwordRequirements": "Must be at least 8 characters with 1 uppercase letter",
+    "alreadyHaveAccount": "Already have an account? Login",
+    "needAccount": "Need an account? Register",
+    "loginSuccess": "Login successful!",
+    "registerSuccess": "Registration successful!",
+    "invalidCredentials": "Invalid credentials",
+    "emailExists": "Email already exists"
+  }
+}
