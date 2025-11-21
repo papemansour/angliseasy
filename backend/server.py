@@ -431,7 +431,7 @@ async def submit_test(submission: TestSubmission):
     
     # Save result
     result = TestResult(
-        user_id=current_user['id'] if current_user else None,
+        user_id=None,
         level=submission.level,
         score=score,
         total_questions=len(submission.answers),
