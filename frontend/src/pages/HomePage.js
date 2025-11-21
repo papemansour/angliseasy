@@ -329,6 +329,12 @@ const HomePage = () => {
                     <span>Anglais professionnel</span>
                   </li>
                 </ul>
+                <Button className="w-full mt-6 bg-teal-600 hover:bg-teal-700" data-testid="pay-advanced">
+                  Payer maintenant
+                </Button>
+                <p className="text-xs text-center text-gray-500 mt-3">
+                  💳 Paiement sécurisé par Stripe (PCI Niveau 1)
+                </p>
               </div>
             </div>
           </div>
