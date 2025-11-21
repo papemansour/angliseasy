@@ -42,6 +42,7 @@ const timeSlots = [
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { currency, formatPrice, EUR_TO_FCFA } = useCurrency();
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
