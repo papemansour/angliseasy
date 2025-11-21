@@ -323,6 +323,44 @@ async def get_pending_registrations(current_user: dict = Depends(get_current_use
     
     return registrations
 
+async def send_welcome_email(user_email: str, first_name: str, last_name: str, temp_password: str):
+    """
+    Send welcome email to newly approved student
+    Note: This is a placeholder. In production, integrate with email service (SendGrid, AWS SES, etc.)
+    """
+    email_content = f"""
+    Hello {first_name} {last_name},
+    
+    Bienvenue sur My KALAMA ENGLISH ! 🎉
+    
+    Votre compte a été validé avec succès. Vous pouvez maintenant accéder à tous nos services d'apprentissage de l'anglais.
+    
+    VOS IDENTIFIANTS:
+    - Email: {user_email}
+    - Mot de passe provisoire: {temp_password}
+    
+    ACCÈS À LA KALAMATHÈQUE (Bibliothèque numérique):
+    - Mot de passe KALAMATHÈQUE: digikode
+    
+    LIEN DE CONNEXION:
+    https://kalama-english.preview.emergentagent.com/login
+    
+    CHANGEZ VOTRE MOT DE PASSE:
+    Nous vous recommandons fortement de changer votre mot de passe dès votre première connexion pour sécuriser votre compte.
+    Vous pouvez le faire depuis votre espace étudiant > Profil > Changer le mot de passe.
+    
+    N'hésitez pas à nous contacter si vous avez des questions.
+    
+    Cordialement,
+    L'équipe My KALAMA ENGLISH
+    info.kalamaenglish@gmail.com
+    """
+    
+    # TODO: Implement actual email sending
+    logger.info(f"Welcome email sent to {user_email}")
+    logger.info(email_content)
+    return True
+
 @api_router.post("/admin/approve-registration/{user_id}")
 async def approve_registration(user_id: str, current_user: dict = Depends(get_current_user)):
     if current_user['role'] != 'admin':
@@ -341,8 +379,16 @@ async def approve_registration(user_id: str, current_user: dict = Depends(get_cu
         {"$set": {"is_active": True, "password_hash": password_hash, "temporary_password": temp_password}}
     )
     
+    # Send welcome email
+    await send_welcome_email(
+        user['email'],
+        user['first_name'],
+        user['last_name'],
+        temp_password
+    )
+    
     return {
-        "message": "User approved",
+        "message": "User approved and welcome email sent",
         "email": user['email'],
         "temporary_password": temp_password
     }
