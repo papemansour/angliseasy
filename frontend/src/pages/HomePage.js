@@ -322,9 +322,6 @@ const HomePage = () => {
       {/* Testimonials */}
       <Testimonials />
 
-      {/* Kalamathèque */}
-      <Kalamathèque />
-
       {/* Test Section */}
       <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
         <div className="container mx-auto max-w-7xl">
