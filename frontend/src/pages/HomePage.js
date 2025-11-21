@@ -635,9 +635,9 @@ const HomePage = () => {
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-gray-500">© 2025 KALAMAENGLISH. Tous droits réservés.</p>
               <div className="flex gap-6">
-                <a href="#" className="text-gray-400 hover:text-teal-400 transition">CGU</a>
-                <a href="#" className="text-gray-400 hover:text-teal-400 transition">Politique de confidentialité</a>
-                <a href="#" className="text-gray-400 hover:text-teal-400 transition">Mentions légales</a>
+                <Link to="/cgu" className="text-gray-400 hover:text-teal-400 transition">CGU</Link>
+                <Link to="/privacy" className="text-gray-400 hover:text-teal-400 transition">Politique de confidentialité</Link>
+                <Link to="/legal" className="text-gray-400 hover:text-teal-400 transition">Mentions légales</Link>
               </div>
             </div>
           </div>
