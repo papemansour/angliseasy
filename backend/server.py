@@ -417,7 +417,7 @@ async def get_test(level: str):
     return {"level": level, "questions": questions}
 
 @api_router.post("/tests/submit")
-async def submit_test(submission: TestSubmission, current_user: dict = Depends(get_current_user) if False else None):
+async def submit_test(submission: TestSubmission):
     if submission.level not in TEST_QUESTIONS:
         raise HTTPException(status_code=404, detail="Test not found")
     
