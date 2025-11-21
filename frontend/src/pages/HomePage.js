@@ -587,7 +587,7 @@ const HomePage = () => {
             <div>
               <h3 className="text-xl font-bold mb-4 text-teal-400">KALAMAENGLISH</h3>
               <p className="text-gray-400 mb-4">
-                Votre partenaire pour maîtriser l'anglais avec des méthodes innovantes et un accompagnement personnalisé.
+                Plateforme d'apprentissage de l'anglais en ligne adaptée à tous les niveaux.
               </p>
             </div>
             
