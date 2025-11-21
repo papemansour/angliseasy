@@ -75,38 +75,43 @@ const HomePage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Apprenez l'anglais facilement avec des méthodes innovantes
-              </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Cours adaptés à tous les niveaux. My KALAMA ENGLISH rend l'apprentissage de l'anglais accessible à tous!
-              </p>
-              <div className="flex gap-4 mb-12">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600">95%</div>
-                  <div className="text-sm text-gray-600">Taux de réussite</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600">200+</div>
-                  <div className="text-sm text-gray-600">Heures de cours</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-blue-600">24/7</div>
-                  <div className="text-sm text-gray-600">Accès aux cours</div>
-                </div>
+      <section className="relative min-h-screen flex items-center">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=1920"
+            alt="Maîtrisez votre anglais"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50"></div>
+        </div>
+        <div className="relative z-10 container mx-auto px-4 py-20">
+          <div className="max-w-3xl">
+            <div className="grid grid-cols-3 gap-4 mb-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
+                <div className="text-3xl md:text-4xl font-bold text-teal-400 mb-2">95%</div>
+                <p className="text-gray-200 text-sm">Taux de réussite</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
+                <div className="text-3xl md:text-4xl font-bold text-teal-400 mb-2">+200</div>
+                <p className="text-gray-200 text-sm">Heures de cours</p>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
+                <div className="text-3xl md:text-4xl font-bold text-teal-400 mb-2">24/7</div>
+                <p className="text-gray-200 text-sm">Accès aux cours</p>
               </div>
             </div>
-            <div className="relative">
-              <img
-                src="https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="Learning English"
-                className="rounded-2xl shadow-2xl"
-              />
-            </div>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+              Apprenez l'anglais facilement avec des méthodes innovantes
+            </h1>
+            <p className="text-base lg:text-lg text-gray-200 mb-8 leading-relaxed">
+              My KALAMA ENGLISH rend l'apprentissage de l'anglais accessible à tous ! Que vous soyez étudiant, professionnel, ou simplement désireux d'apprendre, nos cours sont conçus pour une progression rapide et efficace. Apprenez à votre rythme, avec des horaires flexibles et un accompagnement personnalisé.
+            </p>
+            <button 
+              onClick={() => document.getElementById('register').scrollIntoView({ behavior: 'smooth' })}
+              className="inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-full font-semibold hover:bg-teal-700 transition duration-300"
+            >
+              Commencer à apprendre
+            </button>
           </div>
         </div>
       </section>
