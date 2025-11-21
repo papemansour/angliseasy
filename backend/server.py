@@ -565,6 +565,45 @@ async def get_conversation(user_id: str, current_user: dict = Depends(get_curren
     
     return messages
 
+# LIBRARY ROUTES
+@api_router.get("/library/books")
+async def get_library_books():
+    books = await db.library_books.find({}, {"_id": 0}).to_list(1000)
+    return books
+
+@api_router.post("/library/books")
+async def add_library_book(book_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    book = {
+        "id": str(uuid.uuid4()),
+        "title": book_data.get("title"),
+        "author": book_data.get("author"),
+        "description": book_data.get("description"),
+        "level": book_data.get("level"),
+        "type": book_data.get("type", "pdf"),  # pdf, audio
+        "file_url": book_data.get("file_url"),
+        "audio_url": book_data.get("audio_url"),
+        "pages": book_data.get("pages", 0),
+        "duration": book_data.get("duration", ""),
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.library_books.insert_one(book)
+    return {"message": "Book added successfully", "book": book}
+
+@api_router.delete("/library/books/{book_id}")
+async def delete_library_book(book_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.library_books.delete_one({"id": book_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Book not found")
+    
+    return {"message": "Book deleted successfully"}
+
 @api_router.get("/messages/my-conversations")
 async def get_my_conversations(current_user: dict = Depends(get_current_user)):
     # Get all messages involving current user
