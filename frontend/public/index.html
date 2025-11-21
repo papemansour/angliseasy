@@ -51,6 +51,41 @@
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
+        <script>
+            // Suppress ResizeObserver errors globally
+            (function() {
+                const resizeObserverErrPattern = /ResizeObserver loop/i;
+                
+                // Suppress console.error
+                const originalError = console.error;
+                console.error = function() {
+                    const args = Array.from(arguments);
+                    if (args.some(arg => typeof arg === 'string' && resizeObserverErrPattern.test(arg))) {
+                        return;
+                    }
+                    originalError.apply(console, args);
+                };
+                
+                // Suppress window.onerror
+                const originalOnError = window.onerror;
+                window.onerror = function(message, source, lineno, colno, error) {
+                    if (typeof message === 'string' && resizeObserverErrPattern.test(message)) {
+                        return true;
+                    }
+                    if (originalOnError) {
+                        return originalOnError.apply(window, arguments);
+                    }
+                    return false;
+                };
+                
+                // Suppress error events
+                window.addEventListener('error', function(event) {
+                    if (event.message && resizeObserverErrPattern.test(event.message)) {
+                        event.stopImmediatePropagation();
+                    }
+                }, true);
+            })();
+        </script>
         <div id="root"></div>
         <!--
       This HTML file is a template.
