@@ -182,8 +182,20 @@ const Kalamatheque = () => {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-600 mb-4">{book.description}</p>
+                      
+                      {book.audio_url && (
+                        <div className="mb-4">
+                          <audio controls className="w-full">
+                            <source src={book.audio_url} type="audio/mpeg" />
+                            Votre navigateur ne supporte pas l'élément audio.
+                          </audio>
+                        </div>
+                      )}
+                      
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500">{book.pages} pages</span>
+                        <span className="text-xs text-gray-500">
+                          {book.type === 'audio' ? book.duration : `${book.pages} pages`}
+                        </span>
                         <Button
                           onClick={() => handleDownload(book)}
                           size="sm"
