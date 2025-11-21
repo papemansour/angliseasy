@@ -13,6 +13,7 @@ import TestPage from './pages/TestPage';
 import LegalPage from './pages/LegalPage';
 import CGUPage from './pages/CGUPage';
 import PrivacyPage from './pages/PrivacyPage';
+import Kalamatheque from './pages/Kalamatheque';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
