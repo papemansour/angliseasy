@@ -28,6 +28,7 @@ function App() {
           <Route path="/legal" element={<LegalPage />} />
           <Route path="/cgu" element={<CGUPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/library" element={<Kalamatheque />} />
           
           <Route path="/student/*" element={
             <ProtectedRoute allowedRoles={['student']}>
