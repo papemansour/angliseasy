@@ -344,6 +344,19 @@ const HomePage = () => {
       {/* How It Works */}
       <HowItWorks />
 
+      {/* CTA Button */}
+      <section className="py-12 px-4 bg-white">
+        <div className="container mx-auto max-w-7xl text-center">
+          <button 
+            onClick={() => document.getElementById('register').scrollIntoView({ behavior: 'smooth' })}
+            className="inline-flex items-center px-8 py-4 bg-teal-600 text-white rounded-full font-semibold text-lg hover:bg-teal-700 transition duration-300 animate-bounce shadow-lg hover:shadow-xl"
+            data-testid="cta-start-learning"
+          >
+            Commencer à apprendre
+          </button>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <Testimonials />
 
