@@ -49,7 +49,8 @@ function App() {
         </Routes>
       </BrowserRouter>
       <Toaster position="top-center" richColors />
-    </div>
+      </div>
+    </CurrencyProvider>
   );
 }
 
