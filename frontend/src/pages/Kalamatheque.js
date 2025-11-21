@@ -23,6 +23,18 @@ const Kalamatheque = () => {
 
   const checkAccess = async () => {
     try {
+      // Check for library password
+      const libraryPassword = localStorage.getItem('library_password');
+      if (libraryPassword !== 'digikode') {
+        const password = prompt('Veuillez entrer le mot de passe de la KALAMATHÈQUE :');
+        if (password !== 'digikode') {
+          toast.error('Mot de passe incorrect');
+          navigate('/');
+          return;
+        }
+        localStorage.setItem('library_password', 'digikode');
+      }
+
       const token = localStorage.getItem('token');
       if (!token) {
         toast.error('Vous devez être connecté pour accéder à la KALAMATHÈQUE');
