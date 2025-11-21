@@ -4,23 +4,19 @@ import { UserPlus, Calendar, Video, Award } from 'lucide-react';
 const steps = [
   {
     icon: UserPlus,
-    title: "Inscrivez-vous",
-    description: "Créez votre compte en quelques minutes et passez notre test de niveau gratuit"
+    title: "Inscrivez-vous"
   },
   {
     icon: Calendar,
-    title: "Choisissez vos créneaux",
-    description: "Sélectionnez les horaires qui vous conviennent et réservez vos cours avec nos professeurs"
+    title: "Choisissez vos créneaux"
   },
   {
     icon: Video,
-    title: "Suivez vos cours",
-    description: "Participez à vos cours en ligne via Google Meet avec un suivi personnalisé"
+    title: "Suivez vos cours"
   },
   {
     icon: Award,
-    title: "Progressez rapidement",
-    description: "Atteignez vos objectifs grâce à un accompagnement sur mesure et des ressources adaptées"
+    title: "Progressez rapidement"
   }
 ];
 
@@ -45,7 +41,6 @@ const HowItWorks = () => {
                   {index + 1}
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-gray-900">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
               </div>
             </div>
           ))}

@@ -4,24 +4,31 @@ import { Star } from 'lucide-react';
 
 const testimonials = [
   {
-    name: "Sophie Martin",
+    name: "Sophie Wane",
     role: "Étudiante en commerce",
     image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200",
     content: "Grâce à KALAMAENGLISH, j'ai pu améliorer mon anglais professionnel en seulement 3 mois. Les professeurs sont excellents et très à l'écoute.",
     rating: 5
   },
   {
-    name: "Thomas Dubois",
+    name: "Gabriel Da SILVA",
     role: "Ingénieur",
     image: "https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=200",
     content: "La flexibilité des horaires et la qualité des cours m'ont permis de progresser rapidement. Je recommande vivement!",
     rating: 5
   },
   {
-    name: "Marie Leroux",
+    name: "Kadia SY",
     role: "Chef d'entreprise",
     image: "https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=200",
     content: "Un service exceptionnel! Les cours sont adaptés à mes besoins professionnels et l'équipe est très réactive.",
+    rating: 5
+  },
+  {
+    name: "Élodie LEROUX",
+    role: "Responsable marketing",
+    image: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=200",
+    content: "J'ai enfin pu atteindre mes objectifs en anglais grâce à un accompagnement personnalisé et des cours de qualité.",
     rating: 5
   }
 ];
@@ -33,7 +40,7 @@ const Testimonials = () => {
         <h2 className="text-4xl font-bold text-center mb-4">Ce que disent nos étudiants</h2>
         <p className="text-center text-gray-600 mb-12">Découvrez les témoignages de ceux qui ont réussi avec nous</p>
         
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="hover:shadow-xl transition-shadow border-teal-100">
               <CardContent className="p-6">
