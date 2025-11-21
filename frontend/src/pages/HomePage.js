@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
+import { Calendar } from '../components/ui/calendar';
 import {
   Select,
   SelectContent,
@@ -17,12 +18,24 @@ import {
   CardHeader,
   CardTitle,
 } from '../components/ui/card';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '../components/ui/popover';
 import { toast } from 'sonner';
 import axios from 'axios';
-import { ChevronRight, Users, BookOpen, Clock, Star, MessageCircle } from 'lucide-react';
+import { ChevronRight, Users, BookOpen, Clock, Calendar as CalendarIcon, X } from 'lucide-react';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
+
+const timeSlots = [
+  '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', 
+  '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'
+];
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -36,13 +49,66 @@ const HomePage = () => {
     referral_source: ''
   });
   const [loading, setLoading] = useState(false);
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [selectedTimeSlots, setSelectedTimeSlots] = useState({});
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const handleDateSelect = (date) => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+    if (selectedDates.find(d => d === dateStr)) {
+      setSelectedDates(selectedDates.filter(d => d !== dateStr));
+      const newSlots = { ...selectedTimeSlots };
+      delete newSlots[dateStr];
+      setSelectedTimeSlots(newSlots);
+    } else {
+      setSelectedDates([...selectedDates, dateStr]);
+    }
+  };
+
+  const handleTimeSlotSelect = (dateStr, time) => {
+    const currentSlots = selectedTimeSlots[dateStr] || [];
+    if (currentSlots.includes(time)) {
+      setSelectedTimeSlots({
+        ...selectedTimeSlots,
+        [dateStr]: currentSlots.filter(t => t !== time)
+      });
+    } else {
+      setSelectedTimeSlots({
+        ...selectedTimeSlots,
+        [dateStr]: [...currentSlots, time]
+      });
+    }
+  };
+
+  const formatPreferredSlots = () => {
+    const slots = [];
+    Object.keys(selectedTimeSlots).forEach(dateStr => {
+      const times = selectedTimeSlots[dateStr];
+      if (times && times.length > 0) {
+        const date = new Date(dateStr);
+        const dayName = format(date, 'EEEE', { locale: fr });
+        slots.push(`${dayName} ${times.join(', ')}`);
+      }
+    });
+    return slots.join(' | ');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.level) {
+      toast.error('Veuillez sélectionner votre niveau');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await axios.post(`${API}/auth/register`, formData);
+      const preferredSlots = formatPreferredSlots();
+      await axios.post(`${API}/auth/register`, {
+        ...formData,
+        preferred_slots: preferredSlots || formData.preferred_slots
+      });
       toast.success('Inscription envoyée avec succès! Attendez l\'approbation de l\'administrateur.');
       setFormData({
         first_name: '',
@@ -53,6 +119,8 @@ const HomePage = () => {
         preferred_slots: '',
         referral_source: ''
       });
+      setSelectedDates([]);
+      setSelectedTimeSlots({});
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Erreur lors de l\'inscription');
     } finally {
@@ -61,13 +129,13 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md shadow-sm fixed w-full top-0 z-50">
+      <nav className="bg-white shadow-sm fixed w-full top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-900">KALAMAENGLISH</h1>
+          <h1 className="text-2xl font-bold text-gray-900">KALAMAENGLISH</h1>
           <Link to="/login">
-            <Button variant="outline" data-testid="login-nav-button">
+            <Button variant="outline" data-testid="login-nav-button" className="border-teal-600 text-teal-600 hover:bg-teal-50">
               Connexion
             </Button>
           </Link>
@@ -104,7 +172,7 @@ const HomePage = () => {
               Apprenez l'anglais facilement avec des méthodes innovantes
             </h1>
             <p className="text-base lg:text-lg text-gray-200 mb-8 leading-relaxed">
-              My KALAMA ENGLISH rend l'apprentissage de l'anglais accessible à tous ! Que vous soyez étudiant, professionnel, ou simplement désireux d'apprendre, nos cours sont conçus pour une progression rapide et efficace. Apprenez à votre rythme, avec des horaires flexibles et un accompagnement personnalisé.
+              My KALAMA ENGLISH rend l'apprentissage de l'anglais accessible à tous ! Que vous soyez étudiant, professionnel, ou simplement désireux d'apprendre, nos cours sont conçus pour une progression rapide et efficace.
             </p>
             <button 
               onClick={() => document.getElementById('register').scrollIntoView({ behavior: 'smooth' })}
@@ -120,41 +188,35 @@ const HomePage = () => {
       <section className="py-16 px-4 bg-white">
         <div className="container mx-auto max-w-7xl">
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <BookOpen className="w-12 h-12 text-blue-600 mb-4" />
-                <CardTitle>Apprentissage personnalisé</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Des cours adaptés à votre niveau et à vos objectifs spécifiques</p>
-              </CardContent>
-            </Card>
+            <div className="bg-teal-50 p-6 rounded-lg hover:shadow-md transition-shadow">
+              <div className="p-4 bg-white rounded-lg inline-block mb-4">
+                <BookOpen className="w-8 h-8 text-teal-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-teal-800">Apprentissage personnalisé</h3>
+              <p className="text-gray-700">Des cours adaptés à votre niveau et à vos objectifs spécifiques</p>
+            </div>
 
-            <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Users className="w-12 h-12 text-blue-600 mb-4" />
-                <CardTitle>Professeurs qualifiés</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Une équipe d'experts passionnés par l'enseignement de l'anglais</p>
-              </CardContent>
-            </Card>
+            <div className="bg-teal-50 p-6 rounded-lg hover:shadow-md transition-shadow">
+              <div className="p-4 bg-white rounded-lg inline-block mb-4">
+                <Users className="w-8 h-8 text-teal-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-teal-800">Professeurs qualifiés</h3>
+              <p className="text-gray-700">Une équipe d'experts passionnés par l'enseignement de l'anglais</p>
+            </div>
 
-            <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <Clock className="w-12 h-12 text-blue-600 mb-4" />
-                <CardTitle>Flexibilité totale</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Apprenez à votre rythme avec des horaires adaptés à votre emploi du temps</p>
-              </CardContent>
-            </Card>
+            <div className="bg-teal-50 p-6 rounded-lg hover:shadow-md transition-shadow">
+              <div className="p-4 bg-white rounded-lg inline-block mb-4">
+                <Clock className="w-8 h-8 text-teal-600" />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-teal-800">Flexibilité totale</h3>
+              <p className="text-gray-700">Apprenez à votre rythme avec des horaires adaptés à votre emploi du temps</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-purple-50 to-blue-50">
+      <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
         <div className="container mx-auto max-w-7xl">
           <h2 className="text-4xl font-bold text-center mb-4">Tarifs & Niveaux</h2>
           <p className="text-center text-xl text-red-600 font-semibold mb-12">
@@ -162,92 +224,92 @@ const HomePage = () => {
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-2 border-blue-200 hover:border-blue-400 transition-all hover:shadow-xl">
-              <CardHeader className="bg-gradient-to-br from-blue-50 to-blue-100">
-                <CardTitle className="text-2xl">Pack Débutant</CardTitle>
-                <CardDescription>Parfait pour commencer</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-6">
+                <h3 className="text-2xl font-bold text-teal-800">Pack Débutant</h3>
+                <p className="text-teal-600">Parfait pour commencer</p>
+              </div>
+              <div className="p-6">
                 <div className="text-center mb-6">
                   <div className="text-gray-400 line-through text-xl">80€</div>
-                  <div className="text-5xl font-bold text-blue-600">76€</div>
+                  <div className="text-5xl font-bold text-teal-600">76€</div>
                   <div className="text-green-600 font-semibold">-5% de réduction</div>
                 </div>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-blue-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Cours adaptés débutants</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-blue-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Support pédagogique</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-blue-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Accès bibliothèque</span>
                   </li>
                 </ul>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="border-2 border-purple-300 hover:border-purple-500 transition-all hover:shadow-xl transform hover:scale-105">
-              <CardHeader className="bg-gradient-to-br from-purple-50 to-purple-100">
-                <div className="absolute top-4 right-4">
-                  <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">Populaire</span>
-                </div>
-                <CardTitle className="text-2xl">Pack Intermédiaire</CardTitle>
-                <CardDescription>Le plus choisi</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-300 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all transform hover:scale-105">
+              <div className="absolute top-4 right-4">
+                <span className="bg-teal-600 text-white px-3 py-1 rounded-full text-sm font-semibold">Populaire</span>
+              </div>
+              <div className="bg-gradient-to-br from-teal-100 to-teal-200 p-6">
+                <h3 className="text-2xl font-bold text-teal-800">Pack Intermédiaire</h3>
+                <p className="text-teal-700">Le plus choisi</p>
+              </div>
+              <div className="p-6">
                 <div className="text-center mb-6">
                   <div className="text-gray-400 line-through text-xl">100€</div>
-                  <div className="text-5xl font-bold text-purple-600">90€</div>
+                  <div className="text-5xl font-bold text-teal-600">90€</div>
                   <div className="text-green-600 font-semibold">-10% de réduction</div>
                 </div>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-purple-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Cours intermédiaires</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-purple-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Pratique conversationnelle</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-purple-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Exercices avancés</span>
                   </li>
                 </ul>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            <Card className="border-2 border-indigo-200 hover:border-indigo-400 transition-all hover:shadow-xl">
-              <CardHeader className="bg-gradient-to-br from-indigo-50 to-indigo-100">
-                <CardTitle className="text-2xl">Pack Avancé</CardTitle>
-                <CardDescription>Pour les experts</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-6">
+                <h3 className="text-2xl font-bold text-teal-800">Pack Avancé</h3>
+                <p className="text-teal-600">Pour les experts</p>
+              </div>
+              <div className="p-6">
                 <div className="text-center mb-6">
                   <div className="text-gray-400 line-through text-xl">120€</div>
-                  <div className="text-5xl font-bold text-indigo-600">102€</div>
+                  <div className="text-5xl font-bold text-teal-600">102€</div>
                   <div className="text-green-600 font-semibold">-15% de réduction</div>
                 </div>
                 <ul className="space-y-3">
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-indigo-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Cours niveau avancé</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-indigo-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Préparation examens</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-indigo-600" />
+                    <ChevronRight className="w-5 h-5 text-teal-600" />
                     <span>Anglais professionnel</span>
                   </li>
                 </ul>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -259,45 +321,45 @@ const HomePage = () => {
           <p className="text-center text-gray-600 mb-12">Passez un test gratuit pour connaître votre niveau</p>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <Card className="hover:shadow-xl transition-shadow">
+            <Card className="hover:shadow-xl transition-shadow border-teal-100">
               <CardHeader>
-                <CardTitle>Test Débutant</CardTitle>
+                <CardTitle className="text-teal-800">Test Débutant</CardTitle>
                 <CardDescription>Parfait pour ceux qui débutent leur apprentissage</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">20 questions - 15 minutes</p>
                 <Link to="/test/beginner">
-                  <Button className="w-full" data-testid="test-beginner-button">
+                  <Button className="w-full bg-teal-600 hover:bg-teal-700" data-testid="test-beginner-button">
                     Commencer le test
                   </Button>
                 </Link>
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-xl transition-shadow">
+            <Card className="hover:shadow-xl transition-shadow border-teal-100">
               <CardHeader>
-                <CardTitle>Test Intermédiaire</CardTitle>
+                <CardTitle className="text-teal-800">Test Intermédiaire</CardTitle>
                 <CardDescription>Pour ceux qui ont une bonne base</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">20 questions - 20 minutes</p>
                 <Link to="/test/intermediate">
-                  <Button className="w-full" data-testid="test-intermediate-button">
+                  <Button className="w-full bg-teal-600 hover:bg-teal-700" data-testid="test-intermediate-button">
                     Commencer le test
                   </Button>
                 </Link>
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-xl transition-shadow">
+            <Card className="hover:shadow-xl transition-shadow border-teal-100">
               <CardHeader>
-                <CardTitle>Test Avancé</CardTitle>
+                <CardTitle className="text-teal-800">Test Avancé</CardTitle>
                 <CardDescription>Pour les utilisateurs expérimentés</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">20 questions - 25 minutes</p>
                 <Link to="/test/advanced">
-                  <Button className="w-full" data-testid="test-advanced-button">
+                  <Button className="w-full bg-teal-600 hover:bg-teal-700" data-testid="test-advanced-button">
                     Commencer le test
                   </Button>
                 </Link>
@@ -308,11 +370,11 @@ const HomePage = () => {
       </section>
 
       {/* Registration Form */}
-      <section className="py-20 px-4 bg-gradient-to-br from-blue-50 to-purple-50" id="register">
+      <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white" id="register">
         <div className="container mx-auto max-w-2xl">
-          <Card className="shadow-2xl">
+          <Card className="shadow-2xl border-teal-100">
             <CardHeader>
-              <CardTitle className="text-3xl text-center">Rejoignez KALAMAENGLISH</CardTitle>
+              <CardTitle className="text-3xl text-center text-teal-800">Rejoignez KALAMAENGLISH</CardTitle>
               <CardDescription className="text-center">
                 Inscrivez-vous maintenant et commencez votre parcours d'apprentissage
               </CardDescription>
@@ -328,6 +390,7 @@ const HomePage = () => {
                       required
                       value={formData.first_name}
                       onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                      className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
                     />
                   </div>
                   <div>
@@ -338,6 +401,7 @@ const HomePage = () => {
                       required
                       value={formData.last_name}
                       onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                      className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
                     />
                   </div>
                 </div>
@@ -351,6 +415,7 @@ const HomePage = () => {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
                   />
                 </div>
 
@@ -363,6 +428,7 @@ const HomePage = () => {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+33 6 12 34 56 78"
+                    className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
                   />
                 </div>
 
@@ -371,9 +437,8 @@ const HomePage = () => {
                   <Select
                     value={formData.level}
                     onValueChange={(value) => setFormData({ ...formData, level: value })}
-                    required
                   >
-                    <SelectTrigger data-testid="register-level">
+                    <SelectTrigger data-testid="register-level" className="border-gray-200 focus:border-teal-500 focus:ring-teal-500">
                       <SelectValue placeholder="Sélectionnez votre niveau" />
                     </SelectTrigger>
                     <SelectContent>
@@ -385,14 +450,88 @@ const HomePage = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="preferred_slots">Créneaux préférés</Label>
-                  <Input
-                    id="preferred_slots"
-                    data-testid="register-slots"
-                    value={formData.preferred_slots}
-                    onChange={(e) => setFormData({ ...formData, preferred_slots: e.target.value })}
-                    placeholder="Ex: Lundi 18h-20h, Mercredi 18h-20h"
-                  />
+                  <Label className="flex items-center gap-2 mb-2">
+                    <CalendarIcon className="w-4 h-4 text-teal-600" />
+                    Sélectionnez vos créneaux préférés
+                  </Label>
+                  <Popover open={showCalendar} onOpenChange={setShowCalendar}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-start text-left font-normal border-gray-200 hover:border-teal-500"
+                        type="button"
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {selectedDates.length > 0 ? `${selectedDates.length} date(s) sélectionnée(s)` : 'Choisir des créneaux'}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <div className="p-4">
+                        <Calendar
+                          mode="multiple"
+                          selected={selectedDates.map(d => new Date(d))}
+                          onSelect={(dates) => {
+                            if (dates && dates.length > 0) {
+                              const lastDate = dates[dates.length - 1];
+                              handleDateSelect(lastDate);
+                            }
+                          }}
+                          disabled={(date) => date < new Date()}
+                          className="rounded-md border"
+                        />
+                        
+                        {selectedDates.length > 0 && (
+                          <div className="mt-4 space-y-3 max-h-64 overflow-y-auto">
+                            {selectedDates.map(dateStr => (
+                              <div key={dateStr} className="p-3 bg-teal-50 rounded-lg">
+                                <div className="flex justify-between items-center mb-2">
+                                  <span className="font-semibold text-teal-800">
+                                    {format(new Date(dateStr), 'EEEE dd MMMM', { locale: fr })}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleDateSelect(new Date(dateStr))}
+                                    className="text-red-500 hover:text-red-700"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </button>
+                                </div>
+                                <div className="grid grid-cols-4 gap-2">
+                                  {timeSlots.map(time => (
+                                    <button
+                                      key={time}
+                                      type="button"
+                                      onClick={() => handleTimeSlotSelect(dateStr, time)}
+                                      className={`px-2 py-1 text-xs rounded ${
+                                        selectedTimeSlots[dateStr]?.includes(time)
+                                          ? 'bg-teal-600 text-white'
+                                          : 'bg-white border border-teal-200 text-teal-600 hover:bg-teal-50'
+                                      }`}
+                                    >
+                                      {time}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        <Button
+                          type="button"
+                          onClick={() => setShowCalendar(false)}
+                          className="w-full mt-4 bg-teal-600 hover:bg-teal-700"
+                        >
+                          Confirmer
+                        </Button>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                  {formatPreferredSlots() && (
+                    <p className="text-sm text-gray-600 mt-2">
+                      Créneaux sélectionnés: {formatPreferredSlots()}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -401,7 +540,7 @@ const HomePage = () => {
                     value={formData.referral_source}
                     onValueChange={(value) => setFormData({ ...formData, referral_source: value })}
                   >
-                    <SelectTrigger data-testid="register-referral">
+                    <SelectTrigger data-testid="register-referral" className="border-gray-200 focus:border-teal-500 focus:ring-teal-500">
                       <SelectValue placeholder="Sélectionnez une option" />
                     </SelectTrigger>
                     <SelectContent>
@@ -416,7 +555,7 @@ const HomePage = () => {
 
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full bg-teal-600 hover:bg-teal-700"
                   disabled={loading}
                   data-testid="register-submit-button"
                 >
