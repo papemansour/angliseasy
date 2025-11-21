@@ -48,8 +48,8 @@ function App() {
             </ProtectedRoute>
           } />
         </Routes>
-      </BrowserRouter>
-      <Toaster position="top-center" richColors />
+        </BrowserRouter>
+        <Toaster position="top-center" richColors />
       </div>
     </CurrencyProvider>
   );
