@@ -223,6 +223,11 @@ const HomePage = () => {
       <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
         <div className="container mx-auto max-w-7xl">
           <h2 className="text-4xl font-bold text-center mb-4">Tarifs & Niveaux</h2>
+          
+          <div className="flex justify-center mb-6">
+            <CurrencyToggle />
+          </div>
+          
           <p className="text-center text-xl text-red-600 font-semibold mb-12">
             🎄 Promo Noël & Nouvel An - Valable jusqu'au 14 janvier 2025
           </p>
