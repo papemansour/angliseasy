@@ -44,16 +44,9 @@ const Testimonials = () => {
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="hover:shadow-xl transition-shadow border-teal-100">
               <CardContent className="p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <h3 className="font-bold text-gray-900">{testimonial.name}</h3>
-                    <p className="text-sm text-gray-600">{testimonial.role}</p>
-                  </div>
+                <div className="mb-4">
+                  <h3 className="font-bold text-gray-900 text-lg">{testimonial.name}</h3>
+                  <p className="text-sm text-gray-600">{testimonial.role}</p>
                 </div>
                 <div className="flex gap-1 mb-3">
                   {[...Array(testimonial.rating)].map((_, i) => (
