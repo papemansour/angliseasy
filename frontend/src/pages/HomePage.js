@@ -240,9 +240,8 @@ const HomePage = () => {
               </div>
               <div className="p-6">
                 <div className="text-center mb-6">
-                  <div className="text-gray-400 line-through text-xl">80€ / 52 476 FCFA</div>
-                  <div className="text-4xl font-bold text-teal-600">76€</div>
-                  <div className="text-2xl font-semibold text-teal-700">49 853 FCFA</div>
+                  <div className="text-gray-400 line-through text-xl">{formatPrice(80)}</div>
+                  <div className="text-5xl font-bold text-teal-600">{formatPrice(76)}</div>
                   <div className="text-green-600 font-semibold mt-2">-5% de réduction</div>
                 </div>
                 <ul className="space-y-3">
