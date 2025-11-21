@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
+import { CurrencyToggle, useCurrency } from '../components/CurrencySelector';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Calendar } from '../components/ui/calendar';
