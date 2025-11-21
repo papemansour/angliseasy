@@ -314,17 +314,8 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* How It Works */}
-      <HowItWorks />
-
-      {/* Testimonials */}
-      <Testimonials />
-
-      {/* Kalamathèque */}
-      <Kalamathèque />
-
       {/* Test Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
+      <section className="py-20 px-4 bg-white">
         <div className="container mx-auto max-w-7xl">
           <h2 className="text-4xl font-bold text-center mb-4">Évaluez votre niveau d'anglais</h2>
           <p className="text-center text-gray-600 mb-12">Passez un test gratuit pour connaître votre niveau</p>
