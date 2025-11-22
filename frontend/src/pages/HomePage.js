@@ -119,8 +119,10 @@ const HomePage = () => {
 
     try {
       const preferredSlots = formatPreferredSlots();
+      const fullPhone = `${formData.country_code}${formData.phone}`;
       await axios.post(`${API}/auth/register`, {
         ...formData,
+        phone: fullPhone,
         preferred_slots: preferredSlots || formData.preferred_slots
       });
       toast.success('Inscription envoyée avec succès! Attendez l\'approbation de l\'administrateur.');
