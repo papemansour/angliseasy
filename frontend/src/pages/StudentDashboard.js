@@ -213,11 +213,12 @@ const StudentDashboard = () => {
         </div>
 
         <Tabs defaultValue="links" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-teal-50">
+          <TabsList className="grid w-full grid-cols-6 bg-teal-50">
             <TabsTrigger value="links" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Liens</TabsTrigger>
             <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Documents</TabsTrigger>
             <TabsTrigger value="homeworks" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Devoirs</TabsTrigger>
             <TabsTrigger value="conversations" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Conversations</TabsTrigger>
+            <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Kalamathèque</TabsTrigger>
             <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Profil</TabsTrigger>
           </TabsList>
 
