@@ -520,7 +520,7 @@ const HomePage = () => {
                       {formatPrice(pricingData.beginner_eur)}
                     </div>
                   )}
-                  <div className="text-4xl md:text-5xl font-bold text-teal-600">
+                  <div className="text-2xl md:text-3xl font-bold text-teal-600">
                     {formatPriceWithSmallFCFA(pricingData.beginner_eur - pricingData.beginner_discount)}
                   </div>
                   {pricingData.beginner_discount > 0 && (
