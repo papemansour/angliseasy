@@ -2463,6 +2463,7 @@ async def create_comment(post_id: str, comment_data: ClubCommentCreate, current_
     doc = comment.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
     await db.club_comments.insert_one(doc)
+    logger.info(f"Comment added to post {post_id} by {current_user['id']}")
     
     # Increment comment count
     await db.club_posts.update_one(
@@ -2471,6 +2472,112 @@ async def create_comment(post_id: str, comment_data: ClubCommentCreate, current_
     )
     
     return {"message": "Commentaire ajouté", "id": comment.id}
+
+# ==================== LEADERBOARD ENDPOINTS ====================
+
+class LeaderboardEntry(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid4()))
+    user_id: str
+    user_name: str
+    user_role: str  # 'teacher' ou 'student'
+    rank: int  # 1-10
+    created_by: str  # Admin ID
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+@api_router.get("/club/leaderboard")
+async def get_leaderboard():
+    """Get current leaderboard - Public endpoint"""
+    entries = await db.leaderboard.find({}, {"_id": 0}).sort("rank", 1).to_list(10)
+    return entries
+
+@api_router.post("/club/leaderboard")
+async def create_leaderboard_entry(
+    user_id: str,
+    rank: int,
+    current_user: dict = Depends(get_current_user)
+):
+    """Create or update leaderboard entry - Admin only"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    if rank < 1 or rank > 10:
+        raise HTTPException(status_code=400, detail="Rank must be between 1 and 10")
+    
+    # Get user details
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if rank already taken
+    existing = await db.leaderboard.find_one({"rank": rank})
+    if existing:
+        raise HTTPException(status_code=400, detail=f"Rank {rank} is already taken by {existing['user_name']}")
+    
+    # Check if user already in leaderboard
+    user_entry = await db.leaderboard.find_one({"user_id": user_id})
+    if user_entry:
+        raise HTTPException(status_code=400, detail=f"{user['first_name']} {user['last_name']} is already ranked at position {user_entry['rank']}")
+    
+    entry = LeaderboardEntry(
+        user_id=user_id,
+        user_name=f"{user['first_name']} {user['last_name']}",
+        user_role=user['role'],
+        rank=rank,
+        created_by=current_user['id']
+    )
+    
+    doc = entry.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    doc['updated_at'] = doc['updated_at'].isoformat()
+    await db.leaderboard.insert_one(doc)
+    
+    logger.info(f"Leaderboard entry created: {user['first_name']} {user['last_name']} at rank {rank}")
+    return {"message": "Entry added to leaderboard", "id": entry.id}
+
+@api_router.put("/club/leaderboard/{user_id}")
+async def update_leaderboard_rank(
+    user_id: str,
+    new_rank: int,
+    current_user: dict = Depends(get_current_user)
+):
+    """Update user's rank - Admin only"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    if new_rank < 1 or new_rank > 10:
+        raise HTTPException(status_code=400, detail="Rank must be between 1 and 10")
+    
+    # Check if new rank is taken
+    existing = await db.leaderboard.find_one({"rank": new_rank, "user_id": {"$ne": user_id}})
+    if existing:
+        raise HTTPException(status_code=400, detail=f"Rank {new_rank} is already taken")
+    
+    result = await db.leaderboard.update_one(
+        {"user_id": user_id},
+        {"$set": {"rank": new_rank, "updated_at": datetime.now(timezone.utc).isoformat()}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="User not found in leaderboard")
+    
+    return {"message": "Rank updated"}
+
+@api_router.delete("/club/leaderboard/{user_id}")
+async def remove_from_leaderboard(
+    user_id: str,
+    current_user: dict = Depends(get_current_user)
+):
+    """Remove user from leaderboard - Admin only"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.leaderboard.delete_one({"user_id": user_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found in leaderboard")
+    
+    return {"message": "Removed from leaderboard"}
 
 @api_router.get("/club/events")
 async def get_club_events():
