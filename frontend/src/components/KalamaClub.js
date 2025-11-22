@@ -190,13 +190,14 @@ const KalamaClub = ({ userRole }) => {
             </div>
             <p className="text-teal-100">La communauté des membres actifs • Partagez, apprenez, grandissez ensemble</p>
           </div>
-          <Dialog open={showPostDialog} onOpenChange={setShowPostDialog}>
-            <DialogTrigger asChild>
-              <Button className="bg-white text-teal-600 hover:bg-teal-50">
-                <Send className="w-4 h-4 mr-2" />
-                Nouveau Post
-              </Button>
-            </DialogTrigger>
+          {(userRole === 'teacher' || userRole === 'admin') && (
+            <Dialog open={showPostDialog} onOpenChange={setShowPostDialog}>
+              <DialogTrigger asChild>
+                <Button className="bg-white text-teal-600 hover:bg-teal-50">
+                  <Send className="w-4 h-4 mr-2" />
+                  Nouveau Post
+                </Button>
+              </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Créer un post</DialogTitle>
