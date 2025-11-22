@@ -143,7 +143,7 @@ const TestPage = () => {
           <CardHeader>
             <div className="flex justify-between items-center mb-4">
               <CardTitle className="text-2xl capitalize">
-                Test {level === 'beginner' ? 'Débutant' : level === 'intermediate' ? 'Intermédiaire' : 'Packs professionnels'}
+                Test {level === 'beginner' ? 'Débutant' : level === 'intermediate' ? 'Intermédiaire' : 'Pack professionnel'}
               </CardTitle>
               <span className="text-sm font-semibold text-gray-600">
                 Question {currentQuestion + 1} / {questions.length}

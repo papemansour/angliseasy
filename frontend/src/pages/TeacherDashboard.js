@@ -431,7 +431,7 @@ const TeacherDashboard = () => {
                         <SelectContent>
                           <SelectItem value="beginner">Débutant</SelectItem>
                           <SelectItem value="intermediate">Intermédiaire</SelectItem>
-                          <SelectItem value="advanced">Packs professionnels</SelectItem>
+                          <SelectItem value="advanced">Pack professionnel</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

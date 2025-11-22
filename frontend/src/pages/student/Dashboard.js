@@ -65,7 +65,7 @@ const StudentDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-teal-600 capitalize">
-              {user?.level === 'beginner' ? 'Débutant' : user?.level === 'intermediate' ? 'Intermédiaire' : 'Packs professionnels'}
+              {user?.level === 'beginner' ? 'Débutant' : user?.level === 'intermediate' ? 'Intermédiaire' : 'Pack professionnel'}
             </div>
           </CardContent>
         </Card>
