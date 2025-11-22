@@ -713,6 +713,105 @@ async def delete_news(news_id: str, current_user: dict = Depends(get_current_use
     await db.news.delete_one({"id": news_id})
     return {"message": "News deleted"}
 
+# Contact form route (public)
+@api_router.post("/contact/send")
+async def send_contact_email(contact_data: dict):
+    """
+    Handle contact form submissions from homepage
+    Sends email to mykalamaenglish@gmail.com
+    """
+    name = contact_data.get('name', '')
+    email = contact_data.get('email', '')
+    message = contact_data.get('message', '')
+    
+    if not name or not email or not message:
+        raise HTTPException(status_code=400, detail="All fields are required")
+    
+    # Validate email format
+    import re
+    email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    if not re.match(email_regex, email):
+        raise HTTPException(status_code=400, detail="Invalid email format")
+    
+    # Send email to admin
+    admin_email = "mykalamaenglish@gmail.com"
+    subject = f"Nouveau message de contact - {name}"
+    
+    html_body = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+            .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+            .header {{ background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); 
+                      color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+            .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+            .message-box {{ background: white; padding: 20px; border-left: 4px solid #14b8a6; 
+                           margin: 20px 0; border-radius: 5px; }}
+            .footer {{ text-align: center; margin-top: 30px; color: #666; font-size: 12px; }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📧 Nouveau Message de Contact</h1>
+            </div>
+            <div class="content">
+                <p><strong>Vous avez reçu un nouveau message depuis le formulaire de contact du site web.</strong></p>
+                
+                <div class="message-box">
+                    <p><strong>De :</strong> {name}</p>
+                    <p><strong>Email :</strong> {email}</p>
+                    <p><strong>Date :</strong> {datetime.now(timezone.utc).strftime('%d/%m/%Y à %H:%M UTC')}</p>
+                </div>
+                
+                <div class="message-box">
+                    <h3>Message :</h3>
+                    <p>{message}</p>
+                </div>
+                
+                <p><strong>Pour répondre :</strong> Envoyez votre réponse directement à <a href="mailto:{email}">{email}</a></p>
+                
+                <p>Cordialement,<br>
+                <strong>Système My KALAMA ENGLISH</strong></p>
+            </div>
+            <div class="footer">
+                <p>My KALAMA ENGLISH - Système de notification automatique</p>
+                <p>© 2025 MyKalamaenglish. Tous droits réservés.</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+    
+    text_body = f"""
+    NOUVEAU MESSAGE DE CONTACT - My KALAMA ENGLISH
+    
+    De: {name}
+    Email: {email}
+    Date: {datetime.now(timezone.utc).strftime('%d/%m/%Y à %H:%M UTC')}
+    
+    MESSAGE:
+    {message}
+    
+    Pour répondre, envoyez votre réponse directement à {email}
+    """
+    
+    try:
+        from email_service import email_service
+        success = await email_service._send_email(admin_email, subject, html_body, text_body)
+        
+        if success:
+            logger.info(f"Contact form email sent from {email}")
+            return {"message": "Message sent successfully"}
+        else:
+            logger.warning(f"Contact form email logged (not sent) from {email}")
+            return {"message": "Message received and will be processed"}
+    except Exception as e:
+        logger.error(f"Error processing contact form: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error sending message")
+
 # Admin annuaire (directory)
 @api_router.get("/admin/directory")
 async def get_directory(current_user: dict = Depends(get_current_user)):
