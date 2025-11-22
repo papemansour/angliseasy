@@ -182,17 +182,17 @@ We are delighted to welcome you to MYKALMAENGLISH, our online platform dedicated
 
 Here are some details to help you get started:
 
-**Access to the Platform:** You can log in to your account using the credentials below. You can also change your password in your profile settings.
+Access to the Platform: You can log in to your account using the credentials below. You can also change your password in your profile settings.
 
-**Your Credentials:**
+Your Credentials:
 📧 Email: {email}
 🔑 Temporary Password: {temp_password}
 
-**Available Resources:** Explore our digital library, KALAMATHÈQUE, along with other teaching materials designed to enhance your instruction.
+Available Resources: Explore our digital library, KALAMATHÈQUE, along with other teaching materials designed to enhance your instruction.
 
-**Technical Support:** If you have any questions or encounter any technical issues, please feel free to reach out to our support team at support@mykalmaenglish.com or mykalamaenglish@gmail.com.
+Technical Support: If you have any questions or encounter any technical issues, please feel free to reach out to our support team at support@mykalmaenglish.com or mykalamaenglish@gmail.com.
 
-**Upcoming Events:** Stay tuned for our webinars and workshops featured in the News section, where you can discover new teaching methods and connect with other professionals.
+Upcoming Events: Stay tuned for our webinars and workshops featured in the News section, where you can discover new teaching methods and connect with other professionals.
 
 We wish you great success on your journey with MYKALMAENGLISH. Please do not hesitate to share your suggestions or questions with us.
 
