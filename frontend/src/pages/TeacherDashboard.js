@@ -34,6 +34,7 @@ const TeacherDashboard = () => {
   const [documents, setDocuments] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [studentHomeworks, setStudentHomeworks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [messageContent, setMessageContent] = useState('');
