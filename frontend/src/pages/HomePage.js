@@ -207,7 +207,10 @@ const HomePage = () => {
       {/* Navigation */}
       <nav className="bg-white shadow-sm fixed w-full top-0 z-50">
         <div className="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
-          <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">MyKalamaenglish</h1>
+          <div className="flex flex-col">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-teal-600">My KALAMA</h1>
+            <span className="text-xs sm:text-sm text-gray-600 font-semibold uppercase tracking-wide">English</span>
+          </div>
           <Link to="/login">
             <Button variant="outline" data-testid="login-nav-button" className="border-teal-600 text-teal-600 hover:bg-teal-50 text-sm md:text-base px-3 py-1 md:px-4 md:py-2">
               Connexion
