@@ -486,6 +486,54 @@ async def assign_teacher(student_id: str, teacher_id: str, current_user: dict = 
     
     return {"message": "Teacher assigned successfully"}
 
+@api_router.delete("/admin/delete-student/{student_id}")
+async def delete_student(student_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    student = await db.users.find_one({"id": student_id, "role": "student"}, {"_id": 0})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    # Delete student from database
+    await db.users.delete_one({"id": student_id})
+    
+    # Also delete related data (test results, messages, etc.)
+    await db.test_results.delete_many({"user_id": student_id})
+    await db.messages.delete_many({
+        "$or": [
+            {"from_user_id": student_id},
+            {"to_user_id": student_id}
+        ]
+    })
+    
+    logger.info(f"Student deleted: {student['email']}")
+    return {"message": "Student deleted successfully"}
+
+@api_router.post("/admin/restrict-student/{student_id}")
+async def restrict_student(student_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    student = await db.users.find_one({"id": student_id, "role": "student"}, {"_id": 0})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    # Toggle restriction status
+    new_status = not student.get('is_restricted', False)
+    await db.users.update_one(
+        {"id": student_id},
+        {"$set": {"is_restricted": new_status}}
+    )
+    
+    action = "restricted" if new_status else "unrestricted"
+    logger.info(f"Student {action}: {student['email']}")
+    
+    return {
+        "message": f"Student access {'restricted' if new_status else 'restored'} successfully",
+        "is_restricted": new_status
+    }
+
 # TEST ROUTES
 @api_router.get("/tests/{level}")
 async def get_test(level: str):
