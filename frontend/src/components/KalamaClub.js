@@ -415,47 +415,99 @@ const KalamaClub = ({ userRole }) => {
         {/* Leaderboard Tab */}
         <TabsContent value="leaderboard">
           <Card>
-            <CardHeader className="bg-gradient-to-r from-yellow-50 to-orange-50">
-              <CardTitle className="flex items-center gap-2">
-                <Trophy className="w-6 h-6 text-yellow-600" />
-                Top Contributeurs
-              </CardTitle>
-              <CardDescription>Les membres les plus actifs du club</CardDescription>
+            <CardHeader className="bg-gradient-to-r from-yellow-50 via-orange-50 to-yellow-50">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Trophy className="w-6 h-6 text-yellow-600 animate-pulse" />
+                    🏆 Classement Officiel
+                  </CardTitle>
+                  <CardDescription>Top 10 des meilleurs membres sélectionnés par l'administration</CardDescription>
+                </div>
+                {userRole === 'admin' && (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-yellow-600 hover:bg-yellow-700">
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        Gérer le classement
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Gestion du Classement</DialogTitle>
+                        <CardDescription>Ajoutez ou retirez des membres du top 10</CardDescription>
+                      </DialogHeader>
+                      {/* Interface admin de gestion - À implémenter */}
+                      <div className="text-center p-8 text-gray-500">
+                        Interface de gestion en cours de développement...
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </div>
             </CardHeader>
             <CardContent className="pt-6">
-              {leaderboard.map((member, index) => (
-                <div
-                  key={member._id}
-                  className="flex items-center justify-between p-4 mb-2 rounded-lg hover:bg-gray-50 transition"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                      index === 0 ? 'bg-yellow-400 text-white' :
-                      index === 1 ? 'bg-gray-300 text-white' :
-                      index === 2 ? 'bg-orange-400 text-white' :
-                      'bg-gray-100 text-gray-600'
-                    }`}>
-                      {index + 1}
-                    </div>
-                    <div>
-                      <p className="font-semibold">{member.author_name}</p>
-                      <p className="text-sm text-gray-500">
-                        {member.author_role === 'teacher' ? '👨‍🏫 Professeur' : '👨‍🎓 Étudiant'}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <p className="font-bold text-teal-600">{member.total_likes}</p>
-                      <p className="text-xs text-gray-500">likes</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-bold text-purple-600">{member.post_count}</p>
-                      <p className="text-xs text-gray-500">posts</p>
-                    </div>
-                  </div>
+              {leaderboard.length === 0 ? (
+                <div className="text-center py-12">
+                  <Trophy className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500">Le classement sera bientôt disponible !</p>
+                  <p className="text-sm text-gray-400 mt-2">Continuez à participer activement au club</p>
                 </div>
-              ))}
+              ) : (
+                <div className="space-y-3">
+                  {leaderboard.map((member, index) => {
+                    const getMedal = (rank) => {
+                      if (rank === 1) return '🥇';
+                      if (rank === 2) return '🥈';
+                      if (rank === 3) return '🥉';
+                      return null;
+                    };
+                    
+                    return (
+                      <div
+                        key={member.id}
+                        className={`flex items-center justify-between p-4 rounded-xl transition-all hover:scale-[1.02] ${
+                          member.rank === 1 ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-2 border-yellow-400 shadow-lg' :
+                          member.rank === 2 ? 'bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-400 shadow-md' :
+                          member.rank === 3 ? 'bg-gradient-to-r from-orange-50 to-orange-100 border-2 border-orange-400 shadow-md' :
+                          'bg-gray-50 border border-gray-200'
+                        }`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className={`relative w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl ${
+                            member.rank === 1 ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-white shadow-lg' :
+                            member.rank === 2 ? 'bg-gradient-to-br from-gray-400 to-gray-500 text-white shadow-md' :
+                            member.rank === 3 ? 'bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-md' :
+                            'bg-gradient-to-br from-teal-100 to-teal-200 text-teal-800'
+                          }`}>
+                            {getMedal(member.rank) || member.rank}
+                            {member.rank <= 3 && (
+                              <Sparkles className="absolute -top-1 -right-1 w-5 h-5 text-yellow-500 animate-pulse" />
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-bold text-lg">{member.user_name}</p>
+                            <p className="text-sm text-gray-600 flex items-center gap-1">
+                              {member.user_role === 'teacher' ? '👨‍🏫 Professeur' : '🎓 Étudiant'}
+                              {member.rank <= 3 && <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />}
+                            </p>
+                          </div>
+                        </div>
+                        {userRole === 'admin' && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleRemoveFromLeaderboard(member.user_id)}
+                          >
+                            Retirer
+                          </Button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
