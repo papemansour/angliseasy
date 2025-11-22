@@ -385,7 +385,7 @@ async def approve_registration(user_id: str, current_user: dict = Depends(get_cu
     )
     
     # Send welcome email
-    await send_welcome_email(
+    await email_service.send_welcome_email(
         user['email'],
         user['first_name'],
         user['last_name'],
