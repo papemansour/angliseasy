@@ -27,6 +27,7 @@ import KalamathequeAdmin from '../components/KalamathequeAdmin';
 import NewsManager from '../components/NewsManager';
 import ConversationChat from '../components/ConversationChat';
 import KalamaClub from '../components/KalamaClub';
+import NotificationBell from '../components/NotificationBell';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
