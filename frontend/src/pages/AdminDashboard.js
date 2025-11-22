@@ -709,10 +709,15 @@ const AdminDashboard = () => {
                           <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
                             {contact.first_name?.charAt(0)}{contact.last_name?.charAt(0)}
                           </div>
-                          <div>
+                          <div className="flex-1">
                             <p className="font-semibold text-sm">{contact.first_name} {contact.last_name}</p>
                             <p className="text-xs text-gray-500">{contact.role === 'teacher' ? 'Professeur' : 'Étudiant'}</p>
                           </div>
+                          {selectedRecipients.find(r => r.id === contact.id) && (
+                            <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                              <span className="text-white text-sm">✓</span>
+                            </div>
+                          )}
                         </div>
                       </button>
                     ))}
