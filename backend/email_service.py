@@ -521,7 +521,7 @@ class EmailService:
                     <p><strong>Pour commencer, connectez-vous simplement à votre compte et explorez les cours disponibles.</strong> Si vous avez des questions ou avez besoin d'aide, n'hésitez pas à contacter notre équipe de support.</p>
                     
                     <center>
-                        <a href="https://englishlearn-4.preview.emergentagent.com/login" class="button">
+                        <a href="{self.frontend_url}/login" class="button">
                             🚀 Se connecter maintenant
                         </a>
                     </center>
