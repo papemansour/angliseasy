@@ -352,7 +352,7 @@ const TeacherDashboard = () => {
             <TabsTrigger value="students" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Étudiants</TabsTrigger>
             <TabsTrigger value="courses" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Cours</TabsTrigger>
             <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Documents</TabsTrigger>
-            <TabsTrigger value="homework" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Homework</TabsTrigger>
+            <TabsTrigger value="homework" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Devoirs</TabsTrigger>
             <TabsTrigger value="timer" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Pointage</TabsTrigger>
             <TabsTrigger value="messages" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Messages</TabsTrigger>
             <TabsTrigger value="schedule" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Mes horaires</TabsTrigger>
