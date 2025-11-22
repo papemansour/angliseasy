@@ -512,7 +512,7 @@ const KalamaClub = ({ userRole }) => {
                             
                             <div className="flex items-center justify-center gap-2">
                               <Trophy className="w-6 h-6 text-yellow-700" />
-                              <p className="text-xl font-bold text-yellow-900">CHAMPION(NE) 2024</p>
+                              <p className="text-xl font-bold text-yellow-900">CHAMPION(NE)</p>
                               <Trophy className="w-6 h-6 text-yellow-700" />
                             </div>
                             
