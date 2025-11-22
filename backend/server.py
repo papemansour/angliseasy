@@ -152,6 +152,19 @@ class NewsCreate(BaseModel):
     image_url: Optional[str] = None
     event_date: Optional[str] = None  # ISO format string
 
+class WelcomeLetter(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    user_email: str
+    user_name: str
+    user_level: str  # beginner, intermediate, advanced
+    user_role: str  # student, teacher
+    temp_password: str
+    content: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    is_read: bool = False
+
 # ============ UTILITIES ============
 
 def hash_password(password: str) -> str:
