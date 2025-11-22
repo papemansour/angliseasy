@@ -618,86 +618,102 @@ const HomePage = () => {
           </DialogHeader>
           
           <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="first_name">Prénom *</Label>
-                    <Input
-                      id="first_name"
-                      data-testid="register-first-name"
-                      required
-                      value={formData.first_name}
-                      onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
-                      className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="last_name">Nom *</Label>
-                    <Input
-                      id="last_name"
-                      data-testid="register-last-name"
-                      required
-                      value={formData.last_name}
-                      onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
-                      className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="email">Email *</Label>
-                  <Input
-                    id="email"
-                    data-testid="register-email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="phone">Téléphone *</Label>
-                  <div className="flex gap-2">
-                    <Select
-                      value={formData.country_code}
-                      onValueChange={(value) => setFormData({ ...formData, country_code: value })}
-                    >
-                      <SelectTrigger className="w-[140px] border-gray-200">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="+33">🇫🇷 +33 (France)</SelectItem>
-                        <SelectItem value="+221">🇸🇳 +221 (Sénégal)</SelectItem>
-                        <SelectItem value="+1">🇺🇸 +1 (USA)</SelectItem>
-                        <SelectItem value="+44">🇬🇧 +44 (UK)</SelectItem>
-                        <SelectItem value="+49">🇩🇪 +49 (Allemagne)</SelectItem>
-                        <SelectItem value="+34">🇪🇸 +34 (Espagne)</SelectItem>
-                        <SelectItem value="+39">🇮🇹 +39 (Italie)</SelectItem>
-                        <SelectItem value="+32">🇧🇪 +32 (Belgique)</SelectItem>
-                        <SelectItem value="+41">🇨🇭 +41 (Suisse)</SelectItem>
-                        <SelectItem value="+212">🇲🇦 +212 (Maroc)</SelectItem>
-                        <SelectItem value="+213">🇩🇿 +213 (Algérie)</SelectItem>
-                        <SelectItem value="+216">🇹🇳 +216 (Tunisie)</SelectItem>
-                        <SelectItem value="+225">🇨🇮 +225 (Côte d'Ivoire)</SelectItem>
-                        <SelectItem value="+237">🇨🇲 +237 (Cameroun)</SelectItem>
-                        <SelectItem value="+243">🇨🇩 +243 (RD Congo)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Input
-                      id="phone"
-                      data-testid="register-phone"
-                      required
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="6 12 34 56 78"
-                      className="flex-1 border-gray-200 focus:border-teal-500 focus:ring-teal-500"
-                    />
+                {/* Type de cours */}
+                <div className="bg-teal-50 p-4 rounded-lg">
+                  <Label className="text-base font-semibold mb-2 block">Type de cours *</Label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="courseType"
+                        value="individual"
+                        checked={courseType === 'individual'}
+                        onChange={(e) => setCourseType(e.target.value)}
+                        className="w-4 h-4 text-teal-600"
+                      />
+                      <span>Cours Individuel</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="courseType"
+                        value="group"
+                        checked={courseType === 'group'}
+                        onChange={(e) => setCourseType(e.target.value)}
+                        className="w-4 h-4 text-teal-600"
+                      />
+                      <span>Cours Groupé (max 3 personnes)</span>
+                    </label>
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="level">Niveau d'anglais *</Label>
+                {courseType === 'individual' ? (
+                  /* Formulaire cours individuel */
+                  <>
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="first_name">Prénom *</Label>
+                        <Input
+                          id="first_name"
+                          required
+                          value={formData.first_name}
+                          onChange={(e) => setFormData({ ...formData, first_name: e.target.value })}
+                          className="border-gray-200"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="last_name">Nom *</Label>
+                        <Input
+                          id="last_name"
+                          required
+                          value={formData.last_name}
+                          onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                          className="border-gray-200"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="email">Email de contact *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="border-gray-200"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="phone">Téléphone *</Label>
+                      <div className="flex gap-2">
+                        <Select
+                          value={formData.country_code}
+                          onValueChange={(value) => setFormData({ ...formData, country_code: value })}
+                        >
+                          <SelectTrigger className="w-[140px]">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="+33">🇫🇷 +33</SelectItem>
+                            <SelectItem value="+221">🇸🇳 +221</SelectItem>
+                            <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <Input
+                          id="phone"
+                          required
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          placeholder="6 12 34 56 78"
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="level">Niveau d'anglais *</Label>
                   <Select
                     value={formData.level}
                     onValueChange={(value) => setFormData({ ...formData, level: value })}
