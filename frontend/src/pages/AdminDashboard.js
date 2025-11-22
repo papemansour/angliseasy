@@ -373,6 +373,11 @@ const AdminDashboard = () => {
                                 Mot de passe provisoire: {student.temporary_password}
                               </p>
                             )}
+                            {student.current_password_plain && (
+                              <p className="text-xs text-blue-600 font-semibold mt-1">
+                                Mot de passe actuel: {student.current_password_plain}
+                              </p>
+                            )}
                           </div>
                           <div className="flex items-center gap-2">
                             <span className={`px-3 py-1 rounded text-sm ${
