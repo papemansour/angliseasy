@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import apiClient from '../utils/api';
 import { LogOut, BookOpen, FileText, Link as LinkIcon, Upload, Send, User, Mail, MessageCircle } from 'lucide-react';
 import ConversationChat from '../components/ConversationChat';
+import NewsDisplay from '../components/NewsDisplay';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
