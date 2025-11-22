@@ -1884,30 +1884,20 @@ async def text_to_speech(data: dict, current_user: dict = Depends(get_current_us
         raise HTTPException(status_code=400, detail="Texte requis")
     
     try:
-        from emergentintegrations import OpenAI
-        client_openai = OpenAI(api_key=os.environ.get('EMERGENT_LLM_KEY'))
+        from emergentintegrations.llm.openai.text_to_speech import OpenAITextToSpeech
         
-        response = client_openai.audio.speech.create(
+        tts = OpenAITextToSpeech(api_key=os.environ.get('EMERGENT_LLM_KEY'))
+        
+        # Generate speech and get base64 encoded audio
+        audio_base64 = await tts.generate_speech_base64(
+            text=text,
             model="tts-1",
             voice="alloy",
-            input=text
+            response_format="mp3"
         )
         
-        # Save audio file temporarily
-        audio_filename = f"audio_{uuid.uuid4()}.mp3"
-        audio_path = f"/tmp/{audio_filename}"
-        response.stream_to_file(audio_path)
-        
-        # In production, upload to S3 or CDN
-        # For now, return a base64 encoded audio
-        import base64
-        with open(audio_path, 'rb') as audio_file:
-            audio_data = base64.b64encode(audio_file.read()).decode('utf-8')
-        
-        os.remove(audio_path)
-        
         logger.info(f"TTS used by {current_user['id']}")
-        return {"audio_base64": audio_data}
+        return {"audio_base64": audio_base64}
         
     except Exception as e:
         logger.error(f"TTS error: {str(e)}")
