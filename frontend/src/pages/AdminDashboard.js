@@ -275,7 +275,7 @@ const AdminDashboard = () => {
               <UserCheck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">{pendingRegistrations.length}</div>
+              <div className="text-2xl font-bold text-red-600">{pendingRegistrations.length}</div>
             </CardContent>
           </Card>
 
@@ -285,7 +285,7 @@ const AdminDashboard = () => {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">{students.length}</div>
+              <div className="text-2xl font-bold text-green-600">{students.length}</div>
             </CardContent>
           </Card>
 
@@ -305,7 +305,7 @@ const AdminDashboard = () => {
               <Award className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-600">{testResults.length}</div>
+              <div className="text-2xl font-bold text-green-600">{testResults.length}</div>
             </CardContent>
           </Card>
         </div>
