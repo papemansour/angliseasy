@@ -38,6 +38,8 @@ const AdminDashboard = () => {
   const [selectedStudent, setSelectedStudent] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState('');
   const [sessions, setSessions] = useState([]);
+  const [teacherSessions, setTeacherSessions] = useState([]);
+  const [teacherAvailability, setTeacherAvailability] = useState([]);
   const [prices, setPrices] = useState({
     beginner_eur: 76,
     intermediate_eur: 90,
