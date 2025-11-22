@@ -1,92 +1,237 @@
 import React, { useState, useEffect } from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, MessageCircle, Newspaper, Trophy, BookOpen, X, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from './ui/dropdown-menu';
-import apiClient from '../utils/api';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from './ui/popover';
+import { Badge } from './ui/badge';
 import { toast } from 'sonner';
+import apiClient from '../utils/api';
 
 const NotificationBell = () => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchNotifications();
-    const interval = setInterval(fetchNotifications, 30000); // Check every 30 seconds
+    const interval = setInterval(fetchNotifications, 30000);
     return () => clearInterval(interval);
   }, []);
 
   const fetchNotifications = async () => {
     try {
-      const response = await apiClient.get('/notifications/my-notifications');
-      setNotifications(response.data);
-      setUnreadCount(response.data.filter(n => !n.read).length);
+      const res = await apiClient.get('/notifications/my-notifications');
+      setNotifications(res.data || []);
+      const unread = (res.data || []).filter(n => !n.is_read).length;
+      setUnreadCount(unread);
     } catch (error) {
-      console.error('Error fetching notifications');
+      console.error('Error fetching notifications:', error);
     }
   };
 
   const markAsRead = async (notificationId) => {
     try {
-      await apiClient.post(`/notifications/mark-read/${notificationId}`);
-      fetchNotifications();
+      await apiClient.put(`/notifications/${notificationId}/read`);
+      setNotifications(notifications.map(n => 
+        n.id === notificationId ? { ...n, is_read: true } : n
+      ));
+      setUnreadCount(Math.max(0, unreadCount - 1));
     } catch (error) {
-      toast.error('Erreur');
+      console.error('Error marking notification as read:', error);
     }
   };
 
-  const getNotificationText = (notification) => {
-    switch (notification.type) {
-      case 'new_message':
-        return `💬 Nouveau message de ${notification.from_name}`;
-      case 'new_document':
-        return `📄 Nouveau document: ${notification.title}`;
-      case 'new_link':
-        return `🔗 Nouveau lien: ${notification.title}`;
-      case 'homework_submitted':
-        return `📚 ${notification.student_name} a rendu un devoir`;
-      default:
-        return notification.message || 'Nouvelle notification';
+  const markAllAsRead = async () => {
+    setLoading(true);
+    try {
+      await apiClient.put('/notifications/mark-all-read');
+      setNotifications(notifications.map(n => ({ ...n, is_read: true })));
+      setUnreadCount(0);
+      toast.success('✅ Toutes les notifications sont lues');
+    } catch (error) {
+      toast.error('Erreur lors du marquage');
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const deleteNotification = async (notificationId) => {
+    try {
+      await apiClient.delete(`/notifications/${notificationId}`);
+      const notif = notifications.find(n => n.id === notificationId);
+      setNotifications(notifications.filter(n => n.id !== notificationId));
+      if (notif && !notif.is_read) {
+        setUnreadCount(Math.max(0, unreadCount - 1));
+      }
+      toast.success('🗑️ Notification supprimée');
+    } catch (error) {
+      toast.error('Erreur lors de la suppression');
+    }
+  };
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'message':
+        return <MessageCircle className="w-5 h-5 text-blue-600" />;
+      case 'news':
+        return <Newspaper className="w-5 h-5 text-purple-600" />;
+      case 'club':
+        return <Trophy className="w-5 h-5 text-yellow-600" />;
+      case 'book':
+        return <BookOpen className="w-5 h-5 text-teal-600" />;
+      default:
+        return <Sparkles className="w-5 h-5 text-gray-600" />;
+    }
+  };
+
+  const getNotificationBgColor = (type) => {
+    switch (type) {
+      case 'message':
+        return 'bg-blue-50 border-l-4 border-blue-400';
+      case 'news':
+        return 'bg-purple-50 border-l-4 border-purple-400';
+      case 'club':
+        return 'bg-yellow-50 border-l-4 border-yellow-400';
+      case 'book':
+        return 'bg-teal-50 border-l-4 border-teal-400';
+      default:
+        return 'bg-gray-50 border-l-4 border-gray-400';
+    }
+  };
+
+  const formatTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInMs = now - date;
+    const diffInMinutes = Math.floor(diffInMs / 60000);
+    const diffInHours = Math.floor(diffInMs / 3600000);
+    const diffInDays = Math.floor(diffInMs / 86400000);
+
+    if (diffInMinutes < 1) return '🔥 À l\'instant';
+    if (diffInMinutes < 60) return `Il y a ${diffInMinutes} min`;
+    if (diffInHours < 24) return `Il y a ${diffInHours}h`;
+    if (diffInDays < 7) return `Il y a ${diffInDays}j`;
+    return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="relative">
-          <Bell className="w-5 h-5" />
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative hover:bg-teal-50 transition-all group"
+        >
+          <Bell className={`w-6 h-6 text-teal-600 transition-all ${unreadCount > 0 ? 'animate-wiggle' : 'group-hover:scale-110'}`} />
           {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {unreadCount}
+            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse shadow-lg">
+              {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80 max-h-96 overflow-y-auto">
-        {notifications.length === 0 ? (
-          <div className="p-4 text-center text-gray-500">Aucune notification</div>
-        ) : (
-          notifications.map((notif) => (
-            <DropdownMenuItem
-              key={notif.id}
-              onClick={() => markAsRead(notif.id)}
-              className={`p-3 cursor-pointer ${!notif.read ? 'bg-blue-50' : ''}`}
-            >
-              <div className="flex-1">
-                <p className="text-sm font-medium">{getNotificationText(notif)}</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {new Date(notif.created_at).toLocaleString('fr-FR')}
-                </p>
+      </PopoverTrigger>
+      <PopoverContent className="w-[420px] p-0 shadow-2xl border-2 border-teal-100" align="end">
+        <div className="bg-gradient-to-r from-teal-600 via-teal-500 to-teal-600 p-5 text-white relative overflow-hidden">
+          <div className="absolute inset-0 bg-white/10 animate-pulse"></div>
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <h3 className="font-bold text-xl flex items-center gap-2">
+                <Bell className="w-5 h-5" />
+                Notifications
+              </h3>
+              <p className="text-sm text-teal-100 mt-1">
+                {unreadCount > 0 ? `✨ ${unreadCount} nouvelle(s) notification(s)` : '✅ Tout est à jour !'}
+              </p>
+            </div>
+            {unreadCount > 0 && (
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-white hover:bg-teal-700 transition-all"
+                onClick={markAllAsRead}
+                disabled={loading}
+              >
+                ✓ Tout lire
+              </Button>
+            )}
+          </div>
+        </div>
+
+        <div className="max-h-[550px] overflow-y-auto">
+          {notifications.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-teal-100 to-teal-200 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                <Bell className="w-10 h-10 text-teal-600" />
               </div>
-            </DropdownMenuItem>
-          ))
+              <p className="text-gray-600 font-semibold">Aucune notification</p>
+              <p className="text-sm text-gray-400 mt-2">Vous êtes à jour ! 🎉</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-100">
+              {notifications.map((notification) => (
+                <div
+                  key={notification.id}
+                  className={`p-4 hover:bg-gray-50 transition-all cursor-pointer group ${
+                    !notification.is_read ? 'bg-blue-50/30' : ''
+                  }`}
+                  onClick={() => !notification.is_read && markAsRead(notification.id)}
+                >
+                  <div className="flex gap-3">
+                    <div className={`p-2.5 rounded-xl ${getNotificationBgColor(notification.type)} flex-shrink-0 h-fit shadow-sm`}>
+                      {getNotificationIcon(notification.type)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className={`text-sm font-bold ${!notification.is_read ? 'text-teal-900' : 'text-gray-800'}`}>
+                          {notification.title}
+                        </h4>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteNotification(notification.id);
+                          }}
+                          className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-600 transition-all transform hover:scale-110"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-600 mt-1.5 line-clamp-2 leading-relaxed">
+                        {notification.message}
+                      </p>
+                      <div className="flex items-center gap-2 mt-2.5">
+                        <span className="text-xs text-gray-500 font-medium">
+                          {formatTime(notification.created_at)}
+                        </span>
+                        {!notification.is_read && (
+                          <Badge className="bg-gradient-to-r from-teal-500 to-teal-600 text-white text-xs px-2 py-0.5 shadow-sm animate-pulse">
+                            ✨ Nouveau
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {notifications.length > 0 && (
+          <div className="p-3 border-t bg-gradient-to-r from-gray-50 to-gray-100 text-center">
+            <button
+              className="text-sm text-teal-600 hover:text-teal-700 font-semibold transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              Fermer ✓
+            </button>
+          </div>
         )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </PopoverContent>
+    </Popover>
   );
 };
 
