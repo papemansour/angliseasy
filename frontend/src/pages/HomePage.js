@@ -217,7 +217,7 @@ const HomePage = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center">
+      <section className="relative min-h-screen flex items-center pt-16 md:pt-0">
         <div className="absolute inset-0">
           <img
             src="https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=1920"
@@ -226,31 +226,31 @@ const HomePage = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50"></div>
         </div>
-        <div className="relative z-10 container mx-auto px-4 py-20">
+        <div className="relative z-10 container mx-auto px-4 py-12 md:py-20">
           <div className="max-w-3xl">
-            <div className="grid grid-cols-3 gap-4 mb-8">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
-                <div className="text-3xl md:text-4xl font-bold text-teal-400 mb-2">95%</div>
-                <p className="text-gray-200 text-sm">Taux de réussite</p>
+            <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 md:mb-8">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-4 hover:bg-white/20 transition-colors">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-teal-400 mb-1 md:mb-2">95%</div>
+                <p className="text-gray-200 text-xs sm:text-sm">Taux de réussite</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
-                <div className="text-3xl md:text-4xl font-bold text-teal-400 mb-2">+200</div>
-                <p className="text-gray-200 text-sm">Heures de cours</p>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-4 hover:bg-white/20 transition-colors">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-teal-400 mb-1 md:mb-2">+200</div>
+                <p className="text-gray-200 text-xs sm:text-sm">Heures de cours</p>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 hover:bg-white/20 transition-colors">
-                <div className="text-3xl md:text-4xl font-bold text-teal-400 mb-2">24/7</div>
-                <p className="text-gray-200 text-sm">Accès aux cours</p>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 sm:p-4 hover:bg-white/20 transition-colors">
+                <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-teal-400 mb-1 md:mb-2">24/7</div>
+                <p className="text-gray-200 text-xs sm:text-sm">Accès aux cours</p>
               </div>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">
               Apprenez l'anglais facilement avec des méthodes innovantes
             </h1>
-            <p className="text-base lg:text-lg text-gray-200 mb-8 leading-relaxed">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-200 mb-6 md:mb-8 leading-relaxed">
               My KALAMA ENGLISH rend l'apprentissage de l'anglais accessible à tous ! Que vous soyez étudiant, professionnel, ou simplement désireux d'apprendre, nos cours sont conçus pour une progression rapide et efficace.
             </p>
             <button 
               onClick={() => openRegistrationModal()}
-              className="inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-full font-semibold hover:bg-teal-700 transition duration-300"
+              className="inline-flex items-center px-4 sm:px-6 py-2 sm:py-3 bg-teal-600 text-white rounded-full font-semibold hover:bg-teal-700 transition duration-300 text-sm sm:text-base"
             >
               Commencer à apprendre
             </button>
