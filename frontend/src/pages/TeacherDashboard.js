@@ -847,6 +847,11 @@ const TeacherDashboard = () => {
             </div>
           </TabsContent>
 
+          {/* Schedule Tab - Mes horaires */}
+          <TabsContent value="schedule">
+            <AvailabilityScheduler apiClient={apiClient} />
+          </TabsContent>
+
           {/* Profile Tab - Changement de mot de passe */}
           <TabsContent value="profile">
             <Card className="border-teal-100">
