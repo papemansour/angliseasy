@@ -473,16 +473,6 @@ const HomePage = () => {
           </DialogHeader>
           
           <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="container mx-auto max-w-2xl">
-          <Card className="shadow-2xl border-teal-100">
-            <CardHeader>
-              <CardTitle className="text-3xl text-center text-teal-800">Rejoignez KALAMAENGLISH</CardTitle>
-              <CardDescription className="text-center">
-                Inscrivez-vous maintenant et commencez votre parcours d'apprentissage
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="first_name">Prénom *</Label>
