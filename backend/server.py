@@ -1758,7 +1758,7 @@ async def kalamatheque_ai_assistant(data: dict, current_user: dict = Depends(get
         raise HTTPException(status_code=400, detail="Texte requis")
     
     try:
-        from openai import OpenAI
+        from emergentintegrations import OpenAI
         client_openai = OpenAI(api_key=os.environ.get('EMERGENT_LLM_KEY'))
         
         prompts = {
