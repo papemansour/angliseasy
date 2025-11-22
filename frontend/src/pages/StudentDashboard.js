@@ -379,6 +379,11 @@ const StudentDashboard = () => {
             </Card>
           </TabsContent>
 
+          {/* News Tab */}
+          <TabsContent value="news">
+            <NewsDisplay />
+          </TabsContent>
+
           {/* Kalamathèque Tab */}
           <TabsContent value="kalamatheque">
             <Card className="border-teal-100">
