@@ -729,17 +729,21 @@ const AdminDashboard = () => {
               <Card className="md:col-span-2">
                 <CardHeader>
                   <CardTitle>
-                    {selectedRecipient ? `${selectedRecipient.first_name} ${selectedRecipient.last_name}` : 'Sélectionnez un contact'}
+                    {selectedRecipients.length > 0 
+                      ? `${selectedRecipients.length} personne(s) sélectionnée(s)` 
+                      : 'Envoi de messages groupés'}
                   </CardTitle>
                   <CardDescription>
-                    {selectedRecipient ? (selectedRecipient.role === 'teacher' ? 'Professeur' : 'Étudiant') : ''}
+                    {selectedRecipients.length > 0 
+                      ? selectedRecipients.map(r => `${r.first_name} ${r.last_name}`).join(', ')
+                      : 'Sélectionnez un ou plusieurs contacts'}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {!selectedRecipient ? (
+                  {selectedRecipients.length === 0 ? (
                     <div className="text-center py-12">
                       <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">Sélectionnez un contact pour commencer la conversation</p>
+                      <p className="text-gray-500">Sélectionnez un ou plusieurs contacts pour envoyer un message</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
