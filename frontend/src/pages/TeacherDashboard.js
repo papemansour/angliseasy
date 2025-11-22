@@ -30,6 +30,7 @@ import NewsDisplay from '../components/NewsDisplay';
 import WelcomeLetter from '../components/WelcomeLetter';
 import DonationButton from '../components/DonationButton';
 import KalamaClub from '../components/KalamaClub';
+import NotificationBell from '../components/NotificationBell';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
