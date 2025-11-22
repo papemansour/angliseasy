@@ -247,9 +247,10 @@ Upcoming Events: Stay tuned for our webinars and workshops featured in the News 
 We wish you great success on your journey with MYKALMAENGLISH. Please do not hesitate to share your suggestions or questions with us.
 
 Best regards,
-
 DIAGNE Mansour
-CEO MYKALAMAENGLISH"""
+CEO of KalamaEnglish
+Email: mykalamaenglish@gmail.com
+Website: mykalamaenglish.com"""
     
     # Student letters based on level
     if level == "beginner":
