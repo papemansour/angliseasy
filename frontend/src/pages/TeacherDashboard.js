@@ -449,6 +449,17 @@ const TeacherDashboard = () => {
                       </Select>
                     </div>
                     <div>
+                      <Label htmlFor="student_email">Email de l'étudiant (pour recevoir le lien Meet)</Label>
+                      <Input
+                        id="student_email"
+                        type="email"
+                        value={courseData.student_email}
+                        onChange={(e) => setCourseData({ ...courseData, student_email: e.target.value })}
+                        placeholder="etudiant@example.com"
+                        className="border-teal-200 focus:border-teal-500"
+                      />
+                    </div>
+                    <div>
                       <Label htmlFor="schedule">Horaire</Label>
                       <Input
                         id="schedule"
