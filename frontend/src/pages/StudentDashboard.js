@@ -245,6 +245,11 @@ const StudentDashboard = () => {
             <WelcomeLetter />
           </TabsContent>
 
+          {/* KALAMA CLUB Tab */}
+          <TabsContent value="club">
+            <KalamaClub userRole="student" />
+          </TabsContent>
+
           {/* Liens Tab */}
           <TabsContent value="links">
             <Card className="border-teal-100">
