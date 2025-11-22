@@ -1025,6 +1025,12 @@ async def teacher_send_link(link_data: dict, current_user: dict = Depends(get_cu
     await db.student_links.insert_one(link)
     logger.info(f"Link sent by teacher {current_user['id']} to student {link_data['student_id']}")
     
+    # Create notification for student
+    await create_notification(link_data['student_id'], 'new_link', {
+        "title": link_data['title'],
+        "from_name": f"{teacher['first_name']} {teacher['last_name']}"
+    })
+    
     return {"message": "Link sent successfully"}
 
 # Route for teacher to get homeworks from their students
