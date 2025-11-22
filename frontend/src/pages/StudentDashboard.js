@@ -536,6 +536,36 @@ const StudentDashboard = () => {
             </Card>
           </TabsContent>
 
+          {/* Kalamathèque Tab */}
+          <TabsContent value="kalamatheque">
+            <Card className="border-teal-100">
+              <CardHeader className="bg-teal-50">
+                <CardTitle className="text-teal-800">📚 Kalamathèque</CardTitle>
+                <CardDescription>Accédez à notre bibliothèque numérique</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="text-center py-8">
+                  <div className="mb-6">
+                    <div className="w-20 h-20 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span className="text-4xl">📚</span>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">Bibliothèque numérique</h3>
+                    <p className="text-gray-600 mb-6">
+                      Enrichissez votre apprentissage avec notre collection de ressources pédagogiques
+                    </p>
+                  </div>
+                  <Button 
+                    onClick={() => window.open('/kalamatheque-access', '_blank')}
+                    className="bg-teal-600 hover:bg-teal-700"
+                    size="lg"
+                  >
+                    🔓 Accéder à Kalamathèque
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Profile Tab - Changement de mot de passe */}
           <TabsContent value="profile">
             <Card className="border-teal-100">
