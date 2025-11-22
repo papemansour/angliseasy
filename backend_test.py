@@ -163,8 +163,8 @@ class SecurityTester:
         try:
             logger.info("🔍 Testing admin password reset...")
             
-            # Create test user first
-            test_user_id = await self.create_test_user()
+            # Get test user first
+            test_user_id = await self.get_test_user()
             if not test_user_id:
                 self.test_results["admin_reset_password"]["details"].append("Failed to create test user")
                 return False
