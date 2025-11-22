@@ -2147,6 +2147,21 @@ async def create_book(book_data: dict, current_user: dict = Depends(get_current_
     
     await db.kalamatheque_books.insert_one(book)
     logger.info(f"Book added to Kalamathèque: {book['title']} by admin {current_user['id']}")
+    
+    # Create notifications for all users (everyone can access Kalamathèque)
+    all_users = await db.users.find(
+        {"role": {"$in": ["teacher", "student"]}, "status": "approved"},
+        {"_id": 0, "id": 1}
+    ).to_list(1000)
+    
+    for user in all_users:
+        await create_notification(
+            user_id=user["id"],
+            title="📚 Nouveau livre dans la Kalamathèque !",
+            message=f"Découvrez le nouveau livre : {book['title']}",
+            notification_type="book"
+        )
+    
     return {"message": "Livre ajouté avec succès", "book_id": book['id']}
 
 @api_router.get("/kalamatheque/books")
