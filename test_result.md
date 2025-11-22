@@ -234,16 +234,18 @@ frontend:
 
 metadata:
   created_by: "testing_agent"
-  version: "1.0"
-  test_sequence: 1
-  run_ui: false
+  version: "1.1"
+  test_sequence: 2
+  run_ui: true
 
 test_plan:
   current_focus:
-    - "Password Security Fix - Remove Plain Text Storage"
-    - "Admin Password Reset Endpoint Security"
-    - "Password Change Endpoint Security"
-    - "Public Contact Form"
+    - "Student Login Functionality"
+    - "Student Dashboard Navigation"
+    - "Profile Tab Information Display"
+    - "Password Change Form Functionality"
+    - "Password Change Validation"
+    - "Password Change Security Verification"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -251,3 +253,5 @@ test_plan:
 agent_communication:
     - agent: "testing"
       message: "🎉 ALL SECURITY TESTS PASSED! Fixed 2 critical bugs in admin password reset endpoint: 1) Undefined get_password_hash function (changed to hash_password), 2) Incorrect create_notification call signature. All security features now working correctly. Database verified clean of plain text passwords. Contact form working with proper validation."
+    - agent: "testing"
+      message: "🔄 NEW TEST CYCLE: Starting comprehensive testing of student dashboard password change functionality. Will test login, navigation, profile display, password change form, validation, and security verification with credentials test.student@example.com / zkpgqGzvwz"
