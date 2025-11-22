@@ -842,47 +842,11 @@ const TeacherDashboard = () => {
                       <p className="text-gray-500">Sélectionnez un contact pour commencer la conversation</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      <div className="border border-teal-100 rounded-lg p-4 max-h-[300px] overflow-y-auto space-y-3 bg-gray-50">
-                        {messages.length === 0 ? (
-                          <p className="text-gray-500 text-center py-8">Aucun message</p>
-                        ) : (
-                          messages.map((msg) => (
-                            <div
-                              key={msg.id}
-                              className={`flex ${
-                                msg.from_user_id === user.id ? 'justify-end' : 'justify-start'
-                              }`}
-                            >
-                              <div
-                                className={`max-w-[70%] p-3 rounded-lg ${
-                                  msg.from_user_id === user.id
-                                    ? 'bg-teal-600 text-white'
-                                    : 'bg-white border border-teal-100'
-                                }`}
-                              >
-                                <p className="text-sm">{msg.content}</p>
-                                <p className="text-xs mt-1 opacity-70">
-                                  {new Date(msg.created_at).toLocaleString('fr-FR')}
-                                </p>
-                              </div>
-                            </div>
-                          ))
-                        )}
-                      </div>
-
-                      <form onSubmit={handleSendMessage} className="flex gap-2">
-                        <Input
-                          value={messageContent}
-                          onChange={(e) => setMessageContent(e.target.value)}
-                          placeholder="Écrivez votre message..."
-                          className="flex-1 border-teal-200 focus:border-teal-500"
-                        />
-                        <Button type="submit" className="bg-teal-600 hover:bg-teal-700">
-                          <Send className="w-4 h-4" />
-                        </Button>
-                      </form>
-                    </div>
+                    <ConversationChat
+                      recipientId={selectedRecipient.id}
+                      recipientName={`${selectedRecipient.first_name} ${selectedRecipient.last_name}`}
+                      currentUserId={user.id}
+                    />
                   )}
                 </CardContent>
               </Card>
