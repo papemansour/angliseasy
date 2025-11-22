@@ -296,5 +296,133 @@ class EmailService:
             logger.error(f"Unexpected error sending email to {to_email}: {str(e)}")
             return False
 
+    async def send_password_reset_email(
+        self,
+        to_email: str,
+        user_name: str,
+        temporary_password: str
+    ) -> bool:
+        """
+        Send password reset email with temporary password
+        """
+        subject = "🔐 Réinitialisation de votre mot de passe - My KALAMA ENGLISH"
+        
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
+                          color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .credentials {{ background: white; padding: 20px; border-left: 4px solid #ef4444; 
+                               margin: 20px 0; border-radius: 5px; }}
+                .button {{ display: inline-block; padding: 15px 30px; background: #14b8a6; 
+                          color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
+                .warning {{ background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; 
+                           margin: 20px 0; border-radius: 5px; }}
+                .footer {{ text-align: center; margin-top: 30px; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>🔐 Réinitialisation de mot de passe</h1>
+                </div>
+                <div class="content">
+                    <p>Bonjour <strong>{user_name}</strong>,</p>
+                    
+                    <p>L'administrateur a réinitialisé votre mot de passe sur My KALAMA ENGLISH.</p>
+                    
+                    <div class="credentials">
+                        <h3>VOTRE NOUVEAU MOT DE PASSE TEMPORAIRE</h3>
+                        <p><strong>Email :</strong> {to_email}</p>
+                        <p><strong>Mot de passe temporaire :</strong> <code style="background: #f0f0f0; padding: 5px 10px; border-radius: 3px; font-size: 16px;">{temporary_password}</code></p>
+                    </div>
+                    
+                    <div class="warning">
+                        <p><strong>⚠️ IMPORTANT - Action requise :</strong></p>
+                        <ul>
+                            <li>Ce mot de passe est temporaire et doit être changé dès votre prochaine connexion</li>
+                            <li>Pour votre sécurité, ne partagez jamais ce mot de passe</li>
+                            <li>Changez-le immédiatement après connexion depuis votre espace personnel</li>
+                        </ul>
+                    </div>
+                    
+                    <center>
+                        <a href="https://mykalamalearn.preview.emergentagent.com/login" class="button">
+                            Se connecter maintenant
+                        </a>
+                    </center>
+                    
+                    <p><strong>Comment changer votre mot de passe :</strong></p>
+                    <ol>
+                        <li>Connectez-vous avec le mot de passe temporaire ci-dessus</li>
+                        <li>Accédez à votre profil</li>
+                        <li>Sélectionnez "Changer le mot de passe"</li>
+                        <li>Choisissez un nouveau mot de passe sécurisé</li>
+                    </ol>
+                    
+                    <p>Si vous n'avez pas demandé cette réinitialisation, veuillez contacter immédiatement l'administration.</p>
+                    
+                    <p>Cordialement,<br>
+                    <strong>L'équipe My KALAMA ENGLISH</strong></p>
+                </div>
+                <div class="footer">
+                    <p>My KALAMA ENGLISH - Plateforme d'apprentissage de l'anglais</p>
+                    <p>📧 mykalamaenglish@gmail.com</p>
+                    <p>© 2025 MyKalamaenglish. Tous droits réservés.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        text_body = f"""
+        Bonjour {user_name},
+        
+        RÉINITIALISATION DE MOT DE PASSE - My KALAMA ENGLISH
+        
+        L'administrateur a réinitialisé votre mot de passe.
+        
+        NOUVELLES IDENTIFIANTS:
+        - Email: {to_email}
+        - Mot de passe temporaire: {temporary_password}
+        
+        ⚠️ IMPORTANT - Action requise:
+        - Ce mot de passe est temporaire et doit être changé dès votre prochaine connexion
+        - Pour votre sécurité, ne partagez jamais ce mot de passe
+        - Changez-le immédiatement après connexion depuis votre espace personnel
+        
+        LIEN DE CONNEXION:
+        https://mykalamalearn.preview.emergentagent.com/login
+        
+        COMMENT CHANGER VOTRE MOT DE PASSE:
+        1. Connectez-vous avec le mot de passe temporaire ci-dessus
+        2. Accédez à votre profil
+        3. Sélectionnez "Changer le mot de passe"
+        4. Choisissez un nouveau mot de passe sécurisé
+        
+        Si vous n'avez pas demandé cette réinitialisation, veuillez contacter immédiatement l'administration.
+        
+        Cordialement,
+        L'équipe My KALAMA ENGLISH
+        mykalamaenglish@gmail.com
+        """
+        
+        return await self._send_email(to_email, subject, html_body, text_body)
+
 # Singleton instance
 email_service = EmailService()
+
+# Expose functions for easy import
+async def send_welcome_email(to_email: str, first_name: str, last_name: str, temp_password: str) -> bool:
+    return await email_service.send_welcome_email(to_email, first_name, last_name, temp_password)
+
+async def send_admin_notification(user_email: str, first_name: str, last_name: str, level: str, phone: str = "") -> bool:
+    return await email_service.send_admin_notification(user_email, first_name, last_name, level, phone)
+
+async def send_password_reset_email(to_email: str, user_name: str, temporary_password: str) -> bool:
+    return await email_service.send_password_reset_email(to_email, user_name, temporary_password)
