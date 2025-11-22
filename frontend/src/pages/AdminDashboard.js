@@ -994,7 +994,7 @@ const AdminDashboard = () => {
                     <div className="space-y-4 p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border-2 border-purple-200 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
                         <span className="text-2xl">👔</span>
-                        <h3 className="text-lg font-bold text-purple-800">Pack Professionnel</h3>
+                        <h3 className="text-lg font-bold text-purple-800">Pack K-Professionnel</h3>
                       </div>
                       
                       {/* EUR */}
