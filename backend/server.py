@@ -846,9 +846,11 @@ async def get_teacher_student_homeworks(current_user: dict = Depends(get_current
     ).to_list(1000)
     
     return homeworks
-
-    }
-
+    
+@api_router.post("/teacher/create-course-enhanced")
+async def create_course_new(course_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
     
     course = {
         "id": str(uuid.uuid4()),
