@@ -109,10 +109,14 @@ const TeacherDashboard = () => {
 
   const handleCreateCourse = async (e) => {
     e.preventDefault();
+    if (courseData.student_email && !courseData.student_email.includes('@')) {
+      toast.error('Email étudiant invalide');
+      return;
+    }
     try {
       await apiClient.post('/teacher/create-course', courseData);
-      toast.success('Cours créé avec succès!');
-      setCourseData({ title: '', description: '', level: '', schedule: '', student_id: '', meet_link: '' });
+      toast.success('Cours créé avec succès! L\'étudiant recevra le lien Google Meet par email.');
+      setCourseData({ title: '', description: '', level: '', schedule: '', student_id: '', student_email: '', meet_link: '' });
       fetchData();
     } catch (error) {
       toast.error('Erreur lors de la création du cours');
