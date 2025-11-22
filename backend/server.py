@@ -1377,6 +1377,28 @@ async def end_session(session_data: dict, current_user: dict = Depends(get_curre
     logger.info(f"Session ended by teacher {current_user['id']}, notification sent to admin")
     return {"message": "Session completed and sent to admin"}
 
+# Admin endpoint to get all teacher sessions (for attendance tracking)
+@api_router.get("/admin/teacher-sessions")
+async def get_teacher_sessions(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    sessions = await db.teacher_sessions.find(
+        {"status": "completed"},
+        {"_id": 0}
+    ).sort("end_time", -1).to_list(1000)
+    
+    # Enrich with teacher info
+    for session in sessions:
+        teacher = await db.users.find_one(
+            {"id": session['teacher_id']},
+            {"_id": 0, "first_name": 1, "last_name": 1, "email": 1}
+        )
+        if teacher:
+            session['teacher_name'] = f"{teacher['first_name']} {teacher['last_name']}"
+            session['teacher_email'] = teacher['email']
+    
+    return sessions
 
 @api_router.post("/teacher/attendance")
 async def mark_attendance(attendance_data: AttendanceCreate, current_user: dict = Depends(get_current_user)):
