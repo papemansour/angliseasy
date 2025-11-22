@@ -710,8 +710,11 @@ const HomePage = () => {
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-8 md:mb-12">
             {/* À propos */}
             <div>
-              <h3 className="text-xl font-bold mb-4 text-teal-400">MyKalamaenglish</h3>
-              <p className="text-gray-400 mb-4">
+              <div className="mb-4">
+                <h3 className="text-xl font-bold text-teal-400">My KALAMA</h3>
+                <span className="text-sm text-gray-500 uppercase tracking-wide">English</span>
+              </div>
+              <p className="text-gray-400">
                 Plateforme d'apprentissage de l'anglais en ligne adaptée à tous les niveaux.
               </p>
             </div>
