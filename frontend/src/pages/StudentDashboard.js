@@ -21,6 +21,7 @@ import WelcomeLetter from '../components/WelcomeLetter';
 import DonationButton from '../components/DonationButton';
 import KalamaClub from '../components/KalamaClub';
 import ActivityFeed from '../components/ActivityFeed';
+import StudentOfMonthBadge from '../components/StudentOfMonthBadge';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
