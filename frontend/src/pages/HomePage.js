@@ -508,7 +508,7 @@ const HomePage = () => {
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl text-teal-800">
-              {selectedPlan ? `Inscription - ${selectedPlan.name}` : 'Rejoignez MyKalamaenglish'}
+              {selectedPlan ? `Inscription - ${selectedPlan.name}` : 'Rejoignez My KALAMA English'}
             </DialogTitle>
             <DialogDescription>
               {selectedPlan ? `Inscrivez-vous et payez ${formatPrice(selectedPlan.price)}` : 'Inscrivez-vous maintenant et commencez votre parcours d\'apprentissage'}
