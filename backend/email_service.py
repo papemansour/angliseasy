@@ -85,7 +85,7 @@ class EmailService:
                     </div>
                     
                     <center>
-                        <a href="https://myenglishtutor.preview.emergentagent.com/login" class="button">
+                        <a href="https://mykalamalearn.preview.emergentagent.com/login" class="button">
                             Se connecter maintenant
                         </a>
                     </center>
@@ -126,7 +126,7 @@ class EmailService:
         - Mot de passe KALAMATHÈQUE: digikode
         
         LIEN DE CONNEXION:
-        https://myenglishtutor.preview.emergentagent.com/login
+        https://mykalamalearn.preview.emergentagent.com/login
         
         CHANGEZ VOTRE MOT DE PASSE:
         Nous vous recommandons fortement de changer votre mot de passe dès votre première connexion pour sécuriser votre compte.
@@ -207,7 +207,7 @@ class EmailService:
                     </div>
                     
                     <center>
-                        <a href="https://myenglishtutor.preview.emergentagent.com/admin" class="button">
+                        <a href="https://mykalamalearn.preview.emergentagent.com/admin" class="button">
                             Accéder au Dashboard Admin
                         </a>
                     </center>
@@ -239,7 +239,7 @@ class EmailService:
         
         Veuillez vous connecter au dashboard admin pour approuver cette inscription.
         
-        Lien dashboard: https://myenglishtutor.preview.emergentagent.com/admin
+        Lien dashboard: https://mykalamalearn.preview.emergentagent.com/admin
         """
         
         return await self._send_email(admin_email, subject, html_body, text_body)
