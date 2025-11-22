@@ -922,7 +922,7 @@ const AdminDashboard = () => {
                     <div className="space-y-4 p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-2 border-blue-200 shadow-sm">
                       <div className="flex items-center gap-2 mb-3">
                         <span className="text-2xl">🚀</span>
-                        <h3 className="text-lg font-bold text-blue-800">Pack Intermédiaire</h3>
+                        <h3 className="text-lg font-bold text-blue-800">Pack K-Intermédiaire</h3>
                       </div>
                       
                       {/* EUR */}
