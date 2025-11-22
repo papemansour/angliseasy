@@ -165,6 +165,56 @@ class WelcomeLetter(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     is_read: bool = False
 
+class ClubPost(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    author_id: str
+    author_name: str
+    author_role: str  # student, teacher
+    title: str
+    content: str
+    category: str  # discussion, challenge, event, resource
+    likes: int = 0
+    comments_count: int = 0
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ClubPostCreate(BaseModel):
+    title: str
+    content: str
+    category: str
+
+class ClubComment(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    post_id: str
+    author_id: str
+    author_name: str
+    author_role: str
+    content: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ClubCommentCreate(BaseModel):
+    content: str
+
+class ClubEvent(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    title: str
+    description: str
+    event_date: datetime
+    duration_minutes: int
+    max_participants: int
+    participants: list = []
+    created_by: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class ClubEventCreate(BaseModel):
+    title: str
+    description: str
+    event_date: str  # ISO format
+    duration_minutes: int
+    max_participants: int
+
 # ============ UTILITIES ============
 
 def hash_password(password: str) -> str:
