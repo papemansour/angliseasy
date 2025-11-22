@@ -1099,6 +1099,13 @@ async def send_document(doc_data: DocumentCreate, current_user: dict = Depends(g
     doc['from_teacher_name'] = f"{teacher['first_name']} {teacher['last_name']}"
     await db.documents.insert_one(doc)
     
+    # Create notification for recipient
+    if doc_data.recipient_type == 'student' and doc_data.recipient_id:
+        await create_notification(doc_data.recipient_id, 'new_document', {
+            "title": doc_data.title,
+            "from_name": f"{teacher['first_name']} {teacher['last_name']}"
+        })
+    
     logger.info(f"Document sent by teacher {current_user['id']} to {doc_data.recipient_type}")
     return {"message": "Document sent successfully", "document": document}
 
