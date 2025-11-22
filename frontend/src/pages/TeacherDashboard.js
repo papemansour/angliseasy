@@ -656,22 +656,61 @@ const TeacherDashboard = () => {
                     <div className="space-y-4 max-h-[500px] overflow-y-auto">
                       {documents.map((doc) => (
                         <div key={doc.id} className="p-4 border border-teal-100 rounded-lg hover:bg-teal-50 transition">
-                          <div className="flex items-start gap-3">
-                            <FileText className="w-5 h-5 text-teal-600 mt-1" />
-                            <div className="flex-1">
-                              <h3 className="font-semibold text-teal-800">{doc.title}</h3>
-                              <p className="text-sm text-gray-600 mt-1">{doc.description}</p>
-                              <a href={doc.file_url} target="_blank" rel="noopener noreferrer" className="text-sm text-teal-600 hover:underline mt-2 inline-block">
-                                Ouvrir le document
-                              </a>
-                              <div className="flex gap-2 mt-2">
-                                <span className="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">
-                                  {doc.recipient_type === 'admin' ? 'Admin' : 'Étudiant'}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  {new Date(doc.created_at).toLocaleDateString('fr-FR')}
-                                </span>
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-start gap-3 flex-1">
+                              <FileText className="w-5 h-5 text-teal-600 mt-1" />
+                              <div className="flex-1">
+                                <h3 className="font-semibold text-teal-800">{doc.title}</h3>
+                                <p className="text-sm text-gray-600 mt-1">{doc.description}</p>
+                                <div className="flex gap-2 mt-2">
+                                  <span className="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">
+                                    {doc.recipient_type === 'admin' ? 'Admin' : 'Étudiant'}
+                                  </span>
+                                  <span className="text-xs text-gray-500">
+                                    {new Date(doc.created_at).toLocaleDateString('fr-FR')}
+                                  </span>
+                                </div>
                               </div>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <Button
+                                size="sm"
+                                onClick={() => window.open(doc.file_url, '_blank')}
+                                className="bg-teal-600 hover:bg-teal-700"
+                              >
+                                📄 Ouvrir
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  const link = document.createElement('a');
+                                  link.href = doc.file_url;
+                                  link.download = doc.title;
+                                  link.click();
+                                }}
+                                className="border-blue-500 text-blue-600"
+                              >
+                                💾 Télécharger
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={async () => {
+                                  if (window.confirm('Supprimer ce document ?')) {
+                                    try {
+                                      await apiClient.delete(`/documents/${doc.id}`);
+                                      toast.success('Document supprimé');
+                                      fetchData();
+                                    } catch (error) {
+                                      toast.error('Erreur de suppression');
+                                    }
+                                  }
+                                }}
+                                className="border-red-500 text-red-600"
+                              >
+                                🗑️ Supprimer
+                              </Button>
                             </div>
                           </div>
                         </div>
