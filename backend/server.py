@@ -711,6 +711,7 @@ async def upload_file(file: UploadFile = File(...), current_user: dict = Depends
         "message": "File uploaded successfully",
         "file_url": file_url,
         "filename": file.filename
+    }
 
 # Student routes for links, documents and homeworks
 @api_router.get("/student/my-links")
