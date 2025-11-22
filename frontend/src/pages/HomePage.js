@@ -488,7 +488,7 @@ const HomePage = () => {
                   </li>
                   <li className="flex items-center gap-2">
                     <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
-                    <span>Option déplacement à domicile (frais en sus)</span>
+                    <span className="text-xs">Option déplacement à domicile (frais en sus)</span>
                   </li>
                 </ul>
                 <Button 
