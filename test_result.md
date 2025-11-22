@@ -324,13 +324,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Kalamathèque AI Assistant Interface"
-    - "Kalamathèque Text-to-Speech Integration"
-  stuck_tasks:
-    - "Kalamathèque AI Assistant Interface"
-    - "Kalamathèque Text-to-Speech Integration"
+    - "Frontend React Error Resolution"
+  stuck_tasks: []
   test_all: false
-  test_priority: "stuck_first"
+  test_priority: "high_first"
 
 agent_communication:
     - agent: "testing"
