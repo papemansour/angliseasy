@@ -603,27 +603,7 @@ async def admin_delete_user(user_id: str, current_user: dict = Depends(get_curre
     logger.info(f"User deleted by admin: {user['email']}")
     return {"message": f"{user['role'].capitalize()} deleted successfully"}
 
-# Change password routes for teacher and student
-@api_router.post("/auth/change-password")
-async def change_password(password_data: dict, current_user: dict = Depends(get_current_user)):
-    new_password = password_data.get('new_password')
-    if not new_password or len(new_password) < 6:
-        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
-    
-    hashed = get_password_hash(new_password)
-    
-    # Update password and store plain text for admin view
-    await db.users.update_one(
-        {"id": current_user['id']},
-        {"$set": {
-            "password_hash": hashed,
-            "current_password_plain": new_password,  # For admin to see
-            "password_changed_at": datetime.now(timezone.utc).isoformat()
-        }}
-    )
-    
-    logger.info(f"Password changed by user {current_user['id']}")
-    return {"message": "Password changed successfully"}
+# Endpoint en doublon supprimé - le changement de mot de passe se fait via la route ligne 339
 
 # News routes (admin only can create, everyone can read)
 @api_router.get("/news/all")
