@@ -450,7 +450,60 @@ const HomePage = () => {
             👥 Cours individuels ou en groupe (max 3 personnes)
           </p>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {/* Pack K-Kid - Enfants */}
+            <div className="relative overflow-hidden rounded-2xl border-2 border-pink-300 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all">
+              <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-4 md:p-6">
+                <h3 className="text-xl md:text-2xl font-bold text-pink-800">👶 Pack K-Kid</h3>
+                <p className="text-sm md:text-base text-pink-600">Enfants 3-9 ans</p>
+              </div>
+              <div className="p-4 md:p-6">
+                <div className="text-center mb-4 md:mb-6">
+                  {pricingData.kkid_discount > 0 && (
+                    <div className="text-gray-400 line-through text-lg md:text-xl">
+                      {formatPrice(pricingData.kkid_eur)}
+                    </div>
+                  )}
+                  <div className="text-4xl md:text-5xl font-bold text-pink-600">
+                    {formatPrice(pricingData.kkid_eur - (pricingData.kkid_discount || 0))}
+                  </div>
+                  {pricingData.kkid_discount > 0 && (
+                    <div className="text-green-600 font-semibold mt-1 md:mt-2 text-sm md:text-base">
+                      💰 Économisez {formatPrice(pricingData.kkid_discount)}
+                    </div>
+                  )}
+                </div>
+                <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
+                    <span>Cours ludiques adaptés</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
+                    <span>Jeux et chansons</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
+                    <span>Suivi parental</span>
+                  </li>
+                </ul>
+                <Button 
+                  className="w-full mt-4 md:mt-6 bg-pink-600 hover:bg-pink-700 text-sm md:text-base py-2 md:py-3" 
+                  data-testid="pay-kkid"
+                  onClick={() => openRegistrationModal({ 
+                    name: 'Pack K-Kid', 
+                    level: 'kkid', 
+                    price: pricingData.kkid_eur - (pricingData.kkid_discount || 0)
+                  })}
+                >
+                  Inscrire mon enfant
+                </Button>
+                <p className="text-xs text-center text-gray-500 mt-2 md:mt-3">
+                  🎈 Cours spécialement conçus pour les enfants
+                </p>
+              </div>
+            </div>
+
             <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all">
               <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-4 md:p-6">
                 <h3 className="text-xl md:text-2xl font-bold text-teal-800">🌱 Pack Débutant</h3>
