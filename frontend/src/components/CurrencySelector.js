@@ -74,7 +74,6 @@ export const CurrencyToggle = () => {
             : 'hover:bg-teal-50 text-teal-600'
         } transition-all`}
       >
-        <DollarSign className="w-4 h-4 mr-1" />
         FCFA (Afrique)
       </Button>
     </div>
