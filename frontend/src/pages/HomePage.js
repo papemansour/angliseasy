@@ -654,14 +654,12 @@ const HomePage = () => {
                   {loading ? 'Envoi en cours...' : 'Confirmer mon inscription'}
                 </Button>
 
-                <p className="text-sm text-gray-500 text-center">
-                  En vous inscrivant, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
-                </p>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+            <p className="text-sm text-gray-500 text-center">
+              En vous inscrivant, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
+            </p>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-16 px-4">
