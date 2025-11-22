@@ -625,7 +625,7 @@ async def admin_reset_user_password(user_id: str, current_user: dict = Depends(g
     temporary_password = ''.join(secrets.choice(alphabet) for i in range(10))
     
     # Hash the temporary password
-    hashed = get_password_hash(temporary_password)
+    hashed = hash_password(temporary_password)
     
     # Update user with temporary password
     await db.users.update_one(
