@@ -65,35 +65,50 @@ class SecurityTester:
             logger.error(f"❌ Admin login error: {str(e)}")
             return False
     
-    async def create_test_user(self) -> Optional[str]:
-        """Create a test teacher for password reset testing"""
+    async def get_test_user(self) -> Optional[str]:
+        """Get an existing non-admin user for password reset testing"""
         try:
             headers = {"Authorization": f"Bearer {self.admin_token}"}
-            teacher_data = {
-                "first_name": "TestTeacher",
-                "last_name": "Security"
-            }
             
-            async with self.session.post(f"{BACKEND_URL}/admin/create-teacher", 
-                                       json=teacher_data, headers=headers) as response:
-                if response.status == 200:
-                    data = await response.json()
-                    logger.info(f"✅ Test teacher created: {data.get('email')}")
+            # Get all users and find a non-admin user
+            async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response:
+                if users_response.status == 200:
+                    users = await users_response.json()
+                    for user in users:
+                        if user.get('role') != 'admin':
+                            logger.info(f"✅ Using existing user for test: {user.get('email')}")
+                            return user.get('id')
                     
-                    # Get the user ID by finding the user
-                    async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response:
-                        if users_response.status == 200:
-                            users = await users_response.json()
-                            for user in users:
-                                if user.get('email') == data.get('email'):
-                                    return user.get('id')
-                    return None
+                    # If no non-admin users exist, create a test teacher
+                    teacher_data = {
+                        "first_name": "TestTeacher",
+                        "last_name": f"Security{len(users)}"  # Make unique
+                    }
+                    
+                    async with self.session.post(f"{BACKEND_URL}/admin/create-teacher", 
+                                               json=teacher_data, headers=headers) as response:
+                        if response.status == 200:
+                            data = await response.json()
+                            logger.info(f"✅ Test teacher created: {data.get('email')}")
+                            
+                            # Get the user ID by finding the user
+                            async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response2:
+                                if users_response2.status == 200:
+                                    users2 = await users_response2.json()
+                                    for user in users2:
+                                        if user.get('email') == data.get('email'):
+                                            return user.get('id')
+                            return None
+                        else:
+                            error_text = await response.text()
+                            logger.error(f"❌ Failed to create test teacher: {response.status} - {error_text}")
+                            return None
                 else:
-                    error_text = await response.text()
-                    logger.error(f"❌ Failed to create test teacher: {response.status} - {error_text}")
+                    error_text = await users_response.text()
+                    logger.error(f"❌ Failed to get users: {users_response.status} - {error_text}")
                     return None
         except Exception as e:
-            logger.error(f"❌ Error creating test user: {str(e)}")
+            logger.error(f"❌ Error getting test user: {str(e)}")
             return None
     
     async def test_password_change_security(self) -> bool:
