@@ -39,19 +39,28 @@ const KalamathequeAdmin = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Validate file size (max 50MB)
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error('Fichier trop volumineux (max 50MB)');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
 
     setUploading(true);
+    toast.info(`Upload de ${file.name} en cours...`);
+    
     try {
       const res = await apiClient.post('/uploadfile/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       
       setNewBook(prev => ({ ...prev, [fieldName]: res.data.file_url }));
-      toast.success('Fichier uploadé!');
+      toast.success(`✅ ${file.name} uploadé avec succès!`);
     } catch (error) {
-      toast.error('Erreur d\'upload');
+      console.error('Upload error:', error);
+      toast.error(`Erreur d'upload: ${error.response?.data?.detail || error.message}`);
     } finally {
       setUploading(false);
     }
