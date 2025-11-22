@@ -476,15 +476,19 @@ const HomePage = () => {
                 <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
                   <li className="flex items-center gap-2">
                     <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
-                    <span>Cours ludiques adaptés</span>
+                    <span>Vidéos et jeux interactifs pré-fabriqués</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
-                    <span>Jeux et chansons</span>
+                    <span>Limite le temps d'écran bleu</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
-                    <span>Suivi parental</span>
+                    <span>Favorise les interactions réelles</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
+                    <span>Option déplacement à domicile (frais en sus)</span>
                   </li>
                 </ul>
                 <Button 
