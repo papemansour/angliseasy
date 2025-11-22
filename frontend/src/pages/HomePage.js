@@ -39,6 +39,7 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import Testimonials from '../components/Testimonials';
 import HowItWorks from '../components/HowItWorks';
+import DonationButton from '../components/DonationButton';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
