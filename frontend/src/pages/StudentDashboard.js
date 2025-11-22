@@ -34,6 +34,8 @@ const StudentDashboard = () => {
     description: '',
     file_url: ''
   });
+  const [previewDocument, setPreviewDocument] = useState(null);
+  const [showPreviewDialog, setShowPreviewDialog] = useState(false);
   const [uploadingFile, setUploadingFile] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
