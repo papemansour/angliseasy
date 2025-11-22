@@ -450,10 +450,10 @@ const KalamaClub = ({ userRole }) => {
                         <DialogTitle>Gestion du Classement</DialogTitle>
                         <CardDescription>Ajoutez ou retirez des membres du top 10</CardDescription>
                       </DialogHeader>
-                      {/* Interface admin de gestion - À implémenter */}
-                      <div className="text-center p-8 text-gray-500">
-                        Interface de gestion en cours de développement...
-                      </div>
+                      <LeaderboardManager 
+                        onClose={() => setShowPostDialog(false)}
+                        onUpdate={loadLeaderboard}
+                      />
                     </DialogContent>
                   </Dialog>
                 )}
