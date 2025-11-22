@@ -216,17 +216,15 @@ const HomePage = () => {
       setSelectedDates([]);
       setSelectedTimeSlots({});
       setShowRegistrationModal(false);
+      setRegistrationSuccess(true);
       
-      // Show success message and payment info
-      toast.success('Vous allez être redirigé vers la page de paiement...', {
-        duration: 2000
-      });
-      
-      // Redirect to Stripe payment if plan selected
+      // Show payment options modal
       if (selectedPlan) {
         setTimeout(() => {
-          handleStripePayment(selectedPlan);
-        }, 2000);
+          setShowWavePaymentModal(true);
+        }, 500);
+      } else {
+        toast.success('Inscription envoyée avec succès!');
       }
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Erreur lors de l\'inscription');
