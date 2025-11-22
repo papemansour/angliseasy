@@ -869,7 +869,7 @@ startxref
 
 async def main():
     """Main test runner"""
-    async with SecurityTester() as tester:
+    async with KalamathequeBackendTester() as tester:
         await tester.run_all_tests()
 
 if __name__ == "__main__":
