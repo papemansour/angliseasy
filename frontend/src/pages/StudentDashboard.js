@@ -4,37 +4,51 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../components/ui/dialog';
+import { Textarea } from '../components/ui/textarea';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
-import { LogOut, BookOpen, Award, Lock, FileText } from 'lucide-react';
+import { LogOut, BookOpen, FileText, Link as LinkIcon, Upload, Send, User, Mail } from 'lucide-react';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  const [testResults, setTestResults] = useState([]);
-  const [passwordData, setPasswordData] = useState({
-    old_password: '',
-    new_password: ''
-  });
+  const [teacher, setTeacher] = useState(null);
+  const [links, setLinks] = useState([]);
+  const [documents, setDocuments] = useState([]);
+  const [homeworks, setHomeworks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [homeworkData, setHomeworkData] = useState({
+    title: '',
+    description: '',
+    file_url: ''
+  });
+  const [uploadingFile, setUploadingFile] = useState(false);
 
   useEffect(() => {
-    fetchUserData();
-    fetchTestResults();
+    fetchData();
   }, []);
 
-  const fetchUserData = async () => {
+  const fetchData = async () => {
     try {
-      const response = await apiClient.get('/auth/me');
-      setUser(response.data);
+      const [userRes, linksRes, documentsRes, homeworksRes] = await Promise.all([
+        apiClient.get('/auth/me'),
+        apiClient.get('/student/my-links'),
+        apiClient.get('/student/my-documents'),
+        apiClient.get('/student/my-homeworks')
+      ]);
+      
+      setUser(userRes.data);
+      setLinks(linksRes.data);
+      setDocuments(documentsRes.data);
+      setHomeworks(homeworksRes.data);
+      
+      // Get teacher info if assigned
+      if (userRes.data.assigned_teacher) {
+        const teacherRes = await apiClient.get(`/student/my-teacher/${userRes.data.assigned_teacher}`);
+        setTeacher(teacherRes.data);
+      }
+      
       setLoading(false);
     } catch (error) {
       toast.error('Erreur de chargement');
@@ -42,23 +56,47 @@ const StudentDashboard = () => {
     }
   };
 
-  const fetchTestResults = async () => {
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Fichier trop volumineux (max 10MB)');
+      return;
+    }
+    
+    setUploadingFile(true);
     try {
-      const response = await apiClient.get('/tests/results/my');
-      setTestResults(response.data);
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await apiClient.post('/student/upload-homework', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      
+      setHomeworkData({ ...homeworkData, file_url: response.data.file_url });
+      toast.success('Fichier téléchargé avec succès!');
     } catch (error) {
-      console.error('Error fetching test results:', error);
+      toast.error('Erreur lors du téléchargement');
+    } finally {
+      setUploadingFile(false);
     }
   };
 
-  const handlePasswordChange = async (e) => {
+  const handleSubmitHomework = async (e) => {
     e.preventDefault();
+    if (!homeworkData.file_url) {
+      toast.error('Veuillez télécharger un fichier ou entrer une URL');
+      return;
+    }
+    
     try {
-      await apiClient.post('/auth/change-password', passwordData);
-      toast.success('Mot de passe modifié avec succès!');
-      setPasswordData({ old_password: '', new_password: '' });
+      await apiClient.post('/student/submit-homework', homeworkData);
+      toast.success('Devoir envoyé avec succès!');
+      setHomeworkData({ title: '', description: '', file_url: '' });
+      fetchData();
     } catch (error) {
-      toast.error(error.response?.data?.detail || 'Erreur lors du changement de mot de passe');
+      toast.error('Erreur lors de l\'envoi du devoir');
     }
   };
 
@@ -72,20 +110,23 @@ const StudentDashboard = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50">
       {/* Navigation */}
       <nav className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-900">KALAMAENGLISH</h1>
+          <div className="flex flex-col">
+            <h1 className="text-2xl font-bold text-teal-600">My KALAMA</h1>
+            <span className="text-sm text-gray-600 font-semibold uppercase tracking-wide">English</span>
+          </div>
           <div className="flex items-center gap-4">
             <span className="text-gray-700">{user?.first_name} {user?.last_name}</span>
-            <Button variant="outline" onClick={handleLogout} data-testid="student-logout-button">
+            <Button variant="outline" onClick={handleLogout} className="border-teal-600 text-teal-600 hover:bg-teal-50">
               <LogOut className="w-4 h-4 mr-2" />
               Déconnexion
             </Button>
@@ -94,125 +135,307 @@ const StudentDashboard = () => {
       </nav>
 
       <div className="container mx-auto px-4 py-12 max-w-7xl">
+        {/* Header avec info prof */}
         <div className="mb-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">Espace Étudiant</h2>
-          <p className="text-gray-600">Bienvenue {user?.first_name}!</p>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Espace Étudiant</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Card className="border-teal-100 bg-gradient-to-r from-teal-50 to-blue-50">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center">
+                    <User className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Votre professeur</p>
+                    {teacher ? (
+                      <p className="text-lg font-bold text-teal-800">
+                        {teacher.first_name} {teacher.last_name}
+                      </p>
+                    ) : (
+                      <p className="text-sm text-gray-500">Aucun professeur assigné</p>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-blue-100 bg-gradient-to-r from-blue-50 to-purple-50">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Contact général</p>
+                    <p className="text-lg font-bold text-blue-800">
+                      mykalamaenglish@gmail.com
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
+        {/* Stats Cards */}
         <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card>
+          <Card className="border-teal-100">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Niveau</CardTitle>
-              <Award className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Liens reçus</CardTitle>
+              <LinkIcon className="h-4 w-4 text-teal-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold capitalize">
-                {user?.level === 'beginner' ? 'Débutant' : user?.level === 'intermediate' ? 'Intermédiaire' : 'Avancé'}
-              </div>
+              <div className="text-2xl font-bold text-teal-600">{links.length}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-teal-100">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Tests passés</CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Documents reçus</CardTitle>
+              <FileText className="h-4 w-4 text-teal-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{testResults.length}</div>
+              <div className="text-2xl font-bold text-teal-600">{documents.length}</div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="border-teal-100">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Statut</CardTitle>
-              <BookOpen className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Devoirs rendus</CardTitle>
+              <BookOpen className="h-4 w-4 text-teal-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">Actif</div>
+              <div className="text-2xl font-bold text-teal-600">{homeworks.length}</div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Test Results */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Mes résultats de tests</CardTitle>
-              <CardDescription>Historique de vos tests de niveau</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {testResults.length === 0 ? (
-                <p className="text-gray-500">Aucun test passé pour le moment</p>
-              ) : (
-                <div className="space-y-4">
-                  {testResults.map((result, index) => (
-                    <div key={index} className="p-4 border rounded-lg">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="font-semibold capitalize">
-                          {result.level === 'beginner' ? 'Débutant' : result.level === 'intermediate' ? 'Intermédiaire' : 'Avancé'}
-                        </span>
-                        <span className="text-2xl font-bold text-blue-600">
-                          {Math.round((result.score / result.total_questions) * 100)}%
-                        </span>
+        <Tabs defaultValue="links" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 bg-teal-50">
+            <TabsTrigger value="links" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Liens</TabsTrigger>
+            <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Documents</TabsTrigger>
+            <TabsTrigger value="homeworks" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Devoirs</TabsTrigger>
+          </TabsList>
+
+          {/* Liens Tab */}
+          <TabsContent value="links">
+            <Card className="border-teal-100">
+              <CardHeader>
+                <CardTitle className="text-teal-800">Liens reçus de votre professeur</CardTitle>
+                <CardDescription>Google Meet, ressources en ligne, etc.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {links.length === 0 ? (
+                  <p className="text-gray-500">Aucun lien reçu</p>
+                ) : (
+                  <div className="space-y-4">
+                    {links.map((link) => (
+                      <div key={link.id} className="p-4 border border-teal-100 rounded-lg hover:bg-teal-50 transition">
+                        <div className="flex items-start gap-3">
+                          <LinkIcon className="w-5 h-5 text-teal-600 mt-1 flex-shrink-0" />
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-teal-800">{link.title}</h3>
+                            {link.description && (
+                              <p className="text-sm text-gray-600 mt-1">{link.description}</p>
+                            )}
+                            <a 
+                              href={link.url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="inline-flex items-center gap-1 text-sm text-teal-600 hover:underline mt-2"
+                            >
+                              <LinkIcon className="w-4 h-4" />
+                              Ouvrir le lien
+                            </a>
+                            <div className="flex gap-2 mt-2">
+                              <span className="text-xs bg-teal-100 text-teal-700 px-2 py-1 rounded">
+                                De: {link.from_teacher_name}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {new Date(link.created_at).toLocaleDateString('fr-FR')}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-sm text-gray-600">
-                        {result.score} / {result.total_questions} réponses correctes
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {new Date(result.created_at).toLocaleDateString('fr-FR')}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              )}
-              <Button
-                className="w-full mt-4"
-                onClick={() => navigate('/')}
-                data-testid="student-new-test-button"
-              >
-                Passer un nouveau test
-              </Button>
-            </CardContent>
-          </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-          {/* Change Password */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Changer le mot de passe</CardTitle>
-              <CardDescription>Modifiez votre mot de passe provisoire</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handlePasswordChange} className="space-y-4">
-                <div>
-                  <Label htmlFor="old_password">Ancien mot de passe</Label>
-                  <Input
-                    id="old_password"
-                    type="password"
-                    data-testid="student-old-password"
-                    required
-                    value={passwordData.old_password}
-                    onChange={(e) => setPasswordData({ ...passwordData, old_password: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="new_password">Nouveau mot de passe</Label>
-                  <Input
-                    id="new_password"
-                    type="password"
-                    data-testid="student-new-password"
-                    required
-                    value={passwordData.new_password}
-                    onChange={(e) => setPasswordData({ ...passwordData, new_password: e.target.value })}
-                  />
-                </div>
-                <Button type="submit" className="w-full" data-testid="student-change-password-button">
-                  <Lock className="w-4 h-4 mr-2" />
-                  Changer le mot de passe
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
-        </div>
+          {/* Documents Tab */}
+          <TabsContent value="documents">
+            <Card className="border-teal-100">
+              <CardHeader>
+                <CardTitle className="text-teal-800">Documents reçus</CardTitle>
+                <CardDescription>Documents partagés par votre professeur</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {documents.length === 0 ? (
+                  <p className="text-gray-500">Aucun document reçu</p>
+                ) : (
+                  <div className="space-y-4">
+                    {documents.map((doc) => (
+                      <div key={doc.id} className="p-4 border border-teal-100 rounded-lg hover:bg-teal-50 transition">
+                        <div className="flex items-start gap-3">
+                          <FileText className="w-5 h-5 text-teal-600 mt-1 flex-shrink-0" />
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-teal-800">{doc.title}</h3>
+                            {doc.description && (
+                              <p className="text-sm text-gray-600 mt-1">{doc.description}</p>
+                            )}
+                            <a 
+                              href={doc.file_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer" 
+                              className="inline-flex items-center gap-1 text-sm text-teal-600 hover:underline mt-2"
+                            >
+                              <FileText className="w-4 h-4" />
+                              Ouvrir le document
+                            </a>
+                            <div className="flex gap-2 mt-2">
+                              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                                De: {doc.from_teacher_name || doc.from_admin_name || 'Admin'}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {new Date(doc.created_at).toLocaleDateString('fr-FR')}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Devoirs Tab */}
+          <TabsContent value="homeworks">
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Formulaire de soumission */}
+              <Card className="border-teal-100">
+                <CardHeader>
+                  <CardTitle className="text-teal-800">Rendre un devoir</CardTitle>
+                  <CardDescription>Envoyez votre travail à votre professeur</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleSubmitHomework} className="space-y-4">
+                    <div>
+                      <Label htmlFor="hw_title">Titre du devoir</Label>
+                      <Input
+                        id="hw_title"
+                        required
+                        value={homeworkData.title}
+                        onChange={(e) => setHomeworkData({ ...homeworkData, title: e.target.value })}
+                        className="border-teal-200 focus:border-teal-500"
+                        placeholder="Ex: Exercice page 45"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="hw_description">Description (optionnel)</Label>
+                      <Textarea
+                        id="hw_description"
+                        value={homeworkData.description}
+                        onChange={(e) => setHomeworkData({ ...homeworkData, description: e.target.value })}
+                        className="border-teal-200 focus:border-teal-500"
+                        placeholder="Notes ou commentaires..."
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="hw_file_upload">Télécharger votre fichier</Label>
+                      <div className="mt-2">
+                        <input
+                          type="file"
+                          id="hw_file_upload"
+                          onChange={handleFileChange}
+                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer"
+                          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          PDF, Word, Images (max 10MB)
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-px bg-gray-300"></div>
+                      <span className="text-xs text-gray-500">OU</span>
+                      <div className="flex-1 h-px bg-gray-300"></div>
+                    </div>
+                    <div>
+                      <Label htmlFor="hw_url">Lien du document (URL)</Label>
+                      <Input
+                        id="hw_url"
+                        value={homeworkData.file_url}
+                        onChange={(e) => setHomeworkData({ ...homeworkData, file_url: e.target.value })}
+                        placeholder="https://..."
+                        className="border-teal-200 focus:border-teal-500"
+                        disabled={uploadingFile}
+                      />
+                    </div>
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-teal-600 hover:bg-teal-700"
+                      disabled={uploadingFile}
+                    >
+                      <Send className="w-4 h-4 mr-2" />
+                      {uploadingFile ? 'Téléchargement...' : 'Rendre le devoir'}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+
+              {/* Historique des devoirs */}
+              <Card className="border-teal-100">
+                <CardHeader>
+                  <CardTitle className="text-teal-800">Devoirs rendus</CardTitle>
+                  <CardDescription>Historique de vos travaux</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {homeworks.length === 0 ? (
+                    <p className="text-gray-500">Aucun devoir rendu</p>
+                  ) : (
+                    <div className="space-y-4 max-h-[500px] overflow-y-auto">
+                      {homeworks.map((hw) => (
+                        <div key={hw.id} className="p-4 border border-teal-100 rounded-lg hover:bg-teal-50 transition">
+                          <div className="flex items-start gap-3">
+                            <Upload className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
+                            <div className="flex-1">
+                              <h3 className="font-semibold text-teal-800">{hw.title}</h3>
+                              {hw.description && (
+                                <p className="text-sm text-gray-600 mt-1">{hw.description}</p>
+                              )}
+                              <a 
+                                href={hw.file_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="inline-flex items-center gap-1 text-sm text-teal-600 hover:underline mt-2"
+                              >
+                                <FileText className="w-4 h-4" />
+                                Voir le devoir
+                              </a>
+                              <div className="flex gap-2 mt-2">
+                                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">
+                                  Rendu
+                                </span>
+                                <span className="text-xs text-gray-500">
+                                  {new Date(hw.created_at).toLocaleDateString('fr-FR')}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
