@@ -67,13 +67,17 @@ const AdminDashboard = () => {
         apiClient.get('/auth/me'),
         apiClient.get('/admin/pending-registrations'),
         apiClient.get('/admin/all-users'),
-        apiClient.get('/tests/results/all')
+        apiClient.get('/tests/results/all'),
+        apiClient.get('/admin/session-notifications'),
+        apiClient.get('/messages/my-conversations')
       ]);
       
       setUser(userRes.data);
       setPendingRegistrations(pendingRes.data);
       setAllUsers(usersRes.data);
       setTestResults(resultsRes.data);
+      setSessions(sessionsRes.data);
+      setConversations(conversationsRes.data);
       setLoading(false);
     } catch (error) {
       toast.error('Erreur de chargement');
