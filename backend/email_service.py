@@ -574,6 +574,9 @@ email_service = EmailService()
 async def send_welcome_email(to_email: str, first_name: str, last_name: str, temp_password: str) -> bool:
     return await email_service.send_welcome_email(to_email, first_name, last_name, temp_password)
 
+async def send_level_based_welcome_email(to_email: str, first_name: str, level: str, temp_password: str) -> bool:
+    return await email_service.send_level_based_welcome_email(to_email, first_name, level, temp_password)
+
 async def send_admin_notification(user_email: str, first_name: str, last_name: str, level: str, phone: str = "") -> bool:
     return await email_service.send_admin_notification(user_email, first_name, last_name, level, phone)
 
