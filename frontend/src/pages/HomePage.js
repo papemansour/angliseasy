@@ -628,7 +628,7 @@ const HomePage = () => {
                     </div>
                   )}
                   <div className="text-4xl md:text-5xl font-bold text-teal-600">
-                    {formatPrice(pricingData.advanced_eur - pricingData.advanced_discount)}
+                    {formatPriceWithSmallFCFA(pricingData.advanced_eur - pricingData.advanced_discount)}
                   </div>
                   {pricingData.advanced_discount > 0 && (
                     <div className="text-green-600 font-semibold mt-1 md:mt-2 text-sm md:text-base">
