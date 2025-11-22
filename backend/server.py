@@ -288,11 +288,12 @@ async def register(user_data: UserCreate):
     await db.users.insert_one(doc)
     
     # Send notification email to admin
-    await send_admin_notification_email(
+    await email_service.send_admin_notification(
         user_data.email,
         user_data.first_name,
         user_data.last_name,
-        user_data.level
+        user_data.level,
+        user_data.phone
     )
     
     return {"message": "Registration submitted. Please wait for admin approval."}
