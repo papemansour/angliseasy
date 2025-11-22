@@ -57,13 +57,16 @@ const StudentOfMonthBadge = ({ size = 'normal', showInProfile = false }) => {
             {/* Texte */}
             <div className="space-y-2">
               <h3 className="text-3xl font-black text-white drop-shadow-lg uppercase tracking-wide">
-                Étudiant du Mois
+                {badge.badge_title || (badge.user_role === 'teacher' ? 'Meilleur Prof du Mois' : 'Étudiant du Mois')}
               </h3>
               <div className="bg-white/90 backdrop-blur rounded-xl p-4 shadow-xl">
                 <p className="text-2xl font-bold text-yellow-900">{badge.user_name}</p>
                 <p className="text-sm text-yellow-700 mt-1">
                   🏆 Champion de la communauté KALAMA
                 </p>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <span className="text-pink-600 font-bold">❤️ {badge.likes || 0} likes</span>
+                </div>
               </div>
               <p className="text-white text-sm font-semibold mt-3">
                 ⏰ Valable jusqu'au {new Date(badge.expires_at).toLocaleDateString('fr-FR')}
