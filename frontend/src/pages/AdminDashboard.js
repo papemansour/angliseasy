@@ -317,7 +317,7 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="pending" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-12">
+          <TabsList className="grid w-full grid-cols-12 gap-2 p-2">
             <TabsTrigger value="pending" data-testid="admin-tab-pending">En attente</TabsTrigger>
             <TabsTrigger value="students" data-testid="admin-tab-students">Étudiants</TabsTrigger>
             <TabsTrigger value="teachers" data-testid="admin-tab-teachers">Professeurs</TabsTrigger>
