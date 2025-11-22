@@ -46,12 +46,22 @@ const AdminDashboard = () => {
   const [teacherSessions, setTeacherSessions] = useState([]);
   const [teacherAvailability, setTeacherAvailability] = useState([]);
   const [prices, setPrices] = useState({
+    kkid_eur: 30,
+    kkid_fcfa: 10000,
+    kkid_discount: 0,
+    kkid_discount_fcfa: 0,
     beginner_eur: 76,
-    intermediate_eur: 90,
-    advanced_eur: 102,
+    beginner_discount: 0,
     beginner_fcfa: 50000,
+    beginner_discount_fcfa: 0,
+    intermediate_eur: 90,
+    intermediate_discount: 0,
     intermediate_fcfa: 59000,
-    advanced_fcfa: 67000
+    intermediate_discount_fcfa: 0,
+    advanced_eur: 102,
+    advanced_discount: 0,
+    advanced_fcfa: 67000,
+    advanced_discount_fcfa: 0
   });
   const [messages, setMessages] = useState([]);
   const [conversations, setConversations] = useState([]);
