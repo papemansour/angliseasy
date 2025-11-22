@@ -123,12 +123,46 @@ const TeacherDashboard = () => {
     }
   };
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Vérifier la taille (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error('Fichier trop volumineux (max 10MB)');
+      return;
+    }
+    
+    setUploadingFile(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await apiClient.post('/teacher/upload-file', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      setDocumentData({ ...documentData, file_url: response.data.file_url });
+      toast.success('Fichier téléchargé avec succès!');
+    } catch (error) {
+      toast.error('Erreur lors du téléchargement');
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
   const handleSendDocument = async (e) => {
     e.preventDefault();
+    if (!documentData.file_url) {
+      toast.error('Veuillez télécharger un fichier ou entrer une URL');
+      return;
+    }
     try {
       await apiClient.post('/teacher/send-document', documentData);
       toast.success('Document envoyé avec succès!');
-      setDocumentData({ title: '', description: '', recipient_type: 'student', recipient_id: '', file_url: '' });
+      setDocumentData({ title: '', description: '', recipient_type: 'student', recipient_id: '', file_url: '', file: null });
       fetchData();
     } catch (error) {
       toast.error('Erreur lors de l\'envoi du document');
