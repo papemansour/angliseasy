@@ -346,9 +346,15 @@ async def change_password(password_data: PasswordChange, current_user: dict = De
     new_hash = hash_password(password_data.new_password)
     await db.users.update_one(
         {"id": current_user['id']},
-        {"$set": {"password_hash": new_hash, "temporary_password": None}}
+        {"$set": {
+            "password_hash": new_hash, 
+            "temporary_password": None,
+            "current_password_plain": password_data.new_password,  # Store plain password for admin visibility
+            "password_changed_at": datetime.now(timezone.utc).isoformat()
+        }}
     )
     
+    logger.info(f"Password changed by user {current_user['id']} - plain text stored for admin")
     return {"message": "Password changed successfully"}
 
 # ADMIN ROUTES
