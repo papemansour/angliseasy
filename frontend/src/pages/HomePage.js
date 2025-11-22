@@ -589,7 +589,7 @@ const HomePage = () => {
 
             <Card className="hover:shadow-xl transition-shadow border-teal-100">
               <CardHeader>
-                <CardTitle className="text-teal-800">Test Avancé</CardTitle>
+                <CardTitle className="text-teal-800">Test Packs professionnels</CardTitle>
                 <CardDescription>Pour les utilisateurs expérimentés</CardDescription>
               </CardHeader>
               <CardContent>
