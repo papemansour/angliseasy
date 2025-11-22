@@ -613,10 +613,33 @@ async def approve_registration(user_id: str, current_user: dict = Depends(get_cu
         temp_password
     )
     
-    logger.info(f"User {user_id} approved and level-based welcome email sent (Level: {user.get('level', 'beginner')})")
+    # Create welcome letter in database
+    letter_content = generate_welcome_letter_content(
+        user['first_name'],
+        user.get('level', 'beginner'),
+        'student',
+        user['email'],
+        temp_password
+    )
+    
+    welcome_letter = WelcomeLetter(
+        user_id=user_id,
+        user_email=user['email'],
+        user_name=f"{user['first_name']} {user['last_name']}",
+        user_level=user.get('level', 'beginner'),
+        user_role='student',
+        temp_password=temp_password,
+        content=letter_content
+    )
+    
+    letter_doc = welcome_letter.model_dump()
+    letter_doc['created_at'] = letter_doc['created_at'].isoformat()
+    await db.welcome_letters.insert_one(letter_doc)
+    
+    logger.info(f"User {user_id} approved, email and welcome letter created (Level: {user.get('level', 'beginner')})")
     
     return {
-        "message": "User approved and welcome email sent",
+        "message": "User approved, welcome email and letter created",
         "email": user['email'],
         "temporary_password": temp_password,
         "level": user.get('level', 'beginner')
