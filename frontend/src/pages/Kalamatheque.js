@@ -1,234 +1,299 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '../components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Input } from '../components/ui/input';
+import { Button } from '../components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import apiClient from '../utils/api';
-import { BookOpen, Download, FileText, Lock, ArrowLeft, Search } from 'lucide-react';
 import { toast } from 'sonner';
+import apiClient from '../utils/api';
+import { Search, Volume2, BookOpen, LogOut, Brain } from 'lucide-react';
 
 const Kalamatheque = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedLevel, setSelectedLevel] = useState('all');
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [dictionaryWord, setDictionaryWord] = useState('');
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false);
 
   useEffect(() => {
-    checkAccess();
+    // Check access
+    const access = localStorage.getItem('kalamatheque_access');
+    if (access !== 'granted') {
+      navigate('/kalamatheque-access');
+      return;
+    }
+    
+    fetchUser();
+    fetchBooks();
   }, []);
 
-  const checkAccess = async () => {
+  const fetchUser = async () => {
     try {
-      // Check for library password
-      const libraryPassword = localStorage.getItem('library_password');
-      if (libraryPassword !== 'digikode') {
-        const password = prompt('Veuillez entrer le mot de passe de la KALAMATHÈQUE :');
-        if (password !== 'digikode') {
-          toast.error('Mot de passe incorrect');
-          navigate('/');
-          return;
-        }
-        localStorage.setItem('library_password', 'digikode');
-      }
-
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast.error('Vous devez être connecté pour accéder à la KALAMATHÈQUE');
-        navigate('/login');
-        return;
-      }
-
-      const response = await apiClient.get('/auth/me');
-      const userData = response.data;
-      
-      if (!userData.is_active) {
-        toast.error('Votre compte doit être validé par un administrateur pour accéder à la KALAMATHÈQUE');
-        navigate('/');
-        return;
-      }
-
-      setUser(userData);
-      fetchBooks();
+      const res = await apiClient.get('/auth/me');
+      setUser(res.data);
     } catch (error) {
-      toast.error('Erreur de vérification d\'accès');
-      navigate('/login');
+      console.error('Error fetching user:', error);
     }
   };
 
-  const fetchBooks = async () => {
+  const fetchBooks = async (level = null) => {
     try {
-      const response = await apiClient.get('/library/books');
-      setBooks(response.data);
-      setFilteredBooks(response.data);
-      setLoading(false);
+      const url = level ? `/kalamatheque/books?level=${level}` : '/kalamatheque/books';
+      const res = await apiClient.get(url);
+      setBooks(res.data);
+      setFilteredBooks(res.data);
     } catch (error) {
-      console.error('Error fetching books:', error);
-      setLoading(false);
+      toast.error('Erreur de chargement des livres');
     }
   };
 
-  useEffect(() => {
-    filterBooks();
-  }, [searchQuery, selectedLevel, books]);
-
-  const filterBooks = () => {
-    let filtered = books;
-
-    if (selectedLevel !== 'all') {
-      filtered = filtered.filter(book => book.level === selectedLevel);
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    if (!query) {
+      setFilteredBooks(books);
+      return;
     }
-
-    if (searchQuery) {
-      filtered = filtered.filter(book =>
-        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
+    
+    const filtered = books.filter(book => 
+      book.title.toLowerCase().includes(query.toLowerCase()) ||
+      book.author.toLowerCase().includes(query.toLowerCase())
+    );
     setFilteredBooks(filtered);
   };
 
-  const handleDownload = (book) => {
-    toast.success(`Téléchargement de "${book.title}" en cours...`);
-    // TODO: Implement actual download
+  const handleLevelSelect = (level) => {
+    setSelectedLevel(level);
+    fetchBooks(level);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
-      </div>
-    );
-  }
+  const handleListenWord = async () => {
+    if (!dictionaryWord.trim()) {
+      toast.error('Veuillez entrer un mot');
+      return;
+    }
+
+    try {
+      const res = await apiClient.post('/kalamatheque/text-to-speech', {
+        text: dictionaryWord
+      });
+      
+      // Play audio from base64
+      const audio = new Audio(`data:audio/mp3;base64,${res.data.audio_base64}`);
+      audio.play();
+      toast.success('Prononciation en cours...');
+    } catch (error) {
+      toast.error('Erreur de prononciation');
+    }
+  };
+
+  const handleDictionarySearch = () => {
+    if (!dictionaryWord.trim()) {
+      toast.error('Veuillez entrer un mot');
+      return;
+    }
+    
+    const url = `https://www.wordreference.com/enfr/${encodeURIComponent(dictionaryWord)}`;
+    window.open(url, '_blank');
+  };
+
+  const handleExit = () => {
+    localStorage.removeItem('kalamatheque_access');
+    navigate(-1);
+  };
+
+  const handleOpenBook = (book) => {
+    navigate(`/kalamatheque/reader/${book.id}`);
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-teal-50 to-white">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-teal-900">KALAMATHÈQUE</h1>
-          <Link to={user?.role === 'student' ? '/student' : user?.role === 'teacher' ? '/teacher' : '/admin'}>
-            <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour au dashboard
-            </Button>
-          </Link>
-        </div>
-      </nav>
-
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-50 p-6">
+      <div className="container mx-auto max-w-7xl">
         {/* Header */}
-        <div className="text-center mb-12">
-          <BookOpen className="w-16 h-16 text-teal-600 mx-auto mb-4" />
-          <h2 className="text-4xl font-bold mb-4">Bibliothèque Numérique</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Accédez à notre collection complète de ressources pédagogiques adaptées à votre niveau
-          </p>
-        </div>
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-800">KALAMATHÈQUE</h1>
+              <p className="text-gray-600">Explorez notre collection de ressources pédagogiques</p>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setAiAssistantOpen(!aiAssistantOpen)}
+                className="bg-purple-600 hover:bg-purple-700"
+              >
+                <Brain className="mr-2 h-4 w-4" />
+                IA Assistant
+              </Button>
+              <Button
+                onClick={handleExit}
+                variant="outline"
+                className="border-red-500 text-red-500 hover:bg-red-50"
+              >
+                Quitter
+                <LogOut className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
 
-        {/* Search and Filters */}
-        <div className="mb-8 flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
             <Input
-              placeholder="Rechercher un livre ou un auteur..."
+              type="text"
+              placeholder="Rechercher un document..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-teal-200 focus:border-teal-500"
+              onChange={(e) => handleSearch(e.target.value)}
+              className="pl-10 text-lg"
             />
           </div>
         </div>
 
-        {/* Tabs by Level */}
-        <Tabs value={selectedLevel} onValueChange={setSelectedLevel} className="mb-8">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="all" data-testid="library-tab-all">Tous</TabsTrigger>
-            <TabsTrigger value="beginner" data-testid="library-tab-beginner">Débutant</TabsTrigger>
-            <TabsTrigger value="intermediate" data-testid="library-tab-intermediate">Intermédiaire</TabsTrigger>
-            <TabsTrigger value="advanced" data-testid="library-tab-advanced">Avancé</TabsTrigger>
-          </TabsList>
+        {/* Dictionary Section */}
+        <Card className="mb-6 border-blue-200">
+          <CardHeader className="bg-blue-50">
+            <CardTitle className="flex items-center gap-2">
+              📖 Dictionnaire en ligne
+              <span className="text-sm font-normal text-gray-600">Propulsé par WordReference</span>
+            </CardTitle>
+            <CardDescription>Recherchez la traduction et la définition des mots</CardDescription>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="flex gap-2">
+              <Input
+                type="text"
+                placeholder="Entrez un mot en anglais..."
+                value={dictionaryWord}
+                onChange={(e) => setDictionaryWord(e.target.value)}
+                className="flex-1"
+              />
+              <Button onClick={handleListenWord} variant="outline">
+                <Volume2 className="mr-2 h-4 w-4" />
+                Écouter
+              </Button>
+              <Button onClick={handleDictionarySearch} className="bg-blue-600 hover:bg-blue-700">
+                <Search className="mr-2 h-4 w-4" />
+                Rechercher
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          <TabsContent value={selectedLevel} className="mt-6">
-            {filteredBooks.length === 0 ? (
-              <Card>
-                <CardContent className="text-center py-12">
-                  <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500">Aucun livre disponible pour ce niveau</p>
-                </CardContent>
+        {/* AI Assistant Modal */}
+        {aiAssistantOpen && (
+          <Card className="mb-6 border-purple-200">
+            <CardHeader className="bg-purple-50">
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5" />
+                Assistant IA
+              </CardTitle>
+              <CardDescription>
+                Sélectionnez du texte dans un document pour l'analyser avec l'IA
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-3 gap-4">
+                <Button className="bg-purple-600 hover:bg-purple-700" disabled>
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  Résumer
+                </Button>
+                <Button className="bg-purple-600 hover:bg-purple-700" disabled>
+                  <Brain className="mr-2 h-4 w-4" />
+                  Expliquer
+                </Button>
+                <Button className="bg-purple-600 hover:bg-purple-700" disabled>
+                  📝 Exemples
+                </Button>
+              </div>
+              <p className="text-sm text-gray-500 mt-4 text-center">
+                Ouvrez un livre pour utiliser l'Assistant IA
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Level Selection */}
+        {!selectedLevel ? (
+          <div>
+            <div className="text-center mb-6">
+              <BookOpen className="mx-auto h-12 w-12 text-teal-600 mb-2" />
+              <p className="text-gray-600">Sélectionnez un niveau pour voir les documents disponibles</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition border-green-200"
+                onClick={() => handleLevelSelect('beginner')}
+              >
+                <CardHeader className="bg-green-50">
+                  <CardTitle className="text-green-700">Beginner</CardTitle>
+                  <CardDescription>Niveau débutant</CardDescription>
+                </CardHeader>
               </Card>
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition border-yellow-200"
+                onClick={() => handleLevelSelect('intermediate')}
+              >
+                <CardHeader className="bg-yellow-50">
+                  <CardTitle className="text-yellow-700">Intermediate</CardTitle>
+                  <CardDescription>Niveau intermédiaire</CardDescription>
+                </CardHeader>
+              </Card>
+              <Card 
+                className="cursor-pointer hover:shadow-lg transition border-red-200"
+                onClick={() => handleLevelSelect('advanced')}
+              >
+                <CardHeader className="bg-red-50">
+                  <CardTitle className="text-red-700">Advanced</CardTitle>
+                  <CardDescription>Niveau avancé</CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800 capitalize">
+                {selectedLevel} - {filteredBooks.length} livre(s)
+              </h2>
+              <Button onClick={() => setSelectedLevel(null)} variant="outline">
+                ← Retour aux niveaux
+              </Button>
+            </div>
+
+            {filteredBooks.length === 0 ? (
+              <p className="text-center text-gray-500 py-12">Aucun livre disponible pour ce niveau</p>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {filteredBooks.map((book) => (
-                  <Card key={book.id} className="hover:shadow-xl transition-all border-teal-100">
+                  <Card 
+                    key={book.id} 
+                    className="cursor-pointer hover:shadow-xl transition"
+                    onClick={() => handleOpenBook(book)}
+                  >
                     <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="text-lg mb-2">{book.title}</CardTitle>
-                          <p className="text-sm text-gray-600">Par {book.author}</p>
-                        </div>
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                          book.level === 'beginner' ? 'bg-blue-100 text-blue-700' :
-                          book.level === 'intermediate' ? 'bg-purple-100 text-purple-700' :
-                          'bg-orange-100 text-orange-700'
-                        }`}>
-                          {book.level === 'beginner' ? 'Débutant' : 
-                           book.level === 'intermediate' ? 'Intermédiaire' : 'Avancé'}
-                        </span>
-                      </div>
+                      {book.cover_image && (
+                        <img 
+                          src={book.cover_image} 
+                          alt={book.title}
+                          className="w-full h-48 object-cover rounded-md mb-3"
+                        />
+                      )}
+                      <CardTitle className="text-lg">{book.title}</CardTitle>
+                      <CardDescription>
+                        {book.author && <span className="block">Par {book.author}</span>}
+                        <span className="text-xs text-gray-400">{book.file_type.toUpperCase()}</span>
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-gray-600 mb-4">{book.description}</p>
-                      
-                      {book.audio_url && (
-                        <div className="mb-4">
-                          <audio controls className="w-full">
-                            <source src={book.audio_url} type="audio/mpeg" />
-                            Votre navigateur ne supporte pas l'élément audio.
-                          </audio>
-                        </div>
-                      )}
-                      
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-gray-500">
-                          {book.type === 'audio' ? book.duration : `${book.pages} pages`}
-                        </span>
-                        <Button
-                          onClick={() => handleDownload(book)}
-                          size="sm"
-                          className="bg-teal-600 hover:bg-teal-700"
-                          data-testid={`download-book-${book.id}`}
-                        >
-                          <Download className="w-4 h-4 mr-2" />
-                          Télécharger
-                        </Button>
-                      </div>
+                      <p className="text-sm text-gray-600 line-clamp-3">{book.description}</p>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             )}
-          </TabsContent>
-        </Tabs>
-
-        {/* Access Info */}
-        <Card className="mt-12 border-teal-200 bg-teal-50">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <Lock className="w-6 h-6 text-teal-600 flex-shrink-0 mt-1" />
-              <div>
-                <h3 className="font-bold text-teal-900 mb-2">Accès Réservé aux Membres</h3>
-                <p className="text-teal-800">
-                  La KALAMATHÈQUE est accessible uniquement aux étudiants dont le compte a été validé par un administrateur.
-                  Tous les documents sont protégés et réservés à un usage personnel dans le cadre de votre apprentissage.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+        )}
       </div>
     </div>
   );
