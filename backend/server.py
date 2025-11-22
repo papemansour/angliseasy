@@ -298,6 +298,65 @@ async def register(user_data: UserCreate):
     
     return {"message": "Registration submitted. Please wait for admin approval."}
 
+@api_router.post("/auth/register-group")
+async def register_group(group_data: dict):
+    """Register a group of students (max 3)"""
+    members = group_data.get('members', [])
+    
+    if len(members) == 0 or len(members) > 3:
+        raise HTTPException(status_code=400, detail="Group must have between 1 and 3 members")
+    
+    # Generate group ID
+    group_id = str(uuid.uuid4())
+    
+    # Register each member
+    registered_members = []
+    for member in members:
+        # Check if email already exists
+        existing = await db.users.find_one({"email": member['email']}, {"_id": 0})
+        if existing:
+            raise HTTPException(status_code=400, detail=f"Email {member['email']} already registered")
+        
+        # Create user
+        user = User(
+            email=member['email'],
+            first_name=member['first_name'],
+            last_name=member['last_name'],
+            phone=member['phone'],
+            level=member['level'],
+            role="student",
+            is_active=False,
+            is_restricted=False,
+            password_hash="",
+            preferred_slots=group_data.get('preferred_slots', ''),
+            referral_source=group_data.get('referral_source', '')
+        )
+        
+        doc = user.model_dump()
+        doc['created_at'] = doc['created_at'].isoformat()
+        doc['group_id'] = group_id  # Link members together
+        doc['course_type'] = 'group'
+        
+        await db.users.insert_one(doc)
+        registered_members.append(f"{member['first_name']} {member['last_name']}")
+        
+        # Send notification to admin for each member
+        await email_service.send_admin_notification(
+            member['email'],
+            member['first_name'],
+            member['last_name'],
+            member['level'],
+            member['phone']
+        )
+    
+    logger.info(f"Group registration: {len(members)} members, group_id: {group_id}")
+    
+    return {
+        "message": f"Group registration submitted for {len(members)} members",
+        "group_id": group_id,
+        "members": registered_members
+    }
+
 @api_router.post("/auth/login")
 async def login(credentials: UserLogin):
     user = await db.users.find_one({"email": credentials.email}, {"_id": 0})
