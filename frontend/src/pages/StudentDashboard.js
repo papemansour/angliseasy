@@ -24,6 +24,8 @@ const StudentDashboard = () => {
     file_url: ''
   });
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
     fetchData();
