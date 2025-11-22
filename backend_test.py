@@ -737,8 +737,8 @@ startxref
             return False
     
     async def run_all_tests(self):
-        """Run all security tests"""
-        logger.info("🚀 Starting My KALAMA ENGLISH Security Tests")
+        """Run all Kalamathèque backend tests"""
+        logger.info("🚀 Starting Kalamathèque Backend Tests")
         logger.info("=" * 60)
         
         # Login as admin
@@ -746,44 +746,115 @@ startxref
             logger.error("❌ Cannot proceed without admin login")
             return
         
-        # Run all tests
-        tests = [
-            ("Password Security Check", self.test_password_security_in_database),
-            ("Password Change Security", self.test_password_change_security),
-            ("Admin Password Reset", self.test_admin_password_reset),
-            ("Contact Form", self.test_contact_form),
-        ]
+        # Run tests in order (some depend on previous results)
+        test_file_url = None
         
-        passed_tests = 0
-        total_tests = len(tests)
+        # Test 1: File Upload
+        logger.info(f"\n📋 Running: File Upload Test")
+        logger.info("-" * 40)
+        try:
+            test_file_url = await self.test_file_upload()
+            if test_file_url:
+                logger.info(f"✅ File Upload: PASSED")
+            else:
+                logger.error(f"❌ File Upload: FAILED")
+        except Exception as e:
+            logger.error(f"❌ File Upload: ERROR - {str(e)}")
         
-        for test_name, test_func in tests:
-            logger.info(f"\n📋 Running: {test_name}")
+        # Test 2: Access Verification
+        logger.info(f"\n📋 Running: Access Code Verification")
+        logger.info("-" * 40)
+        try:
+            result = await self.test_access_verification()
+            if result:
+                logger.info(f"✅ Access Verification: PASSED")
+            else:
+                logger.error(f"❌ Access Verification: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Access Verification: ERROR - {str(e)}")
+        
+        # Test 3: Book Creation (requires file URL)
+        if test_file_url:
+            logger.info(f"\n📋 Running: Book Creation")
             logger.info("-" * 40)
-            
             try:
-                result = await test_func()
+                result = await self.test_book_creation(test_file_url)
                 if result:
-                    passed_tests += 1
-                    logger.info(f"✅ {test_name}: PASSED")
+                    logger.info(f"✅ Book Creation: PASSED")
                 else:
-                    logger.error(f"❌ {test_name}: FAILED")
+                    logger.error(f"❌ Book Creation: FAILED")
             except Exception as e:
-                logger.error(f"❌ {test_name}: ERROR - {str(e)}")
-        
-        # Overall security assessment
-        if passed_tests == total_tests:
-            self.test_results["overall_security"]["passed"] = True
-            self.test_results["overall_security"]["details"].append("All security tests passed")
+                logger.error(f"❌ Book Creation: ERROR - {str(e)}")
         else:
-            self.test_results["overall_security"]["details"].append(f"Only {passed_tests}/{total_tests} tests passed")
+            logger.warning("⚠️ Skipping Book Creation - no file URL available")
+        
+        # Test 4: Book Retrieval
+        logger.info(f"\n📋 Running: Book Retrieval")
+        logger.info("-" * 40)
+        try:
+            result = await self.test_book_retrieval()
+            if result:
+                logger.info(f"✅ Book Retrieval: PASSED")
+            else:
+                logger.error(f"❌ Book Retrieval: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Book Retrieval: ERROR - {str(e)}")
+        
+        # Test 5: AI Assistant
+        logger.info(f"\n📋 Running: AI Assistant")
+        logger.info("-" * 40)
+        try:
+            result = await self.test_ai_assistant()
+            if result:
+                logger.info(f"✅ AI Assistant: PASSED")
+            else:
+                logger.error(f"❌ AI Assistant: FAILED")
+        except Exception as e:
+            logger.error(f"❌ AI Assistant: ERROR - {str(e)}")
+        
+        # Test 6: Text-to-Speech
+        logger.info(f"\n📋 Running: Text-to-Speech")
+        logger.info("-" * 40)
+        try:
+            result = await self.test_text_to_speech()
+            if result:
+                logger.info(f"✅ Text-to-Speech: PASSED")
+            else:
+                logger.error(f"❌ Text-to-Speech: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Text-to-Speech: ERROR - {str(e)}")
+        
+        # Test 7: Book Deletion (cleanup)
+        logger.info(f"\n📋 Running: Book Deletion")
+        logger.info("-" * 40)
+        try:
+            result = await self.test_book_deletion()
+            if result:
+                logger.info(f"✅ Book Deletion: PASSED")
+            else:
+                logger.error(f"❌ Book Deletion: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Book Deletion: ERROR - {str(e)}")
+        
+        # Calculate overall results
+        passed_tests = sum(1 for results in self.test_results.values() if results["passed"])
+        total_tests = len(self.test_results) - 1  # Exclude overall_kalamatheque
+        
+        # Overall assessment
+        if passed_tests == total_tests:
+            self.test_results["overall_kalamatheque"]["passed"] = True
+            self.test_results["overall_kalamatheque"]["details"].append("All Kalamathèque tests passed")
+        else:
+            self.test_results["overall_kalamatheque"]["details"].append(f"Only {passed_tests}/{total_tests} tests passed")
         
         # Print summary
         logger.info("\n" + "=" * 60)
-        logger.info("🏁 SECURITY TEST SUMMARY")
+        logger.info("🏁 KALAMATHÈQUE TEST SUMMARY")
         logger.info("=" * 60)
         
         for test_category, results in self.test_results.items():
+            if test_category == "overall_kalamatheque":
+                continue
             status = "✅ PASSED" if results["passed"] else "❌ FAILED"
             logger.info(f"{test_category.upper().replace('_', ' ')}: {status}")
             for detail in results["details"]:
@@ -792,9 +863,9 @@ startxref
         logger.info(f"\nOverall Result: {passed_tests}/{total_tests} tests passed")
         
         if passed_tests == total_tests:
-            logger.info("🎉 ALL SECURITY TESTS PASSED!")
+            logger.info("🎉 ALL KALAMATHÈQUE TESTS PASSED!")
         else:
-            logger.warning("⚠️ SOME SECURITY TESTS FAILED - REVIEW REQUIRED")
+            logger.warning("⚠️ SOME KALAMATHÈQUE TESTS FAILED - REVIEW REQUIRED")
 
 async def main():
     """Main test runner"""
