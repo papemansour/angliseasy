@@ -312,10 +312,10 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Kalamathèque AI Assistant Integration"
+    - "Kalamathèque AI Assistant Interface"
     - "Kalamathèque Text-to-Speech Integration"
   stuck_tasks:
-    - "Kalamathèque AI Assistant Integration"
+    - "Kalamathèque AI Assistant Interface"
     - "Kalamathèque Text-to-Speech Integration"
   test_all: false
   test_priority: "stuck_first"
