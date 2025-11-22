@@ -44,15 +44,9 @@ const WelcomeLetter = () => {
     );
   }
 
-  if (!letter) {
-    return (
-      <Card>
-        <CardContent className="py-12 text-center">
-          <Mail className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-500">Aucune lettre de bienvenue disponible</p>
-        </CardContent>
-      </Card>
-    );
+  // If no letter or already read, don't display anything
+  if (!letter || letter.is_read) {
+    return null;
   }
 
   return (
