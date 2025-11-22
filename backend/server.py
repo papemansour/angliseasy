@@ -2667,21 +2667,38 @@ async def set_student_of_month(
     
     # Create new badge
     expires_at = datetime.now(timezone.utc) + timedelta(days=duration_days)
+    badge_title = "Meilleur Prof du Mois" if user['role'] == 'teacher' else "Étudiant du Mois"
     badge = {
         "id": str(uuid4()),
         "user_id": user_id,
         "user_name": f"{user['first_name']} {user['last_name']}",
         "user_role": user['role'],
+        "badge_title": badge_title,
         "active": True,
+        "likes": 0,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "expires_at": expires_at.isoformat(),
         "created_by": current_user['id']
     }
     
     await db.student_of_month.insert_one(badge)
-    logger.info(f"Student of the Month set: {user['first_name']} {user['last_name']} for {duration_days} days")
+    logger.info(f"{badge_title} set: {user['first_name']} {user['last_name']} for {duration_days} days")
     
-    return {"message": "Badge Étudiant du Mois attribué", "expires_at": expires_at.isoformat()}
+    return {"message": f"Badge {badge_title} attribué", "expires_at": expires_at.isoformat()}
+
+@api_router.post("/club/student-of-month/like")
+async def like_student_of_month(current_user: dict = Depends(get_current_user)):
+    """Like the Student/Teacher of the Month"""
+    badge = await db.student_of_month.find_one({"active": True})
+    if not badge:
+        raise HTTPException(status_code=404, detail="Aucun badge actif")
+    
+    await db.student_of_month.update_one(
+        {"id": badge['id']},
+        {"$inc": {"likes": 1}}
+    )
+    
+    return {"message": "Like ajouté!", "likes": badge.get('likes', 0) + 1}
 
 @api_router.get("/club/events")
 async def get_club_events():
