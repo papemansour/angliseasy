@@ -464,7 +464,7 @@ async def send_admin_notification_email(user_email: str, first_name: str, last_n
     
     Veuillez vous connecter au dashboard admin pour approuver cette inscription.
     
-    Lien dashboard: https://englishlearn-4.preview.emergentagent.com/admin
+    Lien dashboard: {FRONTEND_URL}/admin
     """
     
     # TODO: Implement actual email sending to mykalamaenglish@gmail.com
