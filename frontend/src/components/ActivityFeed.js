@@ -124,12 +124,7 @@ const ActivityFeed = () => {
         onClick={() => setIsOpen(!isOpen)}
         className="relative hover:bg-teal-50 transition-all group"
       >
-        <Zap className={`w-6 h-6 text-teal-600 ${unreadCount > 0 ? 'animate-pulse' : ''}`} />
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-bounce">
-            {unreadCount > 9 ? '9+' : unreadCount}
-          </span>
-        )}
+        <Bell className={`w-6 h-6 text-teal-600 ${unreadCount > 0 ? 'animate-wiggle' : 'group-hover:scale-110'} transition-all`} />
       </Button>
 
       {/* Side Panel */}
