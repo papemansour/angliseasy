@@ -193,6 +193,11 @@ const KalamaClub = ({ userRole }) => {
 
   return (
     <div className="space-y-6">
+      {/* Student of the Month Badge - Flottant et visible partout */}
+      <div className="flex justify-center">
+        <StudentOfMonthBadge />
+      </div>
+
       {/* Header */}
       <div className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-2xl p-8 text-white">
         <div className="flex items-center justify-between">
