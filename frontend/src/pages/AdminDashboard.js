@@ -311,7 +311,7 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="pending" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-10">
+          <TabsList className="grid w-full grid-cols-11">
             <TabsTrigger value="pending" data-testid="admin-tab-pending">En attente</TabsTrigger>
             <TabsTrigger value="students" data-testid="admin-tab-students">Étudiants</TabsTrigger>
             <TabsTrigger value="teachers" data-testid="admin-tab-teachers">Professeurs</TabsTrigger>
@@ -320,6 +320,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="results" data-testid="admin-tab-results">Résultats</TabsTrigger>
             <TabsTrigger value="pricing" data-testid="admin-tab-pricing">Prix</TabsTrigger>
             <TabsTrigger value="availability" data-testid="admin-tab-availability">Horaire profs</TabsTrigger>
+            <TabsTrigger value="news" data-testid="admin-tab-news">📰 News</TabsTrigger>
             <TabsTrigger value="kalamatheque" data-testid="admin-tab-kalamatheque">Kalamathèque</TabsTrigger>
             <TabsTrigger value="conversations" data-testid="admin-tab-conversations">Conversations</TabsTrigger>
           </TabsList>
