@@ -804,37 +804,69 @@ const AdminDashboard = () => {
                         <span className="text-2xl">🚀</span>
                         <h3 className="text-lg font-bold text-blue-800">Pack Intermédiaire</h3>
                       </div>
-                      <div>
-                        <Label htmlFor="intermediate_eur" className="text-blue-700">Prix de base (€)</Label>
-                        <Input
-                          id="intermediate_eur"
-                          type="number"
-                          value={prices.intermediate_eur}
-                          onChange={(e) => setPrices({ ...prices, intermediate_eur: parseInt(e.target.value) })}
-                          className="mt-1 border-blue-300 focus:border-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="intermediate_discount" className="text-blue-700">Remise (€)</Label>
-                        <Input
-                          id="intermediate_discount"
-                          type="number"
-                          value={prices.intermediate_discount || 0}
-                          onChange={(e) => setPrices({ ...prices, intermediate_discount: parseInt(e.target.value) || 0 })}
-                          className="mt-1 border-blue-300 focus:border-blue-500"
-                          placeholder="0"
-                        />
-                      </div>
-                      <div className="pt-3 border-t border-blue-300">
-                        <p className="text-sm font-semibold text-blue-700">Prix final :</p>
-                        <p className="text-3xl font-bold text-blue-800">
-                          {(prices.intermediate_eur - (prices.intermediate_discount || 0))}€
-                        </p>
-                        {prices.intermediate_discount > 0 && (
-                          <p className="text-xs text-blue-600 mt-1">
-                            <span className="line-through">{prices.intermediate_eur}€</span> → Économie de {prices.intermediate_discount}€
+                      
+                      {/* EUR */}
+                      <div className="space-y-3 pb-3 border-b border-blue-200">
+                        <p className="text-sm font-semibold text-blue-700">💶 Prix en EURO</p>
+                        <div>
+                          <Label htmlFor="intermediate_eur" className="text-blue-700 text-xs">Prix de base (€)</Label>
+                          <Input
+                            id="intermediate_eur"
+                            type="number"
+                            value={prices.intermediate_eur}
+                            onChange={(e) => setPrices({ ...prices, intermediate_eur: parseInt(e.target.value) })}
+                            className="mt-1 border-blue-300 focus:border-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="intermediate_discount" className="text-blue-700 text-xs">Remise (€)</Label>
+                          <Input
+                            id="intermediate_discount"
+                            type="number"
+                            value={prices.intermediate_discount || 0}
+                            onChange={(e) => setPrices({ ...prices, intermediate_discount: parseInt(e.target.value) || 0 })}
+                            className="mt-1 border-blue-300 focus:border-blue-500"
+                            placeholder="0"
+                          />
+                        </div>
+                        <div className="bg-blue-100 p-2 rounded">
+                          <p className="text-xs font-semibold text-blue-700">Prix final EUR:</p>
+                          <p className="text-2xl font-bold text-blue-800">
+                            {(prices.intermediate_eur - (prices.intermediate_discount || 0))}€
                           </p>
-                        )}
+                        </div>
+                      </div>
+
+                      {/* FCFA */}
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-blue-700">🇸🇳 Prix en FCFA</p>
+                        <div>
+                          <Label htmlFor="intermediate_fcfa" className="text-blue-700 text-xs">Prix de base (FCFA)</Label>
+                          <Input
+                            id="intermediate_fcfa"
+                            type="number"
+                            value={prices.intermediate_fcfa || 0}
+                            onChange={(e) => setPrices({ ...prices, intermediate_fcfa: parseInt(e.target.value) || 0 })}
+                            className="mt-1 border-blue-300 focus:border-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="intermediate_discount_fcfa" className="text-blue-700 text-xs">Remise (FCFA)</Label>
+                          <Input
+                            id="intermediate_discount_fcfa"
+                            type="number"
+                            value={prices.intermediate_discount_fcfa || 0}
+                            onChange={(e) => setPrices({ ...prices, intermediate_discount_fcfa: parseInt(e.target.value) || 0 })}
+                            className="mt-1 border-blue-300 focus:border-blue-500"
+                            placeholder="0"
+                          />
+                        </div>
+                        <div className="bg-blue-100 p-2 rounded">
+                          <p className="text-xs font-semibold text-blue-700">Prix final FCFA:</p>
+                          <p className="text-2xl font-bold text-blue-800">
+                            {((prices.intermediate_fcfa || 0) - (prices.intermediate_discount_fcfa || 0)).toLocaleString('fr-FR')} FCFA
+                          </p>
+                        </div>
                       </div>
                     </div>
 
