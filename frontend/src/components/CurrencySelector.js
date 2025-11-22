@@ -38,8 +38,21 @@ export const CurrencyProvider = ({ children }) => {
     }
   };
 
+  const formatPriceWithSmallFCFA = (eurPrice) => {
+    if (currency === 'EUR') {
+      return `${eurPrice}€`;
+    } else {
+      const fcfaPrice = Math.round(eurPrice * EUR_TO_FCFA);
+      return (
+        <>
+          {fcfaPrice.toLocaleString()} <span className="text-sm">FCFA</span>
+        </>
+      );
+    }
+  };
+
   return (
-    <CurrencyContext.Provider value={{ currency, toggleCurrency, formatPrice, EUR_TO_FCFA }}>
+    <CurrencyContext.Provider value={{ currency, toggleCurrency, formatPrice, formatPriceWithSmallFCFA, EUR_TO_FCFA }}>
       {children}
     </CurrencyContext.Provider>
   );
