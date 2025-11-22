@@ -49,6 +49,7 @@ const TeacherDashboard = () => {
     level: '',
     schedule: '',
     student_id: '',
+    student_email: '',
     meet_link: ''
   });
 
