@@ -695,6 +695,24 @@ class SessionAction(BaseModel):
 async def create_course_enhanced(course_data: CourseCreateEnhanced, current_user: dict = Depends(get_current_user)):
     if current_user['role'] != 'teacher':
         raise HTTPException(status_code=403, detail="Teacher access required")
+
+@api_router.post("/teacher/upload-file")
+async def upload_file(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    # Pour simplifier, on stocke juste le nom du fichier
+    # En production, il faudrait uploader vers S3, Google Cloud Storage, etc.
+    file_url = f"/uploads/{current_user['id']}/{file.filename}"
+    
+    logger.info(f"File uploaded by teacher {current_user['id']}: {file.filename}")
+    
+    return {
+        "message": "File uploaded successfully",
+        "file_url": file_url,
+        "filename": file.filename
+    }
+
     
     course = {
         "id": str(uuid.uuid4()),
