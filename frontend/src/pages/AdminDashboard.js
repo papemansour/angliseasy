@@ -934,32 +934,45 @@ const AdminDashboard = () => {
                 {/* Liste des contacts */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Contacts</CardTitle>
-                    <CardDescription>Professeurs & Étudiants</CardDescription>
+                    <CardTitle>Tous les contacts</CardTitle>
+                    <CardDescription>
+                      {allUsers.filter(u => u.role === 'teacher' || u.role === 'student').length} contact(s) - Professeurs & Étudiants
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                      {conversations.map((contact) => (
-                        <button
-                          key={contact.id}
-                          onClick={() => setActiveConversation(contact)}
-                          className={`w-full p-3 rounded-lg text-left transition ${
-                            activeConversation?.id === contact.id
-                              ? 'bg-teal-100 border-2 border-teal-600'
-                              : 'bg-gray-50 hover:bg-teal-50 border-2 border-transparent'
-                          }`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold">
-                              {contact.first_name?.charAt(0)}{contact.last_name?.charAt(0)}
+                      {allUsers
+                        .filter(u => u.role === 'teacher' || u.role === 'student')
+                        .sort((a, b) => {
+                          // Tri par rôle (profs d'abord) puis par nom
+                          if (a.role !== b.role) {
+                            return a.role === 'teacher' ? -1 : 1;
+                          }
+                          return (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name);
+                        })
+                        .map((contact) => (
+                          <button
+                            key={contact.id}
+                            onClick={() => setActiveConversation(contact)}
+                            className={`w-full p-3 rounded-lg text-left transition ${
+                              activeConversation?.id === contact.id
+                                ? 'bg-teal-100 border-2 border-teal-600'
+                                : 'bg-gray-50 hover:bg-teal-50 border-2 border-transparent'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={`w-10 h-10 rounded-full ${contact.role === 'teacher' ? 'bg-blue-600' : 'bg-teal-600'} text-white flex items-center justify-center font-bold`}>
+                                {contact.first_name?.charAt(0)}{contact.last_name?.charAt(0)}
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold text-sm">{contact.first_name} {contact.last_name}</p>
+                                <p className="text-xs text-gray-500">
+                                  {contact.role === 'teacher' ? '👨‍🏫 Professeur' : '🎓 Étudiant'}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex-1">
-                              <p className="font-semibold text-sm">{contact.first_name} {contact.last_name}</p>
-                              <p className="text-xs text-gray-500">{contact.role === 'teacher' ? 'Professeur' : 'Étudiant'}</p>
-                            </div>
-                          </div>
-                        </button>
-                      ))}
+                          </button>
+                        ))}
                     </div>
                   </CardContent>
                 </Card>
