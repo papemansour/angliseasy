@@ -655,7 +655,7 @@ async def admin_reset_user_password(user_id: str, current_user: dict = Depends(g
     await create_notification(
         user_id=user_id,
         notification_type="password_reset",
-        message="Votre mot de passe a été réinitialisé par l'administrateur. Veuillez vérifier votre email."
+        data={"message": "Votre mot de passe a été réinitialisé par l'administrateur. Veuillez vérifier votre email."}
     )
     
     logger.info(f"Password reset by admin {current_user['email']} for user {user['email']}")
