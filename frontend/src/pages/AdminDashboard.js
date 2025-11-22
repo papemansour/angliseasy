@@ -429,13 +429,24 @@ const AdminDashboard = () => {
                     <div className="space-y-4">
                       {teachers.map((teacher) => (
                         <div key={teacher.id} className="p-4 border rounded-lg">
-                          <h3 className="font-semibold">{teacher.first_name} {teacher.last_name}</h3>
-                          <p className="text-sm text-gray-600">{teacher.email}</p>
-                          {teacher.temporary_password && (
-                            <p className="text-xs text-orange-600 font-semibold mt-1">
-                              Mot de passe provisoire: {teacher.temporary_password}
-                            </p>
-                          )}
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h3 className="font-semibold">{teacher.first_name} {teacher.last_name}</h3>
+                              <p className="text-sm text-gray-600">{teacher.email}</p>
+                              {teacher.temporary_password && (
+                                <p className="text-xs text-orange-600 font-semibold mt-1">
+                                  Mot de passe provisoire: {teacher.temporary_password}
+                                </p>
+                              )}
+                            </div>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleResetPassword(teacher.id, teacher.email)}
+                            >
+                              🔐 Réinitialiser MDP
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </div>
