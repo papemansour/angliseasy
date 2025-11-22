@@ -236,6 +236,30 @@ async def root():
     return {"message": "KALAMAENGLISH API"}
 
 # AUTH ROUTES
+async def send_admin_notification_email(user_email: str, first_name: str, last_name: str, level: str):
+    """
+    Send email notification to admin when a new student registers
+    """
+    email_content = f"""
+    NOUVELLE INSCRIPTION - My KALAMA ENGLISH
+    
+    Un nouvel étudiant s'est inscrit sur la plateforme :
+    
+    Nom complet: {first_name} {last_name}
+    Email: {user_email}
+    Niveau: {level}
+    Date d'inscription: {datetime.now(timezone.utc).strftime('%d/%m/%Y à %H:%M')}
+    
+    Veuillez vous connecter au dashboard admin pour approuver cette inscription.
+    
+    Lien dashboard: https://myenglishtutor.preview.emergentagent.com/admin
+    """
+    
+    # TODO: Implement actual email sending to mykalamaenglish@gmail.com
+    logger.info(f"Admin notification email for new registration: {user_email}")
+    logger.info(email_content)
+    return True
+
 @api_router.post("/auth/register")
 async def register(user_data: UserCreate):
     # Check if email exists
@@ -252,6 +276,7 @@ async def register(user_data: UserCreate):
         level=user_data.level,
         role="student",
         is_active=False,
+        is_restricted=False,
         password_hash="",  # Will be set by admin
         preferred_slots=user_data.preferred_slots,
         referral_source=user_data.referral_source
@@ -260,6 +285,14 @@ async def register(user_data: UserCreate):
     doc = user.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
     await db.users.insert_one(doc)
+    
+    # Send notification email to admin
+    await send_admin_notification_email(
+        user_data.email,
+        user_data.first_name,
+        user_data.last_name,
+        user_data.level
+    )
     
     return {"message": "Registration submitted. Please wait for admin approval."}
 
