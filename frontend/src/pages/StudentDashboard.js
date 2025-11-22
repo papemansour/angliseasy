@@ -8,7 +8,8 @@ import { Textarea } from '../components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
-import { LogOut, BookOpen, FileText, Link as LinkIcon, Upload, Send, User, Mail } from 'lucide-react';
+import { LogOut, BookOpen, FileText, Link as LinkIcon, Upload, Send, User, Mail, MessageCircle } from 'lucide-react';
+import ConversationChat from '../components/ConversationChat';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
