@@ -305,8 +305,7 @@ class KalamathequeBackendTester:
         """Create a test PDF file for upload testing"""
         try:
             # Create a simple test PDF content
-            test_content = b"""
-%PDF-1.4
+            test_content = b"""%PDF-1.4
 1 0 obj
 <<
 /Type /Catalog
@@ -339,7 +338,7 @@ stream
 BT
 /F1 12 Tf
 72 720 Td
-(Test Kalamathèque Book) Tj
+(Test Kalamatheque Book) Tj
 ET
 endstream
 endobj
@@ -358,8 +357,7 @@ trailer
 >>
 startxref
 299
-%%EOF
-"""
+%%EOF"""
             
             # Create temporary file
             with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
