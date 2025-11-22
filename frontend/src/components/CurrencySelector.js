@@ -45,7 +45,7 @@ export const CurrencyProvider = ({ children }) => {
       const fcfaPrice = Math.round(eurPrice * EUR_TO_FCFA);
       return (
         <>
-          {fcfaPrice.toLocaleString()} <span className="text-sm">FCFA</span>
+          {fcfaPrice.toLocaleString()} <span className="text-xs">FCFA</span>
         </>
       );
     }
