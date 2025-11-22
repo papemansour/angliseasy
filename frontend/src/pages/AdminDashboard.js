@@ -601,10 +601,11 @@ const AdminDashboard = () => {
                         <div className="flex justify-between items-start mb-3">
                           <div>
                             <h3 className="font-semibold text-lg">{session.teacher_name}</h3>
-                            <p className="text-sm text-gray-600">Session ID: {session.session_id}</p>
+                            <p className="text-sm text-gray-600">{session.teacher_email}</p>
+                            <p className="text-xs text-gray-500">Session ID: {session.id}</p>
                           </div>
                           <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                            Terminé
+                            ✓ Terminé
                           </span>
                         </div>
                         
