@@ -117,6 +117,19 @@ const HomePage = () => {
     }
   };
 
+  // Charger les prix depuis l'API
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const response = await axios.get(`${API}/pricing`);
+        setPricingData(response.data);
+      } catch (error) {
+        console.error('Error fetching pricing:', error);
+      }
+    };
+    fetchPricing();
+  }, []);
+
   const formatPreferredSlots = () => {
     const slots = [];
     Object.keys(selectedTimeSlots).forEach(dateStr => {
