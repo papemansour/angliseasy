@@ -518,7 +518,7 @@ const HomePage = () => {
                 <Button 
                   className="w-full mt-4 md:mt-6 bg-teal-600 hover:bg-teal-700 text-sm md:text-base py-2 md:py-3" 
                   data-testid="pay-advanced"
-                  onClick={() => openRegistrationModal({ name: 'Pack Avancé', level: 'advanced', price: 102 })}
+                  onClick={() => openRegistrationModal({ name: 'Pack Packs professionnels', level: 'advanced', price: 102 })}
                 >
                   Payer maintenant
                 </Button>
