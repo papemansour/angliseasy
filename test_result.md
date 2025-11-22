@@ -159,6 +159,66 @@ backend:
           agent: "testing"
           comment: "✅ PASSED - Contact form endpoint works without authentication. Proper email validation (rejects invalid formats), required field validation (rejects missing fields), and sends formatted emails to admin. AWS SES not configured so emails are logged."
 
+  - task: "Kalamathèque File Upload Endpoint"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - POST /api/uploadfile/ works correctly. Files saved to /app/frontend/public/uploads with unique UUIDs. Returns proper response with file_url, filename, and success message."
+
+  - task: "Kalamathèque Access Code Verification"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - POST /api/kalamatheque/verify-access works correctly. Accepts correct code 'Digika' (returns access:true), properly rejects incorrect codes (403 status). No authentication required."
+
+  - task: "Kalamathèque Book Management (CRUD)"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - All book CRUD operations work: POST /api/kalamatheque/books (admin-only creation), GET /api/kalamatheque/books (public retrieval), GET /api/kalamatheque/books/{id} (specific book), DELETE /api/kalamatheque/books/{id} (admin-only deletion). Books stored in MongoDB kalamatheque_books collection."
+
+  - task: "Kalamathèque AI Assistant Integration"
+    implemented: true
+    working: false
+    file: "server.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "❌ FAILED - POST /api/kalamatheque/ai-assistant returns 500 error. Issue: 'cannot import name OpenAI from emergentintegrations'. The emergentintegrations library uses LlmChat class, not OpenAI class. Import needs to be fixed from 'from emergentintegrations import OpenAI' to proper import."
+
+  - task: "Kalamathèque Text-to-Speech Integration"
+    implemented: true
+    working: false
+    file: "server.py"
+    stuck_count: 1
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: false
+          agent: "testing"
+          comment: "❌ FAILED - POST /api/kalamatheque/text-to-speech returns 500 error. Issue: 'cannot import name OpenAI from emergentintegrations'. Should use OpenAITextToSpeech class from emergentintegrations.llm.openai.text_to_speech instead."
+
 frontend:
   - task: "Student Login Functionality"
     implemented: true
