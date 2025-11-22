@@ -60,10 +60,11 @@ const ActivityFeed = () => {
 
   const markAllAsRead = async () => {
     try {
-      await apiClient.put('/notifications/mark-all-read');
-      setNotifications(notifications.map(n => ({ ...n, is_read: true })));
+      await apiClient.delete('/notifications/clear-all');
+      setNotifications([]);
       setUnreadCount(0);
-      toast.success('✅ Toutes les activités sont marquées comme lues');
+      setIsOpen(false);
+      toast.success('🗑️ Toutes les activités ont été supprimées');
     } catch (error) {
       toast.error('Erreur');
     }
