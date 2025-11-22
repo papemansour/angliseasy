@@ -63,7 +63,7 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [userRes, pendingRes, usersRes, resultsRes] = await Promise.all([
+      const [userRes, pendingRes, usersRes, resultsRes, sessionsRes, conversationsRes] = await Promise.all([
         apiClient.get('/auth/me'),
         apiClient.get('/admin/pending-registrations'),
         apiClient.get('/admin/all-users'),
