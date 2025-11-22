@@ -1132,6 +1132,24 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
 
+          {/* KALAMA CLUB Tab */}
+          <TabsContent value="club">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <span className="text-2xl">🏆</span>
+                  KALAMA CLUB - Espace Communauté
+                </CardTitle>
+                <CardDescription>
+                  Créez des posts, organisez des événements et animez la communauté My KALAMA English
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <KalamaClub userRole="admin" />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
         </Tabs>
       </div>
     </div>
