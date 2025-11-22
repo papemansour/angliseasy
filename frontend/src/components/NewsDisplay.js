@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from './ui/card';
+import { Button } from './ui/button';
 import apiClient from '../utils/api';
-import { Calendar, Newspaper } from 'lucide-react';
+import { Calendar, Newspaper, BookOpen } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
 
 const NewsDisplay = () => {
   const [newsList, setNewsList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedNews, setSelectedNews] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
 
   useEffect(() => {
     loadNews();
