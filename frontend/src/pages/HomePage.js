@@ -128,6 +128,21 @@ const HomePage = () => {
       }
     };
     fetchPricing();
+
+    // Ouvrir automatiquement la modale d'inscription si paramètre URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('openRegister') === 'true') {
+      setTimeout(() => {
+        // Ouvrir avec le pack intermédiaire par défaut
+        openRegistrationModal({ 
+          name: 'Pack Intermédiaire', 
+          level: 'intermediate', 
+          price: pricingData.intermediate_eur - pricingData.intermediate_discount 
+        });
+        // Nettoyer l'URL
+        window.history.replaceState({}, '', '/');
+      }, 500);
+    }
   }, []);
 
   const formatPreferredSlots = () => {
