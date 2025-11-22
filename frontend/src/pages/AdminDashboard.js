@@ -897,142 +897,237 @@ const AdminDashboard = () => {
             <KalamathequeAdmin />
           </TabsContent>
 
-          {/* Conversations Tab */}
+          {/* Discussion Tab */}
           <TabsContent value="conversations">
-            <div className="grid md:grid-cols-3 gap-6">
-              {/* Liste des conversations */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Contacts</CardTitle>
-                  <CardDescription>Sélection multiple possible</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {selectedRecipients.length > 0 && (
-                    <div className="mb-3 p-2 bg-blue-50 rounded-lg">
-                      <p className="text-sm font-semibold text-blue-700">
-                        {selectedRecipients.length} personne(s) sélectionnée(s)
-                      </p>
-                    </div>
-                  )}
-                  <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                    {conversations.map((contact) => (
-                      <button
-                        key={contact.id}
-                        onClick={() => handleToggleRecipient(contact)}
-                        className={`w-full p-3 rounded-lg text-left transition relative ${
-                          selectedRecipients.find(r => r.id === contact.id)
-                            ? 'bg-blue-100 border-2 border-blue-600'
-                            : 'bg-gray-50 hover:bg-blue-50 border-2 border-transparent'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
-                            {contact.first_name?.charAt(0)}{contact.last_name?.charAt(0)}
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-semibold text-sm">{contact.first_name} {contact.last_name}</p>
-                            <p className="text-xs text-gray-500">{contact.role === 'teacher' ? 'Professeur' : 'Étudiant'}</p>
-                          </div>
-                          {selectedRecipients.find(r => r.id === contact.id) && (
-                            <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
-                              <span className="text-white text-sm">✓</span>
+            <Card className="mb-4">
+              <CardContent className="pt-6">
+                <div className="flex gap-4 mb-4">
+                  <Button
+                    variant={conversationMode === 'individual' ? 'default' : 'outline'}
+                    onClick={() => {
+                      setConversationMode('individual');
+                      setSelectedRecipients([]);
+                      setActiveConversation(null);
+                    }}
+                    className={conversationMode === 'individual' ? 'bg-teal-600 hover:bg-teal-700' : ''}
+                  >
+                    💬 Discussion individuelle
+                  </Button>
+                  <Button
+                    variant={conversationMode === 'group' ? 'default' : 'outline'}
+                    onClick={() => {
+                      setConversationMode('group');
+                      setActiveConversation(null);
+                    }}
+                    className={conversationMode === 'group' ? 'bg-teal-600 hover:bg-teal-700' : ''}
+                  >
+                    👥 Message groupé
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {conversationMode === 'individual' ? (
+              <div className="grid md:grid-cols-3 gap-6">
+                {/* Liste des contacts */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Contacts</CardTitle>
+                    <CardDescription>Professeurs & Étudiants</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 max-h-[600px] overflow-y-auto">
+                      {conversations.map((contact) => (
+                        <button
+                          key={contact.id}
+                          onClick={() => setActiveConversation(contact)}
+                          className={`w-full p-3 rounded-lg text-left transition ${
+                            activeConversation?.id === contact.id
+                              ? 'bg-teal-100 border-2 border-teal-600'
+                              : 'bg-gray-50 hover:bg-teal-50 border-2 border-transparent'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold">
+                              {contact.first_name?.charAt(0)}{contact.last_name?.charAt(0)}
                             </div>
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Zone de conversation */}
-              <Card className="md:col-span-2">
-                <CardHeader>
-                  <CardTitle>
-                    {selectedRecipients.length > 0 
-                      ? `${selectedRecipients.length} personne(s) sélectionnée(s)` 
-                      : 'Envoi de messages groupés'}
-                  </CardTitle>
-                  <CardDescription>
-                    {selectedRecipients.length > 0 
-                      ? selectedRecipients.map(r => `${r.first_name} ${r.last_name}`).join(', ')
-                      : 'Sélectionnez un ou plusieurs contacts'}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {selectedRecipients.length === 0 ? (
-                    <div className="text-center py-12">
-                      <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">Sélectionnez un ou plusieurs contacts pour envoyer un message</p>
+                            <div className="flex-1">
+                              <p className="font-semibold text-sm">{contact.first_name} {contact.last_name}</p>
+                              <p className="text-xs text-gray-500">{contact.role === 'teacher' ? 'Professeur' : 'Étudiant'}</p>
+                            </div>
+                          </div>
+                        </button>
+                      ))}
                     </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {/* Info sélection */}
-                      <div className="border rounded-lg p-4 bg-blue-50">
-                        <p className="font-semibold mb-2">Destinataires:</p>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedRecipients.map(r => (
-                            <span key={r.id} className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm">
-                              {r.first_name} {r.last_name}
-                            </span>
-                          ))}
-                        </div>
+                  </CardContent>
+                </Card>
+
+                {/* Zone de conversation */}
+                <Card className="md:col-span-2">
+                  <CardHeader>
+                    <CardTitle>
+                      {activeConversation 
+                        ? `${activeConversation.first_name} ${activeConversation.last_name}` 
+                        : 'Discussion'}
+                    </CardTitle>
+                    <CardDescription>
+                      {activeConversation 
+                        ? `${activeConversation.role === 'teacher' ? 'Professeur' : 'Étudiant'} - Messages avec pièces jointes`
+                        : 'Sélectionnez un contact pour commencer'}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {activeConversation ? (
+                      <ConversationChat
+                        recipientId={activeConversation.id}
+                        recipientName={`${activeConversation.first_name} ${activeConversation.last_name}`}
+                        currentUserId={user?.id}
+                      />
+                    ) : (
+                      <div className="text-center py-12">
+                        <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">Sélectionnez un contact pour démarrer une conversation</p>
                       </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-6">
+                {/* Liste des contacts pour sélection multiple */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Contacts</CardTitle>
+                    <CardDescription>Sélection multiple possible</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {selectedRecipients.length > 0 && (
+                      <div className="mb-3 p-2 bg-teal-50 rounded-lg">
+                        <p className="text-sm font-semibold text-teal-700">
+                          {selectedRecipients.length} personne(s) sélectionnée(s)
+                        </p>
+                      </div>
+                    )}
+                    <div className="space-y-2 max-h-[600px] overflow-y-auto">
+                      {conversations.map((contact) => (
+                        <button
+                          key={contact.id}
+                          onClick={() => handleToggleRecipient(contact)}
+                          className={`w-full p-3 rounded-lg text-left transition relative ${
+                            selectedRecipients.find(r => r.id === contact.id)
+                              ? 'bg-teal-100 border-2 border-teal-600'
+                              : 'bg-gray-50 hover:bg-teal-50 border-2 border-transparent'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold">
+                              {contact.first_name?.charAt(0)}{contact.last_name?.charAt(0)}
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold text-sm">{contact.first_name} {contact.last_name}</p>
+                              <p className="text-xs text-gray-500">{contact.role === 'teacher' ? 'Professeur' : 'Étudiant'}</p>
+                            </div>
+                            {selectedRecipients.find(r => r.id === contact.id) && (
+                              <div className="w-6 h-6 bg-teal-600 rounded-full flex items-center justify-center">
+                                <span className="text-white text-sm">✓</span>
+                              </div>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
 
-                      {/* Formulaire message */}
-                      <form onSubmit={handleSendMessage} className="flex gap-2">
-                        <Input
-                          value={messageContent}
-                          onChange={(e) => setMessageContent(e.target.value)}
-                          placeholder="Écrivez votre message..."
-                          className="flex-1"
-                        />
-                        <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-                          Envoyer
-                        </Button>
-                      </form>
+                {/* Zone d'envoi groupé */}
+                <Card className="md:col-span-2">
+                  <CardHeader>
+                    <CardTitle>
+                      {selectedRecipients.length > 0 
+                        ? `${selectedRecipients.length} personne(s) sélectionnée(s)` 
+                        : 'Envoi de messages groupés'}
+                    </CardTitle>
+                    <CardDescription>
+                      {selectedRecipients.length > 0 
+                        ? selectedRecipients.map(r => `${r.first_name} ${r.last_name}`).join(', ')
+                        : 'Sélectionnez un ou plusieurs contacts'}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {selectedRecipients.length === 0 ? (
+                      <div className="text-center py-12">
+                        <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                        <p className="text-gray-500">Sélectionnez un ou plusieurs contacts pour envoyer un message</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {/* Info sélection */}
+                        <div className="border rounded-lg p-4 bg-teal-50">
+                          <p className="font-semibold mb-2">Destinataires:</p>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedRecipients.map(r => (
+                              <span key={r.id} className="px-3 py-1 bg-teal-600 text-white rounded-full text-sm">
+                                {r.first_name} {r.last_name}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
 
-                      {/* Formulaire document */}
-                      <div className="mt-4 pt-4 border-t">
-                        <h4 className="font-semibold mb-3">Envoyer un document</h4>
-                        <form onSubmit={handleSendDocument} className="space-y-3">
-                          <div>
-                            <Label htmlFor="doc_title">Titre</Label>
-                            <Input
-                              id="doc_title"
-                              value={documentToSend.title}
-                              onChange={(e) => setDocumentToSend({ ...documentToSend, title: e.target.value })}
-                              required
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="doc_description">Description</Label>
-                            <Input
-                              id="doc_description"
-                              value={documentToSend.description}
-                              onChange={(e) => setDocumentToSend({ ...documentToSend, description: e.target.value })}
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="doc_url">Lien du document</Label>
-                            <Input
-                              id="doc_url"
-                              value={documentToSend.file_url}
-                              onChange={(e) => setDocumentToSend({ ...documentToSend, file_url: e.target.value })}
-                              placeholder="https://..."
-                              required
-                            />
-                          </div>
-                          <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
-                            Envoyer le document
+                        {/* Formulaire message */}
+                        <form onSubmit={handleSendMessage} className="flex gap-2">
+                          <Input
+                            value={messageContent}
+                            onChange={(e) => setMessageContent(e.target.value)}
+                            placeholder="Écrivez votre message..."
+                            className="flex-1"
+                          />
+                          <Button type="submit" className="bg-teal-600 hover:bg-teal-700">
+                            Envoyer
                           </Button>
                         </form>
+
+                        {/* Formulaire document */}
+                        <div className="mt-4 pt-4 border-t">
+                          <h4 className="font-semibold mb-3">Envoyer un document</h4>
+                          <form onSubmit={handleSendDocument} className="space-y-3">
+                            <div>
+                              <Label htmlFor="doc_title">Titre</Label>
+                              <Input
+                                id="doc_title"
+                                value={documentToSend.title}
+                                onChange={(e) => setDocumentToSend({ ...documentToSend, title: e.target.value })}
+                                required
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="doc_description">Description</Label>
+                              <Input
+                                id="doc_description"
+                                value={documentToSend.description}
+                                onChange={(e) => setDocumentToSend({ ...documentToSend, description: e.target.value })}
+                              />
+                            </div>
+                            <div>
+                              <Label htmlFor="doc_url">Lien du document</Label>
+                              <Input
+                                id="doc_url"
+                                value={documentToSend.file_url}
+                                onChange={(e) => setDocumentToSend({ ...documentToSend, file_url: e.target.value })}
+                                placeholder="https://..."
+                                required
+                              />
+                            </div>
+                            <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700">
+                              Envoyer le document
+                            </Button>
+                          </form>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </TabsContent>
 
         </Tabs>
