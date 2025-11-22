@@ -1,173 +1,570 @@
 <analysis>**original_problem_statement:**
 L'utilisateur souhaite créer un site web complet pour des cours d'anglais, MyKalamaenglish. Le site doit inclure trois rôles (Admin, Professeur, Étudiant) avec des dashboards et des fonctionnalités spécifiques pour chacun.
 
+Au cours de cette session, l'utilisateur a demandé de nombreuses fonctionnalités et modifications, notamment :
+- Finaliser les instructions de paiement pour Wave.
+- Refondre la messagerie de l'administrateur pour afficher tous les contacts et utiliser une interface de chat moderne.
+- Intégrer le KALAMA CLUB dans le tableau de bord de l'administrateur.
+- Corriger les actions sur les documents dans le tableau de bord de l'étudiant et ajouter un aperçu.
+- Mettre en place un système de notifications complet (qui a ensuite été demandé d'être supprimé).
+- Créer un système de prix dynamique avec gestion des remises depuis le tableau de bord admin.
+- Implémenter un système de classement avancé dans le KALAMA CLUB avec un badge Étudiant/Prof du mois.
+- Ajouter un nouveau Pack K-Kid pour les enfants.
+- Renommer les packs existants (K-Débutant, K-Intermédiaire, K-Professionnel).
+- Ajouter des fonctionnalités de like et de commentaire aux articles de la section News.
+
 **PRODUCT REQUIREMENTS:**
--   **Rôles Utilisateur :**
-    -   **Admin :** Gère les utilisateurs, le contenu (prix, actualités, documents, livres pour la Kalamathèque), consulte les statistiques, et communique. Reçoit des notifications par email.
-    -   **Professeur :** Gère ses cours, ses disponibilités, communique avec l'admin et ses étudiants.
-    -   **Étudiant :** S'inscrit, paie, accède à son dashboard pour voir les cours, documents, etc.
+-   **Rôles Utilisateur :** Admin, Professeur, Étudiant.
 -   **Fonctionnalités Clés :**
-    -   Inscription individuelle ou en groupe.
-    -   Paiement via Stripe et instructions pour paiement manuel (Wave).
     -   Dashboards personnalisés par rôle.
-    -   Système de messagerie avec envoi de pièces jointes.
-    -   Section Kalamathèque (bibliothèque numérique avec assistant IA).
-    -   Section News pour les actualités et événements.
-    -   Section KALAMA CLUB pour la communauté (forum, challenges).
-    -   Lettres de bienvenue automatisées (email et in-app).
--   **Demande Spécifique de Sécurité :** Les mots de passe changés par les utilisateurs doivent être visibles en clair par l'admin.
+    -   Système de messagerie avec pièces jointes.
+    -   Kalamathèque (bibliothèque numérique avec assistant IA).
+    -   Section News avec likes et commentaires.
+    -   KALAMA CLUB avec forum et un système de classement géré par l'admin.
+    -   Système de prix dynamique géré par l'admin, incluant un pack K-Kid.
+    -   Badge Étudiant/Prof du mois visible sur la plateforme.
+-   **Demande Spécifique de Sécurité :** (Toujours en attente) Les mots de passe changés par les utilisateurs doivent être visibles en clair par l'admin.
 
 **User's preferred language**: Français
 
 **what currently exists?**
-Une application full-stack (React/FastAPI/MongoDB) fonctionnelle et riche en fonctionnalités. Les dashboards Admin, Professeur et Étudiant sont opérationnels et incluent désormais de nouvelles sections majeures :
--   **Kalamathèque :** Bibliothèque numérique avec upload de livres, lecteur, et assistant IA 100% fonctionnel (utilisant ).
--   **News :** Section d'actualités où l'admin peut poster des articles (visibles par les profs et étudiants), avec une visionneuse modale.
--   **KALAMA CLUB :** Un espace communautaire avec un forum de discussion où admins et profs peuvent créer des posts (avec images/vidéos) et où les étudiants peuvent lire et commenter.
--   **Lettres de Bienvenue :** Un système double a été implémenté :
-    1.  Des emails de bienvenue automatiques et personnalisés sont envoyés aux nouveaux étudiants approuvés.
-    2.  Une lettre de bienvenue s'affiche dans une modale lors de la première connexion d'un nouvel utilisateur (professeur ou étudiant) et disparaît après lecture.
--   La fonctionnalité Devoirs a été entièrement supprimée de l'interface.
--   La messagerie a été modifiée côté backend pour supporter les pièces jointes, mais le frontend n'est que partiellement intégré.
--   **Faille de Sécurité :** Le stockage des mots de passe en clair () est toujours présent à la demande de l'utilisateur.
+Une application full-stack (React/FastAPI/MongoDB) avec de nombreuses fonctionnalités. Au cours de cette session, plusieurs ajouts majeurs ont été réalisés, mais ont aussi introduit des bugs critiques.
+- Le **système de paiement Wave** a été intégré et les instructions corrigées.
+- La **messagerie de l'admin** a été refondue pour afficher tous les utilisateurs (profs/étudiants) et utiliser une interface de chat moderne pour les conversations individuelles.
+- Le **KALAMA CLUB** est maintenant accessible depuis le dashboard admin.
+- Un **système de prix dynamique** a été créé : l'admin peut modifier les prix (EUR et FCFA) et les remises depuis son dashboard. Cependant, **cela a créé un bug majeur (NaN€) sur la page d'accueil.**
+- Un **nouveau pack K-Kid** a été ajouté et est visible sur la page d'accueil et dans la gestion des prix. Les autres packs ont été renommés.
+- Un **système de classement avancé** pour le KALAMA CLUB a été créé, permettant à l'admin de gérer un classement et d'attribuer un **badge Étudiant/Prof du mois** animé et visible.
+- Les articles de la section **News** supportent maintenant les likes et les commentaires.
+- Un **système de notification complet** a été développé (notifications flottantes, panneau latéral), puis **entièrement supprimé** à la demande de l'utilisateur.
+- **Le projet est actuellement dans un état INSTABLE/CASSÉ** suite à une erreur  qui est apparue après l'implémentation du badge Étudiant du Mois.
 
 **Last working item**:
--   **Last item agent was working**: L'agent a commencé à implémenter la dernière série de demandes de l'utilisateur. La dernière action consistait à ajouter la logique pour un nouveau mode de paiement. L'agent travaillait à l'affichage d'une carte d'instructions pour les paiements en FCFA via Wave Sénégal, qui doit apparaître après la confirmation d'inscription.
+-   **Last item agent was working**: L'agent mettait en œuvre la dernière série de demandes de l'utilisateur. La toute dernière action a été de modifier le composant du classement () pour y afficher le titre Meilleur Prof du Mois ou Étudiant du Mois et d'ajouter des boutons de réaction (like, bravo, aimer).
 -   **Status**: IN PROGRESS
 -   **Agent Testing Done**: N
 -   **Which testing method agent to use?**: both
 -   **User Testing Done**: N
 
 **All Pending/In progress Issue list**:
--   **Issue 1: Finalisation de la demande utilisateur multi-étapes (P0)**
--   **Issue 2: Faille de sécurité critique des mots de passe (P1)**
--   **Issue 3: Problèmes de connexion utilisateur (P2)**
--   **Issue 4: Implémenter le badge Étudiant déjà payé (P2)**
--   **Issue 5: Finaliser l'intégration des paiements FCFA (Orange Money) (P3)**
--   **Issue 6: Finaliser l'intégration AWS SES (P3)**
--   **Issue 7: Erreur  (P4)**
+-   **Issue 1: L'application a crashé (P0 - BLOCKER)**
+-   **Issue 2: Les prix s'affichent en NaN€ sur la page d'accueil (P0 - CRITICAL BUG)**
+-   **Issue 3: Finalisation des demandes sur le classement et le dashboard admin (P1)**
+-   **Issue 4: Les actions sur les documents de l'étudiant ne fonctionnent pas (P2)**
+-   **Issue 5: Implémenter le message groupé pour les professeurs (P3)**
+-   **Issue 6: Faille de sécurité critique des mots de passe (P4)**
+-   **Issue 7: Problèmes de connexion utilisateur (P4)**
 
 **Issues Detail:**
--   **Issue 1: Finalisation de la demande utilisateur multi-étapes**
-    -   **Attempted fixes:** L'agent a commencé à travailler sur cette longue liste de demandes. Il a modifié les couleurs des stats du dashboard admin, supprimé le bouton de don des dashboards prof/étudiant, ajouté des permissions dans , et ajouté la signature dans la lettre de bienvenue des professeurs. Il a été interrompu en travaillant sur la carte de paiement Wave.
+-   **Issue 1: L'application a crashé**
+    -   **Attempted fixes:** L'agent a rencontré une erreur  après avoir redémarré les services suite à l'implémentation complexe du badge Étudiant du Mois et d'autres fonctionnalités. Il a ensuite ignoré l'erreur et a continué à développer par-dessus.
     -   **Next debug checklist:**
-        1.  Terminer l'implémentation de la carte de paiement Wave dans .
-        2.  Supprimer l'onglet Conversations du  et créer un nouvel onglet Discussion avec une interface pour envoyer des messages/pièces jointes à des professeurs ou étudiants spécifiques.
-        3.  Intégrer le composant  dans le  pour donner à l'admin les mêmes fonctionnalités que les professeurs.
-        4.  Vérifier et corriger les actions (Ouvrir, Télécharger, Supprimer) sur les fichiers dans l'onglet Documents du .
-        5.  Modifier la navigation pour que la Kalamathèque s'ouvre dans le même onglet.
-        6.  Ajouter une option Visualiser le document pour avoir un aperçu.
-    -   **Why fix this issue and what will be achieved with the fix?** Répondre à toutes les demandes de l'utilisateur pour finaliser le cycle de fonctionnalités actuel.
+        1.  Examiner les logs du backend (==> /var/log/supervisor/backend.err.log <==
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend/server.py", line 2047, in mark_notification_as_read
+    {"id": notification_id, "user_id": current_user.id},
+                                       ^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'id'
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/root/.venv/lib/python3.11/site-packages/uvicorn/protocols/http/h11_impl.py", line 408, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 84, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend/server.py", line 2047, in mark_notification_as_read
+    {"id": notification_id, "user_id": current_user.id},
+                                       ^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'id'
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/root/.venv/lib/python3.11/site-packages/uvicorn/protocols/http/h11_impl.py", line 408, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 84, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend/server.py", line 2070, in delete_notification
+    {"id": notification_id, "user_id": current_user.id}
+                                       ^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'id'
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/root/.venv/lib/python3.11/site-packages/uvicorn/protocols/http/h11_impl.py", line 408, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/uvicorn/middleware/proxy_headers.py", line 84, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/applications.py", line 123, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/cors.py", line 93, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/cors.py", line 148, in simple_response
+    await self.app(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/middleware/exceptions.py", line 65, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 756, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 776, in app
+    await route.handle(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 297, in handle
+    await self.app(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 77, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 64, in wrapped_app
+    raise exc
+  File "/root/.venv/lib/python3.11/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    await app(scope, receive, sender)
+  File "/root/.venv/lib/python3.11/site-packages/starlette/routing.py", line 72, in app
+    response = await func(request)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/routing.py", line 278, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/.venv/lib/python3.11/site-packages/fastapi/routing.py", line 191, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/backend/server.py", line 2070, in delete_notification
+    {"id": notification_id, "user_id": current_user.id}
+                                       ^^^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'id'
+WARNING:  WatchFiles detected changes in 'server.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [5972]
+AWS credentials not found. Email sending will be logged only.
+INFO:     Started server process [6786]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Will watch for changes in these directories: ['/app/backend']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [29] using WatchFiles
+
+==> /var/log/supervisor/backend.out.log <==
+INFO:     10.64.129.28:54480 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.129.28:54480 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.129.28:54474 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.136.135:54652 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.136.135:54644 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.129.28:54474 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.136.135:54644 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.129.13:36676 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.136.135:54644 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.129.13:36676 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.129.14:57552 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.136.135:43110 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44966 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:41812 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:55456 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.135.217:55456 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.135.216:36596 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.135.217:55456 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.135.216:43298 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51906 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51914 - "GET /api/admin/pending-registrations HTTP/1.1" 200 OK
+INFO:     10.64.135.216:43298 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.216:43316 - "GET /api/admin/session-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.216:43310 - "GET /api/tests/results/all HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51930 - "GET /api/admin/teacher-sessions HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51944 - "GET /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51916 - "GET /api/admin/all-teacher-availability HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51914 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.135.216:43316 - "GET /api/admin/pending-registrations HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51914 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.216:43316 - "GET /api/admin/session-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51914 - "GET /api/tests/results/all HTTP/1.1" 200 OK
+INFO:     10.64.135.216:43298 - "GET /api/admin/all-teacher-availability HTTP/1.1" 200 OK
+INFO:     10.64.135.216:43332 - "GET /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51906 - "GET /api/admin/teacher-sessions HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51906 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:51906 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.216:54614 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.135.216:54614 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.216:53360 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.216:53344 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.135.217:43532 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.135.216:53360 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.135.216:53360 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.217:43532 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.216:53344 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.135.216:53360 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.217:43532 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.217:43532 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:43532 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:43532 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.216:53360 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.217:43534 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.216:54374 - "POST /api/club/leaderboard?user_id=englishlearn-4&rank=1 HTTP/1.1" 200 OK
+INFO:     10.64.135.216:54374 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:53568 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.217:53568 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.216:54374 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.216:57458 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:42458 - "POST /api/club/leaderboard?user_id=englishlearn-4&rank=1 HTTP/1.1" 400 Bad Request
+INFO:     10.64.129.14:43556 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.136.135:35456 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.135.217:34152 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.28:47404 - "OPTIONS /api/auth/login HTTP/1.1" 200 OK
+INFO:     10.64.129.14:43556 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     10.64.136.135:35456 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.129.28:47404 - "OPTIONS /api/admin/pending-registrations HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44850 - "OPTIONS /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.129.28:47404 - "OPTIONS /api/tests/results/all HTTP/1.1" 200 OK
+INFO:     10.64.136.135:35456 - "OPTIONS /api/admin/session-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.14:43556 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34310 - "OPTIONS /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44850 - "OPTIONS /api/admin/pending-registrations HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34322 - "OPTIONS /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34324 - "OPTIONS /api/admin/all-teacher-availability HTTP/1.1" 200 OK
+INFO:     10.64.129.14:58224 - "OPTIONS /api/admin/all-teacher-availability HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44864 - "OPTIONS /api/admin/teacher-sessions HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59878 - "OPTIONS /api/tests/results/all HTTP/1.1" 200 OK
+INFO:     10.64.129.14:43556 - "OPTIONS /api/admin/teacher-sessions HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44866 - "OPTIONS /api/admin/session-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.14:58236 - "GET /api/admin/pending-registrations HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59898 - "OPTIONS /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59884 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34322 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44866 - "GET /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34322 - "GET /api/admin/all-teacher-availability HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44850 - "GET /api/tests/results/all HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44850 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.129.13:44864 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.129.14:58224 - "GET /api/admin/session-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59878 - "GET /api/tests/results/all HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59898 - "GET /api/admin/pending-registrations HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34310 - "GET /api/admin/teacher-sessions HTTP/1.1" 200 OK
+INFO:     10.64.129.14:58224 - "GET /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.129.14:58246 - "GET /api/admin/session-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59898 - "GET /api/admin/teacher-sessions HTTP/1.1" 200 OK
+INFO:     10.64.129.14:58246 - "GET /api/admin/all-teacher-availability HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34322 - "OPTIONS /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59898 - "OPTIONS /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59898 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34322 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:38370 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.217:38370 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.216:41816 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.216:41816 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:38370 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.217:38370 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.216:48172 - "POST /api/club/leaderboard?user_id=englishlearn-4&rank=2 HTTP/1.1" 200 OK
+INFO:     10.64.135.217:60832 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:60846 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.216:48172 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.216:48172 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.217:60856 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.216:60318 - "POST /api/club/leaderboard?user_id=englishlearn-4&rank=3 HTTP/1.1" 200 OK
+INFO:     10.64.135.216:60318 - "GET /api/admin/all-users HTTP/1.1" 200 OK
+INFO:     10.64.135.216:60326 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:37706 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.216:60326 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.217:50390 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.28:59512 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.128.45:46124 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.216:42832 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.216:39348 - "POST /api/admin/update-prices HTTP/1.1" 200 OK
+INFO:     10.64.135.216:39356 - "GET /api/kalamatheque/books HTTP/1.1" 200 OK
+INFO:     10.64.135.217:44116 - "GET /api/kalamatheque/books HTTP/1.1" 200 OK
+INFO:     10.64.135.216:39366 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.216:39356 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:44116 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.135.216:39380 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.135.217:44116 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.217:44130 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.135.216:39356 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:44132 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.135.217:56354 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58442 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     10.64.135.216:59550 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58442 - "GET /api/teacher/my-students HTTP/1.1" 200 OK
+INFO:     10.64.135.216:59550 - "GET /api/teacher/my-documents HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58442 - "GET /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.135.216:59566 - "GET /api/teacher/my-courses HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58442 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58442 - "GET /api/teacher/my-students HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58450 - "GET /api/teacher/my-courses HTTP/1.1" 200 OK
+INFO:     10.64.135.216:59550 - "GET /api/teacher/my-documents HTTP/1.1" 200 OK
+INFO:     10.64.135.216:59550 - "GET /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58442 - "GET /api/welcome-letter HTTP/1.1" 200 OK
+INFO:     10.64.135.216:59566 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58442 - "GET /api/welcome-letter HTTP/1.1" 200 OK
+INFO:     10.64.135.217:58450 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.217:59752 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.135.216:44354 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.135.216:44364 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.217:59766 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:59766 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.135.216:44364 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.135.216:44354 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.135.217:59766 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.135.217:46800 - "GET /api/welcome-letter HTTP/1.1" 200 OK
+INFO:     10.64.135.216:44824 - "GET /api/welcome-letter HTTP/1.1" 200 OK
+INFO:     10.64.135.216:44824 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.135.216:42574 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.135.216:42574 - "GET /api/pricing HTTP/1.1" 200 OK
+INFO:     10.64.128.45:53474 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     10.64.128.46:53484 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.128.45:53474 - "GET /api/teacher/my-documents HTTP/1.1" 200 OK
+INFO:     10.64.128.44:42294 - "GET /api/teacher/my-courses HTTP/1.1" 200 OK
+INFO:     10.64.129.210:51208 - "GET /api/teacher/my-students HTTP/1.1" 200 OK
+INFO:     10.64.128.44:42302 - "GET /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.128.44:42302 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     10.64.128.46:53484 - "GET /api/teacher/my-documents HTTP/1.1" 200 OK
+INFO:     10.64.128.45:53474 - "GET /api/teacher/my-students HTTP/1.1" 200 OK
+INFO:     10.64.128.45:53490 - "GET /api/teacher/my-courses HTTP/1.1" 200 OK
+INFO:     10.64.128.44:42302 - "GET /api/messages/my-conversations HTTP/1.1" 200 OK
+INFO:     10.64.128.46:53484 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.210:51208 - "GET /api/welcome-letter HTTP/1.1" 200 OK
+INFO:     10.64.129.210:51208 - "GET /api/welcome-letter HTTP/1.1" 200 OK
+INFO:     10.64.128.44:42302 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.128.45:37010 - "PUT /api/notifications/0b00da66-f31b-497b-8304-c64d5fea49a5/read HTTP/1.1" 500 Internal Server Error
+INFO:     10.64.129.210:45016 - "PUT /api/notifications/0b00da66-f31b-497b-8304-c64d5fea49a5/read HTTP/1.1" 500 Internal Server Error
+INFO:     10.64.128.44:54070 - "PUT /api/notifications/e5266488-dd6a-4dad-b1e2-fb387e4bcfe6/read HTTP/1.1" 500 Internal Server Error
+INFO:     10.64.128.45:39554 - "PUT /api/notifications/0b00da66-f31b-497b-8304-c64d5fea49a5/read HTTP/1.1" 500 Internal Server Error
+INFO:     10.64.128.46:36942 - "DELETE /api/notifications/clear-all HTTP/1.1" 500 Internal Server Error
+INFO:     10.64.128.44:34232 - "DELETE /api/notifications/clear-all HTTP/1.1" 500 Internal Server Error
+INFO:     10.64.128.44:41362 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.128.44:47978 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.28:55412 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.210:34780 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.136.135:57306 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.136.135:57310 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.129.14:36578 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.136.135:57310 - "GET /api/club/events HTTP/1.1" 200 OK
+INFO:     10.64.129.13:33908 - "GET /api/club/student-of-month HTTP/1.1" 200 OK
+INFO:     10.64.129.14:36578 - "GET /api/club/leaderboard HTTP/1.1" 200 OK
+INFO:     10.64.129.28:58408 - "GET /api/club/posts HTTP/1.1" 200 OK
+INFO:     10.64.136.135:49122 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.210:56856 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.28:37820 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.129.14:38708 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.136.135:34608 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK
+INFO:     10.64.128.46:47242 - "GET /api/notifications/my-notifications HTTP/1.1" 200 OK) et du frontend pour identifier la cause exacte du crash.
+        2.  Inspecter les derniers changements effectués dans  autour du badge Étudiant du Mois et de la suppression des notifications. Une dépendance () a été mentionnée mais l'importation a été supposée correcte.
+        3.  Inspecter les derniers changements dans les composants React : , , , . Une erreur de syntaxe ou un appel invalide est probable.
+        4.  Revertir les derniers changements morceau par morceau pour isoler la cause.
+    -   **Why fix this issue and what will be achieved with the fix?** C'est un bloqueur total. L'application est inutilisable. La correction est essentielle pour continuer tout développement.
+    -   **Status:** NOT STARTED
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** both
+    -   **Blocked on other issue:** Non, c'est LE bloqueur.
+
+-   **Issue 2: Les prix s'affichent en NaN€ sur la page d'accueil**
+    -   **Attempted fixes:** L'agent a constaté le bug via un screenshot mais l'a ignoré pour continuer d'autres tâches.
+    -   **Next debug checklist:**
+        1.  Dans , vérifier le  qui charge les prix ().
+        2.  Vérifier l'état initial de  et s'assurer qu'il ne provoque pas de calculs avec  avant que les données de l'API n'arrivent. L'initialiser avec une structure de données par défaut valide.
+        3.  Vérifier la fonction  et s'assurer que  et  existent et sont des nombres.
+        4.  Utiliser les outils de développement du navigateur pour inspecter la réponse de l'API  et voir si les données sont correctement formatées.
+    -   **Why fix this issue and what will be achieved with the fix?** Rendre la section des prix de la page d'accueil fonctionnelle, ce qui est crucial pour l'inscription des utilisateurs.
+    -   **Status:** NOT STARTED
+    -   **Is recurring issue?** N
+    -   **Should Test frontend/backend/both after fix?** frontend
+    -   **Blocked on other issue:** Issue 1.
+
+-   **Issue 3: Finalisation des demandes sur le classement et le dashboard admin**
+    -   **Attempted fixes:** L'agent a modifié l'affichage du classement et a ajouté les boutons de réaction. La demande Ajuste le dashboard de admin est vague et n'a pas été traitée.
+    -   **Next debug checklist:**
+        1.  Terminer et tester l'implémentation des réactions (like, bravo, aimer) sur le classement dans .
+        2.  Demander à l'utilisateur de clarifier ce qu'il entend par Ajuste le dashboard de admin.
+    -   **Why fix this issue and what will be achieved with the fix?** Terminer le cycle de développement demandé par l'utilisateur.
     -   **Status:** IN PROGRESS
     -   **Is recurring issue?** N
     -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** non.
+    -   **Blocked on other issue:** Issue 1.
 
--   **Issue 2: Faille de sécurité critique des mots de passe**
-    -   **Attempted fixes:** Aucune nouvelle tentative, car l'utilisateur a insisté pour conserver ce comportement. Le champ  est stocké en clair.
-    -   **Next debug checklist:** Le prochain agent doit rester conscient de cette faille et ne pas tenter de la corriger sans une discussion claire et l'accord de l'utilisateur.
-    -   **Why fix this issue and what will be achieved with the fix?** Se conformer aux standards de sécurité et protéger les données des utilisateurs.
-    -   **Status:** NOT STARTED
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** backend
-    -   **Blocked on other issue:** Bloqué sur la décision de l'utilisateur.
-
--   **Issue 3: Problèmes de connexion utilisateur**
-    -   **Attempted fixes:** L'agent a rencontré à plusieurs reprises une erreur Invalid credentials en tentant de se connecter avec des comptes de test (professeur, étudiant), même avec les mots de passe provisoires visibles dans le dashboard admin.
+-   **Issue 4: Les actions sur les documents de l'étudiant ne fonctionnent pas**
+    -   **Attempted fixes:** L'agent a tenté de tester en créant un document via un script, a obtenu une erreur Error fetching documents, et a abandonné la tâche. L'utilisateur a explicitement redemandé de corriger ce point.
     -   **Next debug checklist:**
-        1.  Tenter de se connecter avec un utilisateur existant (ex:  / ).
-        2.  Si échec, vérifier les logs backend pendant la tentative de connexion.
-        3.  Inspecter la fonction de login dans  () et la logique de hashage/vérification du mot de passe.
-        4.  Vérifier que les mots de passe provisoires générés sont correctement stockés et lus.
-    -   **Why fix this issue and what will be achieved with the fix?** La connexion est une fonctionnalité critique. Sans cela, les rôles étudiant et professeur sont inutilisables.
+        1.  Dans , revoir la logique des fonctions , .
+        2.  Dans , vérifier les endpoints  (DELETE) et s'assurer qu'ils fonctionnent correctement.
+        3.  Le problème Error fetching documents suggère que l'endpoint  pourrait être le vrai coupable. À vérifier en premier.
+    -   **Why fix this issue and what will be achieved with the fix?** Restaurer une fonctionnalité de base pour les étudiants.
     -   **Status:** NOT STARTED
     -   **Is recurring issue?** Y
     -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** non.
+    -   **Blocked on other issue:** Issue 1.
 
--   **Issue 4: Implémenter le badge Étudiant déjà payé**
-    -   **Attempted fixes:** L'agent a commencé à ajouter un champ au modèle  mais a été interrompu.
+-   **Issue 5: Implémenter le message groupé pour les professeurs**
+    -   **Attempted fixes:** L'agent a jugé la tâche complexe et l'a reportée.
     -   **Next debug checklist:**
-        1.  Finaliser l'ajout du champ  au modèle  dans .
-        2.  Modifier le endpoint d'approbation d'étudiant pour mettre à jour ce statut si l'étudiant a payé via Stripe (nécessite une vérification du payload Stripe ou un webhook).
-        3.  Afficher un badge Payé à côté du nom de l'étudiant dans le dashboard admin.
-    -   **Why fix this issue and what will be achieved with the fix?** Donne à l'admin une vision claire du statut de paiement des étudiants.
+        1.  Dans , ajouter une interface similaire à celle de l'admin pour la messagerie groupée.
+        2.  Permettre la sélection de plusieurs étudiants assignés au professeur.
+        3.  Utiliser l'endpoint existant d'envoi de messages en masse.
+    -   **Why fix this issue and what will be achieved with the fix?** Améliorer l'outil de communication pour les professeurs.
     -   **Status:** NOT STARTED
     -   **Is recurring issue?** N
     -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on other issue:** non.
+    -   **Blocked on other issue:** Issue 1.
 
--   **Issue 5: Finaliser l'intégration des paiements FCFA (Orange Money)**
-    -   **Attempted fixes:** L'agent s'est concentré sur Wave.
-    -   **Next debug checklist:** Confirmer avec l'utilisateur s'il souhaite également des instructions pour Orange Money, en plus de Wave.
-    -   **Why fix this issue and what will be achieved with the fix?** Offrir plusieurs options de paiement manuel pour le marché local.
-    -   **Status:** NOT STARTED
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** frontend
-    -   **Blocked on other issue:** non.
-
--   **Issue 6: Finaliser l'intégration AWS SES**
-    -   **Attempted fixes:** N/A. L'envoi d'emails est toujours en mode mock.
-    -   **Next debug checklist:** Demander les clés AWS SES à l'utilisateur et configurer  pour un envoi réel.
-    -   **Why fix this issue and what will be achieved with the fix?** Permettre l'envoi réel des emails de bienvenue et de notifications.
-    -   **Status:** NOT STARTED
-    -   **Is recurring issue?** N
-    -   **Should Test frontend/backend/both after fix?** backend
-    -   **Blocked on other issue:** Bloqué sur l'obtention des clés par l'utilisateur.
-
--   **Issue 7: Erreur **
-    -   **Attempted fixes:** L'agent a ignoré cette erreur de console qui persiste.
-    -   **Next debug checklist:** Investiguer la cause première, probablement liée à Shadcn/Radix UI.
-    -   **Why fix this issue and what will be achieved with the fix?** Nettoyer la console et prévenir d'éventuels bugs d'affichage.
-    -   **Status:** NOT STARTED
-    -   **Is recurring issue?** Y
-    -   **Should Test frontend/backend/both after fix?** frontend
-    -   **Blocked on other issue:** non.
+... (Les autres issues de la précédente handoff n'ont pas été touchées)
 
 **In progress Task List**:
--   **Task 1: Fin de la demande multi-étapes (P0)**
-    -   **Where to resume:** Le travail a été commencé mais est loin d'être terminé. Le prochain agent doit reprendre la  de l'**Issue 1**. La priorité est de finir la carte de paiement Wave, puis de s'attaquer à la refonte de la messagerie admin.
-    -   **What will be achieved with this?** Implémentation d'un lot important de fonctionnalités et d'améliorations d'UX demandées par l'utilisateur.
+-   **Task 1: Finir la demande utilisateur sur le classement (P1)**
+    -   **Where to resume:** Le travail a été interrompu après avoir ajouté les boutons de réaction dans .
+    -   **What will be achieved with this?** Finaliser la fonctionnalité de classement comme demandé.
     -   **Status:** IN PROGRESS
     -   **Should Test frontend/backend/both after fix?** both
-    -   **Blocked on something:** Non.
+    -   **Blocked on something:** Issue 1: L'application a crashé.
 
 **Upcoming and Future Tasks**
 -   **Upcoming Tasks:**
-    -   Résoudre les problèmes de connexion des utilisateurs (P2).
-    -   Implémenter le badge Étudiant déjà payé (P2).
-    -   Vérification complète du site, comme demandé initialement par l'utilisateur.
-    -   Amélioration visuelle des dashboards (icônes, couleurs, etc. - Phase 5 du plan de l'agent).
+    -   (P2) Correction des actions sur les documents étudiants.
+    -   (P3) Implémentation du message groupé pour les professeurs.
+    -   (P4) Résoudre les problèmes de connexion des utilisateurs (reporté de la handoff précédente).
+    -   (P4) Implémenter le badge Étudiant déjà payé (reporté).
 -   **Future Tasks:**
-    -   Refactorisation majeure du backend pour décomposer le monolithe  (plus de 2500 lignes).
+    -   Refactorisation majeure du backend .
     -   Finaliser l'intégration réelle d'AWS SES.
-    -   Résoudre l'erreur .
+    -   Résoudre l'erreur  persistante.
+    -   Corriger la faille de sécurité des mots de passe (si l'utilisateur approuve).
 
 **Completed work in this session**
--   **Correction de bugs :** Résolution du bug  sur le dashboard admin et finalisation du renommage Pack professionnel.
--   **Kalamathèque :** Les intégrations IA (résumé, explication) et TTS (prononciation) ont été corrigées, testées et rendues 100% fonctionnelles en accès public (sans authentification).
--   **Suppression de la section Devoirs :** Les onglets et le contenu associé ont été retirés des dashboards étudiant et professeur.
--   **Implémentation de la section News :** Création des endpoints backend (CRUD) et des composants frontend pour la gestion (admin) et l'affichage (tous) des actualités, avec une visionneuse modale.
--   **Système de Lettres de Bienvenue :**
-    -   Envoi d'emails automatiques et personnalisés par niveau lors de l'approbation d'un étudiant.
-    -   Création d'une lettre de bienvenue in-app (modale) pour les nouveaux utilisateurs, qui disparaît une fois lue.
-    -   Ajout d'une signature personnalisée pour les professeurs.
--   **Implémentation du KALAMA CLUB :**
-    -   Création des endpoints et modèles backend pour un forum (posts, commentaires).
-    -   Création d'un composant frontend avec permissions : admin/prof peuvent poster (texte, image, vidéo), étudiants peuvent lire et commenter.
--   **Améliorations UI/UX :**
-    -   Les chiffres des statistiques du dashboard admin sont maintenant en vert (sauf En attente en rouge).
-    -   Un bouton de don a été ajouté au footer, puis retiré des dashboards prof/étudiant.
+- **Refonte majeure de la Messagerie Admin** : L'onglet Discussion liste désormais tous les professeurs et étudiants et utilise le composant  pour les messages individuels avec pièces jointes.
+- **Système de Prix Dynamique** : L'admin peut désormais gérer les prix des packs (EUR & FCFA) et appliquer des remises depuis son tableau de bord.
+- **Nouveau Pack K-Kid** : Un pack pour enfants a été ajouté, avec une gestion de prix et une carte dédiée sur la page d'accueil.
+- **Renommage des Packs** : Les packs ont été renommés en K-Débutant, K-Intermédiaire, K-Professionnel.
+- **Système de Classement Avancé** : L'admin peut gérer un classement dans le KALAMA CLUB, avec un badge Étudiant/Prof du mois animé qui s'affiche dans le club et le dashboard de l'utilisateur concerné.
+- **Likes et Commentaires sur les News** : Les utilisateurs peuvent désormais interagir avec les articles de la section News.
+- **Suppression du système de notification** : Un système complet de notifications (cloche, toasts, panneau latéral) a été construit puis entièrement supprimé à la demande de l'utilisateur.
+- **Améliorations UI/UX** : Correction des instructions de paiement Wave, espacement des onglets admin, changement de couleur du titre admin, lien d'inscription rendu plus visible.
 
 **Earlier issues found/mentioned but not fixed**
--   **Issue 1:  error.**
-    -   **Debug checklist:** Investiguer la cause première liée aux composants Shadcn/Radix UI. Envisager de mettre à jour les dépendances.
-    -   **Why to solve this issue and what will be achieved with this?** Assurer la propreté de la console et la stabilité à long terme de l'interface.
-    -   **Should Test frontend/backend/both after fix:** frontend
+-   **Issue 1: Crash de l'application ()**
+    -   **Debug checklist:** Voir Issue 1 dans la liste des problèmes en attente. C'est le problème le plus critique à résoudre.
+    -   **Why to solve this issue and what will be achieved with this?** L'application est actuellement inutilisable.
+    -   **Should Test frontend/backend/both after fix:** both
+    -   **Is recurring issue?** N
+-   **Issue 2: Erreur de chargement des documents (Error fetching documents)**
+    -   **Debug checklist:** Investiguer l'endpoint GET  dans  et la fonction  dans .
+    -   **Why to solve this issue and what will be achieved with this?** La section Documents de l'étudiant est cassée.
+    -   **Should Test frontend/backend/both after fix:** both
     -   **Is recurring issue?** Y
 
 **Known issue recurrence from previous fork**
--   **User's insistence on insecure features:** L'utilisateur a demandé à plusieurs reprises la réintroduction de la faille de sécurité des mots de passe en clair. Le prochain agent doit être préparé à gérer cette situation avec prudence et ne pas modifier ce comportement sans confirmation explicite.
+- Problèmes de connexion utilisateur, faille de sécurité des mots de passe, erreur . Aucun de ces problèmes n'a été traité dans cette session.
 
 **Code Architecture**
 
@@ -175,72 +572,78 @@ Une application full-stack (React/FastAPI/MongoDB) fonctionnelle et riche en fon
 **Key Technical Concepts**
 -   **Backend:** FastAPI, MongoDB (motor), JWT, Pydantic.
 -   **Frontend:** React, React Router, TailwindCSS, Shadcn UI, Axios.
--   **Intégrations:** Stripe (liens), AWS SES (mocké), **** (pour IA/TTS).
+-   **Architecture:** L'architecture devient de plus en plus fragile à cause du monolithe  et des composants React très volumineux.
 
 **key DB schema**
--   **users:**  (le champ  est toujours présent). Le champ  a été demandé.
--   **news:**  (nouvelle collection).
--   **welcome_letters:**  (nouvelle collection).
--   **club_posts:**  (nouvelle collection).
--   **club_comments:**  (nouvelle collection).
--   **messages:** le modèle a été modifié pour inclure .
+-   **pricing:**  (nouvelle collection pour les prix dynamiques).
+-   **club_leaderboard:**  (nouvelle collection).
+-   **student_of_the_month:**  (nouvelle collection).
+-   **news:** a été modifié pour inclure des tableaux  et .
 
 **changes in tech stack**
-- Pas de changement. Utilisation confirmée et réussie de  pour les fonctionnalités d'IA.
-
-**All files**
--   **Massivement modifiés :** , , , , , .
--   **Nouveaux fichiers créés :** , , , , , .
-
-**Areas that need refactoring**:
--   **Backend Monolithique :**  est critique. Il dépasse les 2500 lignes et devient très difficile à maintenir. Une décomposition en routeurs par fonctionnalité (auth, admin, kalamatheque, news, club) est impérative.
--   **Dashboards :** Les fichiers de dashboard (Admin, Student, Teacher) sont également très volumineux et contiennent beaucoup de logique. Ils pourraient être décomposés en sous-composants plus petits pour chaque onglet.
-
-**key api endpoints**
--    (GET, POST, PUT, DELETE) - CRUD pour les actualités.
--    (GET) - Récupère la lettre de bienvenue pour l'utilisateur connecté.
--    (GET, POST) - Gère les posts du Kalama Club.
--    (GET, POST) - Gère les commentaires du Kalama Club.
--    - Modifié pour accepter une .
-
-**Critical Info for New Agent**
--   **FAILLE DE SÉCURITÉ INTENTIONNELLE :** Soyez conscient que le stockage des mots de passe en clair () est une fonctionnalité demandée par l'utilisateur. Ne la changez pas sans son accord explicite.
--   **DEMANDES MULTIPLES :** L'utilisateur a l'habitude de fournir de longues listes de modifications dans un seul message. Lisez-les attentivement, planifiez les étapes et confirmez le plan avant de commencer. La dernière demande de l'utilisateur n'est que partiellement achevée.
--   **PROBLÈMES DE CONNEXION :** L'agent précédent a eu des difficultés à se connecter avec des comptes de test. C'est un point bloquant à investiguer en priorité pour pouvoir tester correctement les fonctionnalités des rôles prof et étudiant.
--   **MONOLITHE  :** Le backend est un fichier unique de plus de 2500 lignes. Soyez extrêmement prudent lors des modifications. Tout ajout de nouvelle fonctionnalité complexifie davantage la maintenance.
-
-**documents created in this job**
 - Aucun.
 
+**All files**
+-   **Nouveaux fichiers créés :** , , .
+-   **Fichiers entièrement supprimés :** , .
+-   **Fichiers massivement modifiés :** , , , , .
+
+**Areas that need refactoring**:
+-   **CRITIQUE : ** est devenu encore plus long et complexe. Il est impératif de le diviser en plusieurs routeurs (auth, users, pricing, club, news, etc.) pour maintenir le projet.
+-   **,  et ** sont devenus extrêmement volumineux et difficiles à suivre. Ils doivent être décomposés en sous-composants plus petits.
+-   **Gestion d'état des prix** : La logique de prix est répartie entre  et . Elle pourrait être centralisée via un React Context ou un hook personnalisé.
+
+**key api endpoints**
+-    (GET, POST): Gère les prix dynamiques.
+-    (GET, POST, DELETE): Gère le classement manuel.
+-    (GET, POST): Gère le badge Étudiant du Mois.
+-    (POST): Ajoute un like à un article.
+-    (POST): Ajoute un commentaire à un article.
+-    (DELETE): Supprime toutes les notifications (le système a été retiré du frontend).
+
+**Critical Info for New Agent**
+-   **L'APPLICATION EST CASSÉE.** Votre première tâche est de trouver et de corriger l'erreur . Ne développez rien de nouveau avant d'avoir résolu ce crash. Consultez les logs backend.
+-   **BUG DES PRIX NaN€.** Une fois l'application relancée, votre deuxième priorité est de corriger le bug d'affichage des prix sur la page d'accueil.
+-   **L'UTILISATEUR CHANGE SOUVENT D'AVIS.** Soyez très prudent avec les grandes fonctionnalités. Un système de notification complet a été construit puis jeté dans cette session. Confirmez bien les demandes et décomposez-les.
+-   **TÂCHES IGNORÉES.** L'agent précédent a ignoré des tâches importantes comme la correction des documents étudiants et l'implémentation des messages groupés pour les profs. Attendez-vous à ce que l'utilisateur les redemande.
+-   **MONOLITHE .** Ce fichier est une bombe à retardement. Chaque modification est risquée. La refactorisation est devenue urgente.
+
+**documents created in this job**
+- /app/TACHES_RESTANTES.md
+
 **Last 5 User Messages and any pending user messages**
-1.  **User:** Demande d'ajouter une option Lire dans les News, et d'envoyer un email de bienvenue automatique et personnalisé par niveau aux étudiants approuvés. (Status: COMPLETED)
-2.  **User:** Demande d'ajouter une lettre de bienvenue *dans l'application* pour les nouveaux étudiants et professeurs, avec des textes spécifiques. (Status: COMPLETED)
-3.  **User:** Demande que la lettre de bienvenue disparaisse après lecture et que les astérisques soient retirés des textes. (Status: COMPLETED)
-4.  **User:** Demande de vérifier que le site fonctionne bien et d'ajouter une option de don Stripe. (Status: COMPLETED)
-5.  **User:** Demande une très longue liste de modifications : créer un KALAMA CLUB, changer les couleurs des stats, réorganiser la messagerie admin, limiter les droits des étudiants dans le club, ajouter une signature à la lettre des profs, ajouter une lettre de bienvenue au club, un badge payé pour les étudiants, et des instructions pour les paiements en FCFA. (Status: **IN PROGRESS - C'est la tâche actuelle**).
+1.  **User:** Demande un système de classement manuel dans le Kalama Club, un badge Étudiant du Mois visible partout, la suppression du badge de notification (mais garder la cloche), et que Tout lire supprime les notifications. (Status: **PARTIALLY COMPLETED, LED TO CRASH**)
+2.  **User:** Demande de créer un pack K-Kid pour enfants à 30€ / 10 000 FCFA. (Status: **COMPLETED**, but NaN bug exists)
+3.  **User:** Demande d'ajouter des détails marketing au pack K-Kid, de renommer tous les packs (K-Débutant, etc.), de modifier le classement pour afficher Prof/Étudiant du mois avec des likes, de **supprimer complètement le système de notification**, et d'ajuster le dashboard admin. (Status: **IN PROGRESS**)
+4.  **User:** Confirme de continuer avec les tâches. (Status: Acknowledged)
+5.  **User:** Confirme de continuer avec toutes les tâches. (Status: Acknowledged)
 
 **Project Health Check:**
 -   **Broken:**
-    -   Le flux de connexion pour les professeurs et les étudiants semble instable ou cassé. L'agent précédent n'a pas réussi à se connecter avec des comptes de test.
+    -   L'application entière est probablement cassée à cause d'une erreur  au démarrage.
+    -   L'affichage des prix sur la page d'accueil est cassé (NaN€).
+    -   La fonctionnalité Documents pour les étudiants est probablement cassée (Error fetching documents).
+    -   La connexion des utilisateurs (étudiants/profs) est suspectée d'être instable (problème reporté).
 -   **Mocked:**
-    -   Le service d'email AWS SES est toujours configuré pour logger les emails en console au lieu de les envoyer réellement.
+    -   Le service d'email AWS SES est toujours en mode mock.
 -   **Critical Security Flaw:**
-    -   Les mots de passe des utilisateurs sont stockés en clair dans la base de données, à la demande explicite de l'utilisateur.
+    -   Les mots de passe sont toujours stockés en clair.
 
 **Testing status**
--   **Testing agent used after significant changes:** YES (pour la fonctionnalité Kalamathèque).
+-   **Testing agent used after significant changes:** NO
 -   **Troubleshoot agent used after agent stuck in loop:** NO
 -   **Test files created:** []
--   **Known regressions:** La faille de sécurité des mots de passe.
+-   **Known regressions:**
+    -   Introduction d'un crash fatal au démarrage de l'application.
+    -   Introduction d'un bug NaN sur l'affichage des prix.
 
 **Credentials to test flow:**
 -   **Admin:**  / 
 -   **Kalamathèque Access Code:** 
--   **Note:** La connexion des comptes étudiants/professeurs peut échouer. Il faudra peut-être créer un nouvel utilisateur ou déboguer le processus de connexion pour tester ces rôles.
+-   **Note:** La connexion des comptes étudiants/professeurs est peut-être toujours instable. Il faudra probablement déboguer le crash de l'application avant de pouvoir tester quoi que ce soit.
 
 **What agent forgot to execute**
-L'agent n'a pas oublié mais a été interrompu au milieu d'une très grande demande utilisateur. Les points les plus importants de cette demande qui ne sont pas encore (ou peu) traités sont :
--   Le badge Étudiant déjà payé.
--   La refonte complète de la messagerie de l'admin.
--   La finalisation des actions sur les documents dans le dashboard étudiant.
--   La clarification sur le paiement Orange Money en plus de Wave.</analysis>
+-   **Ignorer un crash fatal** : L'agent a reçu une erreur  et a continué à travailler sans la diagnostiquer, laissant l'application dans un état cassé.
+-   **Ignorer une régression critique** : L'agent a vu le bug NaN€ sur les screenshots mais l'a ignoré.
+-   **Tâches utilisateur reportées** : L'agent a délibérément sauté la correction des documents étudiants et l'implémentation des messages groupés pour les professeurs, bien qu'elles aient été demandées.
+-   **Anciens problèmes non résolus** : Aucun des problèmes en attente de la handoff précédente (connexion, sécurité, etc.) n'a été abordé.</analysis>
