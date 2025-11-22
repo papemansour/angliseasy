@@ -510,6 +510,34 @@ async def restrict_student(student_id: str, current_user: dict = Depends(get_cur
         "is_restricted": new_status
     }
 
+@api_router.post("/admin/restrict-user/{user_id}")
+async def restrict_user_generic(user_id: str, current_user: dict = Depends(get_current_user)):
+    """Generic endpoint to restrict/unrestrict any user (student or teacher)"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user['role'] == 'admin':
+        raise HTTPException(status_code=403, detail="Cannot restrict admin")
+    
+    # Toggle restriction status
+    new_status = not user.get('is_restricted', False)
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {"is_restricted": new_status}}
+    )
+    
+    action = "restricted" if new_status else "unrestricted"
+    logger.info(f"{user['role'].title()} {action}: {user['email']}")
+    
+    return {
+        "message": f"Access {'restricted' if new_status else 'restored'} successfully",
+        "is_restricted": new_status
+    }
+
 @api_router.get("/admin/session-notifications")
 async def get_session_notifications(current_user: dict = Depends(get_current_user)):
     if current_user['role'] != 'admin':
