@@ -28,6 +28,7 @@ import AvailabilityScheduler from '../components/AvailabilityScheduler';
 import ConversationChat from '../components/ConversationChat';
 import NewsDisplay from '../components/NewsDisplay';
 import WelcomeLetter from '../components/WelcomeLetter';
+import DonationButton from '../components/DonationButton';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
