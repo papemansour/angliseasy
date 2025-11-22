@@ -330,6 +330,17 @@ const StudentDashboard = () => {
                           <div className="flex flex-col gap-2">
                             <Button
                               size="sm"
+                              onClick={() => {
+                                setPreviewDocument(doc);
+                                setShowPreviewDialog(true);
+                              }}
+                              className="bg-purple-600 hover:bg-purple-700"
+                            >
+                              <Eye className="w-4 h-4 mr-1" />
+                              Visualiser
+                            </Button>
+                            <Button
+                              size="sm"
                               onClick={() => window.open(doc.file_url, '_blank')}
                               className="bg-teal-600 hover:bg-teal-700"
                             >
@@ -343,6 +354,7 @@ const StudentDashboard = () => {
                                 link.href = doc.file_url;
                                 link.download = doc.title;
                                 link.click();
+                                toast.success('Téléchargement démarré');
                               }}
                               className="border-blue-500 text-blue-600"
                             >
