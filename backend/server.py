@@ -1840,8 +1840,8 @@ async def delete_book(book_id: str, current_user: dict = Depends(get_current_use
     return {"message": "Livre supprimé avec succès"}
 
 @api_router.post("/kalamatheque/ai-assistant")
-async def kalamatheque_ai_assistant(data: dict, current_user: dict = Depends(get_current_user)):
-    """AI Assistant for Kalamathèque - summarize, explain, or give examples"""
+async def kalamatheque_ai_assistant(data: dict):
+    """AI Assistant for Kalamathèque - summarize, explain, or give examples (public access)"""
     action = data.get('action')  # 'summarize', 'explain', 'examples'
     selected_text = data.get('text')
     
@@ -1861,14 +1861,14 @@ async def kalamatheque_ai_assistant(data: dict, current_user: dict = Depends(get
         
         chat = LlmChat(
             api_key=os.environ.get('EMERGENT_LLM_KEY'),
-            session_id=current_user['id'],
+            session_id="kalamatheque_public",
             system_message="Vous êtes un assistant pédagogique qui aide les étudiants à comprendre les textes."
         )
         
         user_message = UserMessage(text=prompt)
         result = await chat.send_message(user_message)
         
-        logger.info(f"AI Assistant used by {current_user['id']} - action: {action}")
+        logger.info(f"AI Assistant used - action: {action}")
         return {"result": result}
         
     except Exception as e:
