@@ -473,18 +473,21 @@ async def approve_registration(user_id: str, current_user: dict = Depends(get_cu
         {"$set": {"is_active": True, "password_hash": password_hash, "temporary_password": temp_password}}
     )
     
-    # Send welcome email
-    await email_service.send_welcome_email(
+    # Send level-based welcome email
+    await email_service.send_level_based_welcome_email(
         user['email'],
         user['first_name'],
-        user['last_name'],
+        user.get('level', 'beginner'),  # Get level from user data, default to beginner
         temp_password
     )
+    
+    logger.info(f"User {user_id} approved and level-based welcome email sent (Level: {user.get('level', 'beginner')})")
     
     return {
         "message": "User approved and welcome email sent",
         "email": user['email'],
-        "temporary_password": temp_password
+        "temporary_password": temp_password,
+        "level": user.get('level', 'beginner')
     }
 
 @api_router.post("/admin/create-teacher")
