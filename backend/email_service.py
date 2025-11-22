@@ -208,7 +208,7 @@ class EmailService:
                     </div>
                     
                     <center>
-                        <a href="https://englishlearn-4.preview.emergentagent.com/admin" class="button">
+                        <a href="{self.frontend_url}/admin" class="button">
                             Accéder au Dashboard Admin
                         </a>
                     </center>
@@ -240,7 +240,7 @@ class EmailService:
         
         Veuillez vous connecter au dashboard admin pour approuver cette inscription.
         
-        Lien dashboard: https://englishlearn-4.preview.emergentagent.com/admin
+        Lien dashboard: {self.frontend_url}/admin
         """
         
         return await self._send_email(admin_email, subject, html_body, text_body)
