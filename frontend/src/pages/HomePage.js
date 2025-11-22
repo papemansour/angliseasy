@@ -460,8 +460,19 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Registration Form */}
-      <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white" id="register">
+      {/* Registration Modal */}
+      <Dialog open={showRegistrationModal} onOpenChange={setShowRegistrationModal}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-teal-800">
+              {selectedPlan ? `Inscription - ${selectedPlan.name}` : 'Rejoignez MyKalamaenglish'}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedPlan ? `Inscrivez-vous et payez ${formatPrice(selectedPlan.price)}` : 'Inscrivez-vous maintenant et commencez votre parcours d\'apprentissage'}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleSubmit} className="space-y-4">
         <div className="container mx-auto max-w-2xl">
           <Card className="shadow-2xl border-teal-100">
             <CardHeader>
