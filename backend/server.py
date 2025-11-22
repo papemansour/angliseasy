@@ -1996,6 +1996,67 @@ async def get_my_conversations(current_user: dict = Depends(get_current_user)):
     
     return users
 
+# ==================== NOTIFICATIONS ENDPOINTS ====================
+
+async def create_notification(user_id: str, title: str, message: str, notification_type: str):
+    """Helper function to create a notification"""
+    notification = {
+        "id": str(uuid4()),
+        "user_id": user_id,
+        "title": title,
+        "message": message,
+        "type": notification_type,  # 'message', 'news', 'club', 'book'
+        "is_read": False,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.notifications.insert_one(notification)
+    return notification
+
+@api_router.get("/notifications/my-notifications")
+async def get_my_notifications(current_user: User = Depends(get_current_user)):
+    """Get all notifications for the current user"""
+    notifications = await db.notifications.find(
+        {"user_id": current_user.id},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(50).to_list(50)
+    return notifications
+
+@api_router.put("/notifications/{notification_id}/read")
+async def mark_notification_as_read(
+    notification_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Mark a notification as read"""
+    result = await db.notifications.update_one(
+        {"id": notification_id, "user_id": current_user.id},
+        {"$set": {"is_read": True}}
+    )
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    return {"message": "Notification marked as read"}
+
+@api_router.put("/notifications/mark-all-read")
+async def mark_all_notifications_as_read(current_user: User = Depends(get_current_user)):
+    """Mark all notifications as read for the current user"""
+    await db.notifications.update_many(
+        {"user_id": current_user.id, "is_read": False},
+        {"$set": {"is_read": True}}
+    )
+    return {"message": "All notifications marked as read"}
+
+@api_router.delete("/notifications/{notification_id}")
+async def delete_notification(
+    notification_id: str,
+    current_user: User = Depends(get_current_user)
+):
+    """Delete a notification"""
+    result = await db.notifications.delete_one(
+        {"id": notification_id, "user_id": current_user.id}
+    )
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    return {"message": "Notification deleted"}
+
 # Initialize admin user
 @app.on_event("startup")
 async def create_admin():
