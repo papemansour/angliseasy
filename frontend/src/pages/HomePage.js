@@ -27,6 +27,13 @@ import {
 import { toast } from 'sonner';
 import axios from 'axios';
 import { ChevronRight, Users, BookOpen, Clock, Calendar as CalendarIcon, X } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '../components/ui/dialog';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import Testimonials from '../components/Testimonials';
