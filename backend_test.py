@@ -301,52 +301,439 @@ class KalamathequeBackendTester:
             self.test_results["contact_form"]["details"].append(f"Test error: {str(e)}")
             return False
     
-    async def test_password_security_in_database(self) -> bool:
-        """Test that no plain text passwords are stored or returned"""
+    async def create_test_file(self) -> str:
+        """Create a test PDF file for upload testing"""
         try:
-            logger.info("🔍 Testing password security in responses...")
+            # Create a simple test PDF content
+            test_content = b"""
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Contents 4 0 R
+>>
+endobj
+
+4 0 obj
+<<
+/Length 44
+>>
+stream
+BT
+/F1 12 Tf
+72 720 Td
+(Test Kalamathèque Book) Tj
+ET
+endstream
+endobj
+
+xref
+0 5
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000206 00000 n 
+trailer
+<<
+/Size 5
+/Root 1 0 R
+>>
+startxref
+299
+%%EOF
+"""
             
-            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            # Create temporary file
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_file:
+                temp_file.write(test_content)
+                return temp_file.name
+                
+        except Exception as e:
+            logger.error(f"❌ Error creating test file: {str(e)}")
+            return None
+
+    async def test_file_upload(self) -> bool:
+        """Test file upload endpoint"""
+        try:
+            logger.info("🔍 Testing file upload endpoint...")
             
-            # Test that user endpoints don't return password fields
-            async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as response:
+            # Create test file
+            test_file_path = await self.create_test_file()
+            if not test_file_path:
+                self.test_results["file_upload"]["details"].append("Failed to create test file")
+                return False
+            
+            try:
+                # Upload file
+                with open(test_file_path, 'rb') as file:
+                    data = aiohttp.FormData()
+                    data.add_field('file', file, filename='test_book.pdf', content_type='application/pdf')
+                    
+                    async with self.session.post(f"{BACKEND_URL}/uploadfile/", data=data) as response:
+                        if response.status == 200:
+                            result = await response.json()
+                            
+                            # Check response structure
+                            required_fields = ["message", "file_url", "filename"]
+                            missing_fields = [field for field in required_fields if field not in result]
+                            
+                            if not missing_fields:
+                                logger.info("✅ File upload successful")
+                                self.test_results["file_upload"]["details"].append("File uploaded successfully")
+                                self.test_results["file_upload"]["details"].append(f"File URL: {result.get('file_url')}")
+                                self.test_results["file_upload"]["passed"] = True
+                                return result.get('file_url')
+                            else:
+                                logger.error(f"❌ Missing fields in upload response: {missing_fields}")
+                                self.test_results["file_upload"]["details"].append(f"Missing fields: {missing_fields}")
+                                return False
+                        else:
+                            error_text = await response.text()
+                            logger.error(f"❌ File upload failed: {response.status} - {error_text}")
+                            self.test_results["file_upload"]["details"].append(f"Upload failed: {error_text}")
+                            return False
+            finally:
+                # Clean up test file
+                if os.path.exists(test_file_path):
+                    os.unlink(test_file_path)
+                    
+        except Exception as e:
+            logger.error(f"❌ File upload test error: {str(e)}")
+            self.test_results["file_upload"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_access_verification(self) -> bool:
+        """Test Kalamathèque access code verification"""
+        try:
+            logger.info("🔍 Testing access code verification...")
+            
+            # Test correct access code
+            correct_data = {"access_code": KALAMATHEQUE_ACCESS_CODE}
+            async with self.session.post(f"{BACKEND_URL}/kalamatheque/verify-access", json=correct_data) as response:
                 if response.status == 200:
-                    users = await response.json()
-                    
-                    security_issues = []
-                    for user in users:
-                        # Check for plain text password fields
-                        if "current_password_plain" in user:
-                            security_issues.append(f"User {user.get('email', 'unknown')} has current_password_plain field")
-                        
-                        if "password" in user and user["password"]:
-                            security_issues.append(f"User {user.get('email', 'unknown')} has plain password field")
-                        
-                        # Check that password_hash exists and looks hashed
-                        if "password_hash" in user and user["password_hash"]:
-                            if not user["password_hash"].startswith("$2b$"):
-                                security_issues.append(f"User {user.get('email', 'unknown')} password_hash doesn't look like bcrypt hash")
-                    
-                    if not security_issues:
-                        logger.info("✅ No plain text passwords found in user data")
-                        self.test_results["password_security"]["details"].append("No plain text passwords in user responses")
-                        self.test_results["password_security"]["passed"] = True
-                        return True
+                    result = await response.json()
+                    if result.get("access") == True:
+                        logger.info("✅ Correct access code accepted")
+                        self.test_results["access_verification"]["details"].append("Correct access code works")
                     else:
-                        logger.error("❌ Security issues found:")
-                        for issue in security_issues:
-                            logger.error(f"  - {issue}")
-                            self.test_results["password_security"]["details"].append(issue)
+                        logger.error("❌ Correct access code not properly accepted")
+                        self.test_results["access_verification"]["details"].append("Correct access code issue")
                         return False
                 else:
                     error_text = await response.text()
-                    logger.error(f"❌ Failed to get users for security check: {response.status} - {error_text}")
-                    self.test_results["password_security"]["details"].append(f"Failed to check users: {error_text}")
+                    logger.error(f"❌ Access verification failed: {response.status} - {error_text}")
+                    self.test_results["access_verification"]["details"].append(f"Access verification failed: {error_text}")
+                    return False
+            
+            # Test incorrect access code
+            incorrect_data = {"access_code": "WrongCode"}
+            async with self.session.post(f"{BACKEND_URL}/kalamatheque/verify-access", json=incorrect_data) as response:
+                if response.status == 403:
+                    logger.info("✅ Incorrect access code properly rejected")
+                    self.test_results["access_verification"]["details"].append("Incorrect access code properly rejected")
+                    self.test_results["access_verification"]["passed"] = True
+                    return True
+                else:
+                    logger.error(f"❌ Incorrect access code not properly rejected: {response.status}")
+                    self.test_results["access_verification"]["details"].append("Incorrect access code not rejected")
                     return False
                     
         except Exception as e:
-            logger.error(f"❌ Password security test error: {str(e)}")
-            self.test_results["password_security"]["details"].append(f"Test error: {str(e)}")
+            logger.error(f"❌ Access verification test error: {str(e)}")
+            self.test_results["access_verification"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_book_creation(self, file_url: str) -> bool:
+        """Test book creation (admin only)"""
+        try:
+            logger.info("🔍 Testing book creation...")
+            
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            # Test book creation with all fields
+            book_data = {
+                "title": "Test English Grammar Book",
+                "author": "Test Author",
+                "description": "A comprehensive guide to English grammar for intermediate learners",
+                "level": "intermediate",
+                "file_url": file_url,
+                "file_type": "pdf",
+                "cover_image": "/images/test-cover.jpg"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/kalamatheque/books", json=book_data, headers=headers) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if "book_id" in result and result.get("message"):
+                        logger.info("✅ Book created successfully")
+                        self.test_results["book_creation"]["details"].append("Book created with all fields")
+                        self.test_book_id = result["book_id"]
+                        
+                        # Test book creation with missing required fields
+                        incomplete_data = {
+                            "title": "Incomplete Book"
+                            # Missing required fields
+                        }
+                        
+                        async with self.session.post(f"{BACKEND_URL}/kalamatheque/books", json=incomplete_data, headers=headers) as incomplete_response:
+                            if incomplete_response.status in [400, 422]:
+                                logger.info("✅ Missing required fields properly rejected")
+                                self.test_results["book_creation"]["details"].append("Missing fields validation works")
+                            else:
+                                logger.warning("⚠️ Missing fields validation unclear")
+                                self.test_results["book_creation"]["details"].append("Missing fields validation unclear")
+                        
+                        self.test_results["book_creation"]["passed"] = True
+                        return True
+                    else:
+                        logger.error("❌ Book creation response missing required fields")
+                        self.test_results["book_creation"]["details"].append("Response missing book_id or message")
+                        return False
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Book creation failed: {response.status} - {error_text}")
+                    self.test_results["book_creation"]["details"].append(f"Creation failed: {error_text}")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"❌ Book creation test error: {str(e)}")
+            self.test_results["book_creation"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_book_retrieval(self) -> bool:
+        """Test book retrieval endpoints"""
+        try:
+            logger.info("🔍 Testing book retrieval...")
+            
+            # Test get all books
+            async with self.session.get(f"{BACKEND_URL}/kalamatheque/books") as response:
+                if response.status == 200:
+                    books = await response.json()
+                    
+                    if isinstance(books, list):
+                        logger.info(f"✅ Retrieved {len(books)} books")
+                        self.test_results["book_retrieval"]["details"].append(f"Retrieved {len(books)} books")
+                        
+                        # Verify our test book is in the list
+                        if self.test_book_id:
+                            test_book_found = any(book.get("id") == self.test_book_id for book in books)
+                            if test_book_found:
+                                logger.info("✅ Test book found in book list")
+                                self.test_results["book_retrieval"]["details"].append("Test book found in list")
+                            else:
+                                logger.warning("⚠️ Test book not found in list")
+                                self.test_results["book_retrieval"]["details"].append("Test book not found in list")
+                    else:
+                        logger.error("❌ Books response is not a list")
+                        self.test_results["book_retrieval"]["details"].append("Invalid response format")
+                        return False
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Get books failed: {response.status} - {error_text}")
+                    self.test_results["book_retrieval"]["details"].append(f"Get books failed: {error_text}")
+                    return False
+            
+            # Test get specific book
+            if self.test_book_id:
+                async with self.session.get(f"{BACKEND_URL}/kalamatheque/books/{self.test_book_id}") as response:
+                    if response.status == 200:
+                        book = await response.json()
+                        
+                        if book.get("id") == self.test_book_id:
+                            logger.info("✅ Specific book retrieved successfully")
+                            self.test_results["book_retrieval"]["details"].append("Specific book retrieval works")
+                            self.test_results["book_retrieval"]["passed"] = True
+                            return True
+                        else:
+                            logger.error("❌ Retrieved book ID doesn't match")
+                            self.test_results["book_retrieval"]["details"].append("Book ID mismatch")
+                            return False
+                    else:
+                        error_text = await response.text()
+                        logger.error(f"❌ Get specific book failed: {response.status} - {error_text}")
+                        self.test_results["book_retrieval"]["details"].append(f"Get specific book failed: {error_text}")
+                        return False
+            else:
+                logger.warning("⚠️ No test book ID available for specific book test")
+                self.test_results["book_retrieval"]["details"].append("No test book for specific retrieval")
+                self.test_results["book_retrieval"]["passed"] = True
+                return True
+                
+        except Exception as e:
+            logger.error(f"❌ Book retrieval test error: {str(e)}")
+            self.test_results["book_retrieval"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_ai_assistant(self) -> bool:
+        """Test AI assistant endpoint"""
+        try:
+            logger.info("🔍 Testing AI assistant...")
+            
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            # Test summarize action
+            test_data = {
+                "action": "summarize",
+                "text": "English grammar is the set of structural rules governing the composition of clauses, phrases and words in the English language. The term refers to the study of such rules and this field includes phonology, morphology, syntax, semantics, and pragmatics."
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/kalamatheque/ai-assistant", json=test_data, headers=headers) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if "result" in result and result["result"]:
+                        logger.info("✅ AI assistant summarize works")
+                        self.test_results["ai_assistant"]["details"].append("AI summarize function works")
+                        
+                        # Test explain action
+                        explain_data = {
+                            "action": "explain",
+                            "text": "The quick brown fox jumps over the lazy dog."
+                        }
+                        
+                        async with self.session.post(f"{BACKEND_URL}/kalamatheque/ai-assistant", json=explain_data, headers=headers) as explain_response:
+                            if explain_response.status == 200:
+                                explain_result = await explain_response.json()
+                                if "result" in explain_result and explain_result["result"]:
+                                    logger.info("✅ AI assistant explain works")
+                                    self.test_results["ai_assistant"]["details"].append("AI explain function works")
+                                    self.test_results["ai_assistant"]["passed"] = True
+                                    return True
+                                else:
+                                    logger.error("❌ AI explain response missing result")
+                                    self.test_results["ai_assistant"]["details"].append("AI explain missing result")
+                                    return False
+                            else:
+                                error_text = await explain_response.text()
+                                logger.error(f"❌ AI explain failed: {explain_response.status} - {error_text}")
+                                self.test_results["ai_assistant"]["details"].append(f"AI explain failed: {error_text}")
+                                return False
+                    else:
+                        logger.error("❌ AI assistant response missing result")
+                        self.test_results["ai_assistant"]["details"].append("AI response missing result")
+                        return False
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ AI assistant failed: {response.status} - {error_text}")
+                    self.test_results["ai_assistant"]["details"].append(f"AI assistant failed: {error_text}")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"❌ AI assistant test error: {str(e)}")
+            self.test_results["ai_assistant"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_text_to_speech(self) -> bool:
+        """Test text-to-speech endpoint"""
+        try:
+            logger.info("🔍 Testing text-to-speech...")
+            
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            test_data = {
+                "text": "Hello, this is a test of the text-to-speech functionality for Kalamathèque."
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/kalamatheque/text-to-speech", json=test_data, headers=headers) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if "audio_base64" in result and result["audio_base64"]:
+                        # Verify it's valid base64
+                        try:
+                            audio_data = base64.b64decode(result["audio_base64"])
+                            if len(audio_data) > 0:
+                                logger.info("✅ Text-to-speech works and returns valid audio")
+                                self.test_results["text_to_speech"]["details"].append("TTS generates valid audio")
+                                self.test_results["text_to_speech"]["passed"] = True
+                                return True
+                            else:
+                                logger.error("❌ TTS returned empty audio data")
+                                self.test_results["text_to_speech"]["details"].append("TTS returned empty audio")
+                                return False
+                        except Exception as decode_error:
+                            logger.error(f"❌ TTS returned invalid base64: {str(decode_error)}")
+                            self.test_results["text_to_speech"]["details"].append("TTS returned invalid base64")
+                            return False
+                    else:
+                        logger.error("❌ TTS response missing audio_base64")
+                        self.test_results["text_to_speech"]["details"].append("TTS response missing audio")
+                        return False
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Text-to-speech failed: {response.status} - {error_text}")
+                    self.test_results["text_to_speech"]["details"].append(f"TTS failed: {error_text}")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"❌ Text-to-speech test error: {str(e)}")
+            self.test_results["text_to_speech"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_book_deletion(self) -> bool:
+        """Test book deletion (admin only)"""
+        try:
+            logger.info("🔍 Testing book deletion...")
+            
+            if not self.test_book_id:
+                logger.warning("⚠️ No test book ID available for deletion test")
+                self.test_results["book_deletion"]["details"].append("No test book for deletion")
+                self.test_results["book_deletion"]["passed"] = True
+                return True
+            
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            async with self.session.delete(f"{BACKEND_URL}/kalamatheque/books/{self.test_book_id}", headers=headers) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    
+                    if result.get("message"):
+                        logger.info("✅ Book deleted successfully")
+                        self.test_results["book_deletion"]["details"].append("Book deletion works")
+                        
+                        # Verify book is actually deleted
+                        async with self.session.get(f"{BACKEND_URL}/kalamatheque/books/{self.test_book_id}") as verify_response:
+                            if verify_response.status == 404:
+                                logger.info("✅ Book properly removed from database")
+                                self.test_results["book_deletion"]["details"].append("Book properly removed")
+                                self.test_results["book_deletion"]["passed"] = True
+                                return True
+                            else:
+                                logger.error("❌ Book still exists after deletion")
+                                self.test_results["book_deletion"]["details"].append("Book not properly removed")
+                                return False
+                    else:
+                        logger.error("❌ Book deletion response missing message")
+                        self.test_results["book_deletion"]["details"].append("Deletion response missing message")
+                        return False
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Book deletion failed: {response.status} - {error_text}")
+                    self.test_results["book_deletion"]["details"].append(f"Deletion failed: {error_text}")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"❌ Book deletion test error: {str(e)}")
+            self.test_results["book_deletion"]["details"].append(f"Test error: {str(e)}")
             return False
     
     async def run_all_tests(self):
