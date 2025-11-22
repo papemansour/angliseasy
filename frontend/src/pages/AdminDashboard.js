@@ -684,16 +684,23 @@ const AdminDashboard = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>Contacts</CardTitle>
-                  <CardDescription>Professeurs et Étudiants</CardDescription>
+                  <CardDescription>Sélection multiple possible</CardDescription>
                 </CardHeader>
                 <CardContent>
+                  {selectedRecipients.length > 0 && (
+                    <div className="mb-3 p-2 bg-blue-50 rounded-lg">
+                      <p className="text-sm font-semibold text-blue-700">
+                        {selectedRecipients.length} personne(s) sélectionnée(s)
+                      </p>
+                    </div>
+                  )}
                   <div className="space-y-2 max-h-[600px] overflow-y-auto">
                     {conversations.map((contact) => (
                       <button
                         key={contact.id}
-                        onClick={() => handleSelectRecipient(contact)}
-                        className={`w-full p-3 rounded-lg text-left transition ${
-                          selectedRecipient?.id === contact.id
+                        onClick={() => handleToggleRecipient(contact)}
+                        className={`w-full p-3 rounded-lg text-left transition relative ${
+                          selectedRecipients.find(r => r.id === contact.id)
                             ? 'bg-blue-100 border-2 border-blue-600'
                             : 'bg-gray-50 hover:bg-blue-50 border-2 border-transparent'
                         }`}
