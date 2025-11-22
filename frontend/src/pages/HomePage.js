@@ -118,6 +118,33 @@ const HomePage = () => {
     return slots.join(' | ');
   };
 
+  const handleAddGroupMember = () => {
+    if (groupMembers.length < 3) {
+      setGroupMembers([...groupMembers, { 
+        first_name: '', 
+        last_name: '', 
+        email: '', 
+        phone: '', 
+        country_code: '+33', 
+        level: '' 
+      }]);
+    } else {
+      toast.error('Maximum 3 personnes pour un cours groupé');
+    }
+  };
+
+  const handleRemoveGroupMember = (index) => {
+    if (groupMembers.length > 1) {
+      setGroupMembers(groupMembers.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleGroupMemberChange = (index, field, value) => {
+    const updated = [...groupMembers];
+    updated[index][field] = value;
+    setGroupMembers(updated);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
