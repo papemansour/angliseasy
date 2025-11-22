@@ -464,7 +464,7 @@ const HomePage = () => {
                       {formatPrice(pricingData.kkid_eur)}
                     </div>
                   )}
-                  <div className="text-4xl md:text-5xl font-bold text-pink-600">
+                  <div className="text-2xl md:text-3xl font-bold text-pink-600">
                     {formatPriceWithSmallFCFA(pricingData.kkid_eur - (pricingData.kkid_discount || 0))}
                   </div>
                   {pricingData.kkid_discount > 0 && (
