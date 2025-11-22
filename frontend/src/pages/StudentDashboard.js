@@ -153,6 +153,11 @@ const StudentDashboard = () => {
       </nav>
 
       <div className="container mx-auto px-4 py-12 max-w-7xl">
+        {/* Student of the Month Badge - Affichage ÉNORME pour célébrer */}
+        <div className="mb-8 flex justify-center">
+          <StudentOfMonthBadge showInProfile={true} />
+        </div>
+
         {/* Header avec info prof */}
         <div className="mb-8">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Espace Étudiant</h2>
