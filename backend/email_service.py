@@ -413,6 +413,159 @@ class EmailService:
         """
         
         return await self._send_email(to_email, subject, html_body, text_body)
+    
+    async def send_level_based_welcome_email(
+        self, 
+        to_email: str, 
+        first_name: str, 
+        level: str,
+        temp_password: str
+    ) -> bool:
+        """
+        Send level-based welcome email to newly approved student
+        """
+        subject = "Bienvenue sur MYKALMAENGLISH ! 🎉"
+        
+        # Determine content based on level
+        if level == "beginner":
+            content_title = "Débutant"
+            content_body = f"""
+                    <p>Hello <strong>{first_name}</strong>,</p>
+                    
+                    <p>Nous sommes ravis de vous accueillir sur <strong>MYKALMAENGLISH</strong> ! 🎉</p>
+                    
+                    <p>Félicitations pour avoir fait le premier pas dans votre parcours d'apprentissage de l'anglais. En tant que débutant, vous trouverez que notre plateforme est conçue pour vous accompagner à chaque étape. Voici ce à quoi vous pouvez vous attendre :</p>
+                    
+                    <ul>
+                        <li><strong>Leçons interactives :</strong> un contenu engageant adapté aux débutants pour vous aider à construire une base solide en anglais.</li>
+                        <li><strong>Apprentissage flexible :</strong> accédez à vos cours à tout moment, partout, à votre propre rythme.</li>
+                        <li><strong>Communauté de soutien :</strong> rejoignez notre communauté dynamique d'apprenants et d'instructeurs qui sont là pour vous aider à réussir.</li>
+                    </ul>
+            """
+        elif level == "intermediate":
+            content_title = "Intermédiaire"
+            content_body = f"""
+                    <p>Hello <strong>{first_name}</strong>,</p>
+                    
+                    <p>Nous sommes ravis de vous accueillir sur <strong>MYKALMAENGLISH</strong> ! Vous vous êtes inscrit avec succès à notre cours en ligne de niveau intermédiaire, et nous sommes impatients de vous accompagner dans votre apprentissage de la langue.</p>
+                    
+                    <ul>
+                        <li><strong>Leçons interactives :</strong> un contenu engageant adapté à votre niveau pour vous aider à approfondir vos connaissances en anglais.</li>
+                        <li><strong>Apprentissage flexible :</strong> accédez à vos cours à tout moment, partout, à votre propre rythme.</li>
+                        <li><strong>Communauté de soutien :</strong> rejoignez notre communauté dynamique d'apprenants et d'instructeurs qui sont là pour vous aider à réussir.</li>
+                    </ul>
+                    
+                    <p>Sur MYKALMAENGLISH, vous trouverez une variété de ressources conçues pour améliorer vos compétences en anglais, notamment des leçons interactives, des exercices engageants et une communauté d'apprenants soudée. Nous vous encourageons à explorer la plateforme et à profiter pleinement de tout ce que nous offrons.</p>
+            """
+        else:  # advanced / Pack professionnel
+            content_title = "Pack Professionnel"
+            content_body = f"""
+                    <p>Hello <strong>{first_name}</strong>,</p>
+                    
+                    <p>Nous sommes ravis de vous accueillir sur <strong>MYKALMAENGLISH</strong> ! Vous avez franchi une étape importante pour améliorer vos compétences en anglais professionnel, et nous sommes impatients de vous accompagner dans cette aventure.</p>
+                    
+                    <p>Notre programme de formation intensive et accélérée en anglais est conçu spécialement pour des professionnels comme vous. Voici ce que vous pouvez attendre :</p>
+                    
+                    <ul>
+                        <li><strong>Apprentissage complet :</strong> Engagez-vous avec un contenu adapté qui se concentre sur des applications concrètes.</li>
+                        <li><strong>Accès flexible :</strong> Apprenez à votre rythme grâce à notre plateforme en ligne, disponible à tout moment et de n'importe où.</li>
+                        <li><strong>Communauté de soutien :</strong> Connectez-vous avec d'autres apprenants et des instructeurs qui sont là pour vous soutenir.</li>
+                    </ul>
+            """
+        
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); 
+                          color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .credentials {{ background: white; padding: 20px; border-left: 4px solid #14b8a6; 
+                               margin: 20px 0; border-radius: 5px; }}
+                .features {{ background: white; padding: 20px; margin: 20px 0; border-radius: 5px; }}
+                .button {{ display: inline-block; padding: 15px 30px; background: #14b8a6; 
+                          color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }}
+                .footer {{ text-align: center; margin-top: 30px; color: #666; font-size: 12px; }}
+                ul {{ padding-left: 20px; }}
+                li {{ margin: 10px 0; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Bienvenue sur MYKALMAENGLISH !</h1>
+                    <p>Niveau : {content_title}</p>
+                </div>
+                <div class="content">
+                    {content_body}
+                    
+                    <div class="credentials">
+                        <h3>📧 VOS IDENTIFIANTS DE CONNEXION</h3>
+                        <p><strong>Email :</strong> {to_email}</p>
+                        <p><strong>Mot de passe provisoire :</strong> <code style="background: #f0f0f0; padding: 5px 10px; border-radius: 3px; font-size: 16px;">{temp_password}</code></p>
+                    </div>
+                    
+                    <div class="features">
+                        <h3>🎓 VOS ACCÈS</h3>
+                        <ul>
+                            <li><strong>Kalamathèque :</strong> Bibliothèque en ligne avec un accès illimité pour lire des livres</li>
+                            <li><strong>News :</strong> Section actualités et événements dans votre espace pour rester informé</li>
+                            <li><strong>Profil :</strong> Vous pouvez changer votre mot de passe provisoire dans votre espace, section Profil</li>
+                        </ul>
+                    </div>
+                    
+                    <p><strong>Pour commencer, connectez-vous simplement à votre compte et explorez les cours disponibles.</strong> Si vous avez des questions ou avez besoin d'aide, n'hésitez pas à contacter notre équipe de support.</p>
+                    
+                    <center>
+                        <a href="https://esolplatform.preview.emergentagent.com/login" class="button">
+                            🚀 Se connecter maintenant
+                        </a>
+                    </center>
+                    
+                    <p>Nous vous souhaitons une expérience d'apprentissage enrichissante et agréable !</p>
+                    
+                    <p>Cordialement,<br>
+                    <strong>L'équipe MYKALMAENGLISH</strong></p>
+                </div>
+                <div class="footer">
+                    <p>MYKALMAENGLISH - Plateforme d'apprentissage de l'anglais</p>
+                    <p>📧 info.kalamaenglish@gmail.com</p>
+                    <p>© 2025 MyKalamaenglish. Tous droits réservés.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        text_body = f"""
+        Hello {first_name},
+        
+        Bienvenue sur MYKALMAENGLISH !
+        Niveau : {content_title}
+        
+        VOS IDENTIFIANTS:
+        - Email: {to_email}
+        - Mot de passe provisoire: {temp_password}
+        
+        VOS ACCÈS:
+        - Kalamathèque : Bibliothèque en ligne avec accès illimité
+        - News : Actualités et événements
+        - Profil : Changez votre mot de passe provisoire
+        
+        LIEN DE CONNEXION:
+        https://esolplatform.preview.emergentagent.com/login
+        
+        Pour commencer, connectez-vous simplement à votre compte et explorez les cours disponibles.
+        
+        Cordialement,
+        L'équipe MYKALMAENGLISH
+        info.kalamaenglish@gmail.com
+        """
+        
+        return await self._send_email(to_email, subject, html_body, text_body)
 
 # Singleton instance
 email_service = EmailService()
