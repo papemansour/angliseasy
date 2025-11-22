@@ -682,6 +682,103 @@ const TeacherDashboard = () => {
             </div>
           </TabsContent>
 
+          {/* Homework Tab */}
+          <TabsContent value="homework">
+            <Card className="border-teal-100">
+              <CardHeader className="bg-teal-50">
+                <CardTitle className="text-teal-800">📝 Devoirs des étudiants</CardTitle>
+                <CardDescription>Consultez et téléchargez les devoirs soumis par vos étudiants</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <Button 
+                  onClick={async () => {
+                    try {
+                      const res = await apiClient.get('/teacher/student-homeworks');
+                      setStudentHomeworks(res.data);
+                      toast.success('Devoirs actualisés');
+                    } catch (error) {
+                      toast.error('Erreur de chargement');
+                    }
+                  }}
+                  className="mb-4 bg-teal-600 hover:bg-teal-700"
+                >
+                  🔄 Actualiser les devoirs
+                </Button>
+
+                {studentHomeworks.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">Aucun devoir soumis</p>
+                ) : (
+                  <div className="space-y-4">
+                    {studentHomeworks.map((homework) => (
+                      <div key={homework.id} className="p-4 border border-teal-100 rounded-lg bg-white hover:shadow-md transition">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <h3 className="font-semibold text-lg text-teal-800">{homework.title}</h3>
+                            <p className="text-sm text-gray-600">
+                              Par : <span className="font-medium">{homework.student_name}</span>
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Soumis le {new Date(homework.submitted_at).toLocaleDateString('fr-FR')} à {new Date(homework.submitted_at).toLocaleTimeString('fr-FR')}
+                            </p>
+                          </div>
+                          <span className={`px-3 py-1 rounded text-xs font-semibold ${
+                            homework.status === 'reviewed' 
+                              ? 'bg-green-100 text-green-700' 
+                              : 'bg-orange-100 text-orange-700'
+                          }`}>
+                            {homework.status === 'reviewed' ? 'Corrigé' : 'En attente'}
+                          </span>
+                        </div>
+
+                        <p className="text-gray-700 mb-3">{homework.description}</p>
+
+                        <div className="flex gap-2">
+                          {homework.file_url && (
+                            <a 
+                              href={homework.file_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition"
+                            >
+                              📄 Ouvrir le devoir
+                            </a>
+                          )}
+                          {homework.file_url && (
+                            <a 
+                              href={homework.file_url} 
+                              download
+                              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                            >
+                              💾 Télécharger
+                            </a>
+                          )}
+                          <Button
+                            variant="outline"
+                            onClick={async () => {
+                              if (window.confirm('Êtes-vous sûr de vouloir supprimer ce devoir ?')) {
+                                try {
+                                  await apiClient.delete(`/teacher/homework/${homework.id}`);
+                                  toast.success('Devoir supprimé');
+                                  const res = await apiClient.get('/teacher/student-homeworks');
+                                  setStudentHomeworks(res.data);
+                                } catch (error) {
+                                  toast.error('Erreur lors de la suppression');
+                                }
+                              }
+                            }}
+                            className="text-red-600 border-red-600 hover:bg-red-50"
+                          >
+                            🗑️ Supprimer
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="timer">
             <Card className="border-teal-100">
               <CardHeader>
