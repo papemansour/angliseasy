@@ -514,6 +514,45 @@ async def get_session_notifications(current_user: dict = Depends(get_current_use
         {"_id": 0}
     ).sort("created_at", -1).to_list(100)
     
+
+@api_router.post("/admin/update-prices")
+async def update_prices(prices: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Store prices in database
+    prices_doc = {
+        "id": "pricing",
+        **prices,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "updated_by": current_user['id']
+    }
+    
+    await db.pricing.replace_one({"id": "pricing"}, prices_doc, upsert=True)
+    logger.info(f"Prices updated by admin {current_user['id']}")
+    return {"message": "Prices updated successfully"}
+
+@api_router.post("/admin/send-document")
+async def admin_send_document(doc_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    document = {
+        "id": str(uuid.uuid4()),
+        "from_user_id": current_user['id'],
+        "from_user_role": "admin",
+        "to_user_id": doc_data['recipient_id'],
+        "to_user_role": doc_data['recipient_type'],
+        "title": doc_data['title'],
+        "description": doc_data.get('description', ''),
+        "file_url": doc_data['file_url'],
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.admin_documents.insert_one(document)
+    logger.info(f"Document sent by admin to {doc_data['recipient_type']} {doc_data['recipient_id']}")
+    return {"message": "Document sent successfully"}
+
     return notifications
 
 
