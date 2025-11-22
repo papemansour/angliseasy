@@ -606,6 +606,206 @@ async def create_course(course_data: CourseCreate, current_user: dict = Depends(
     
     return {"message": "Course created", "course": course}
 
+# New models for enhanced teacher features
+class CourseCreateEnhanced(BaseModel):
+    title: str
+    description: str
+    level: str
+    schedule: str
+    student_id: Optional[str] = None
+    meet_link: Optional[str] = None
+
+class DocumentCreate(BaseModel):
+    title: str
+    description: str
+    recipient_type: str  # 'admin' or 'student'
+    recipient_id: Optional[str] = None
+    file_url: str
+
+class Document(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    teacher_id: str
+    title: str
+    description: str
+    recipient_type: str
+    recipient_id: Optional[str] = None
+    file_url: str
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class SessionAction(BaseModel):
+    action: str  # 'start', 'pause', 'resume', 'end'
+    elapsed_time: Optional[int] = None
+    paused_duration: Optional[int] = None
+
+# Enhanced teacher routes
+@api_router.post("/teacher/create-course")
+async def create_course_enhanced(course_data: CourseCreateEnhanced, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    course = {
+        "id": str(uuid.uuid4()),
+        "teacher_id": current_user['id'],
+        "title": course_data.title,
+        "description": course_data.description,
+        "level": course_data.level,
+        "schedule": course_data.schedule,
+        "student_id": course_data.student_id,
+        "meet_link": course_data.meet_link,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.courses.insert_one(course)
+    return {"message": "Course created", "course": course}
+
+@api_router.get("/teacher/my-documents")
+async def get_my_documents(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    documents = await db.documents.find(
+        {"teacher_id": current_user['id']},
+        {"_id": 0}
+    ).to_list(1000)
+    return documents
+
+@api_router.post("/teacher/send-document")
+async def send_document(doc_data: DocumentCreate, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    document = Document(
+        teacher_id=current_user['id'],
+        title=doc_data.title,
+        description=doc_data.description,
+        recipient_type=doc_data.recipient_type,
+        recipient_id=doc_data.recipient_id if doc_data.recipient_type == 'student' else None,
+        file_url=doc_data.file_url
+    )
+    
+    doc = document.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    await db.documents.insert_one(doc)
+    
+    logger.info(f"Document sent by teacher {current_user['id']} to {doc_data.recipient_type}")
+    return {"message": "Document sent successfully", "document": document}
+
+@api_router.post("/teacher/session/start")
+async def start_session(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    session = {
+        "id": str(uuid.uuid4()),
+        "teacher_id": current_user['id'],
+        "start_time": datetime.now(timezone.utc).isoformat(),
+        "status": "in_progress",
+        "pauses": []
+    }
+    
+    await db.teacher_sessions.insert_one(session)
+    logger.info(f"Session started by teacher {current_user['id']}")
+    return {"message": "Session started", "session_id": session['id']}
+
+@api_router.post("/teacher/session/pause")
+async def pause_session(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    session = await db.teacher_sessions.find_one(
+        {"teacher_id": current_user['id'], "status": "in_progress"},
+        {"_id": 0},
+        sort=[("start_time", -1)]
+    )
+    
+    if not session:
+        raise HTTPException(status_code=404, detail="No active session found")
+    
+    pause_record = {
+        "pause_time": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.teacher_sessions.update_one(
+        {"id": session['id']},
+        {"$push": {"pauses": pause_record}}
+    )
+    
+    logger.info(f"Session paused by teacher {current_user['id']}")
+    return {"message": "Session paused"}
+
+@api_router.post("/teacher/session/resume")
+async def resume_session(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    session = await db.teacher_sessions.find_one(
+        {"teacher_id": current_user['id'], "status": "in_progress"},
+        {"_id": 0},
+        sort=[("start_time", -1)]
+    )
+    
+    if not session or not session.get('pauses'):
+        raise HTTPException(status_code=404, detail="No paused session found")
+    
+    await db.teacher_sessions.update_one(
+        {"id": session['id'], "pauses.resume_time": {"$exists": False}},
+        {"$set": {"pauses.$[elem].resume_time": datetime.now(timezone.utc).isoformat()}},
+        array_filters=[{"elem.resume_time": {"$exists": False}}]
+    )
+    
+    logger.info(f"Session resumed by teacher {current_user['id']}")
+    return {"message": "Session resumed"}
+
+@api_router.post("/teacher/session/end")
+async def end_session(session_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    session = await db.teacher_sessions.find_one(
+        {"teacher_id": current_user['id'], "status": "in_progress"},
+        {"_id": 0},
+        sort=[("start_time", -1)]
+    )
+    
+    if not session:
+        raise HTTPException(status_code=404, detail="No active session found")
+    
+    # Update session with end time and total duration
+    await db.teacher_sessions.update_one(
+        {"id": session['id']},
+        {"$set": {
+            "end_time": datetime.now(timezone.utc).isoformat(),
+            "status": "completed",
+            "total_time_seconds": session_data.get('total_time', 0),
+            "paused_duration_seconds": session_data.get('paused_duration', 0)
+        }}
+    )
+    
+    # Get teacher and admin info
+    teacher = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+    
+    # Create notification for admin
+    notification = {
+        "id": str(uuid.uuid4()),
+        "type": "session_completed",
+        "teacher_id": current_user['id'],
+        "teacher_name": f"{teacher['first_name']} {teacher['last_name']}",
+        "session_id": session['id'],
+        "start_time": session['start_time'],
+        "end_time": datetime.now(timezone.utc).isoformat(),
+        "total_time_seconds": session_data.get('total_time', 0),
+        "paused_duration_seconds": session_data.get('paused_duration', 0),
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "read": False
+    }
+    
+    await db.admin_notifications.insert_one(notification)
+    
+    logger.info(f"Session ended by teacher {current_user['id']}, notification sent to admin")
+    return {"message": "Session completed and sent to admin"}
+
+
 @api_router.post("/teacher/attendance")
 async def mark_attendance(attendance_data: AttendanceCreate, current_user: dict = Depends(get_current_user)):
     if current_user['role'] != 'teacher':
