@@ -101,9 +101,22 @@ const NewsDisplay = () => {
                     </p>
                   </div>
                 )}
-                <p className="text-xs text-gray-500 mt-4 italic">
-                  Publié par {news.author_name}
-                </p>
+                <div className="flex justify-between items-center mt-4">
+                  <p className="text-xs text-gray-500 italic">
+                    Publié par {news.author_name}
+                  </p>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      setSelectedNews(news);
+                      setShowDialog(true);
+                    }}
+                    className="bg-teal-600 hover:bg-teal-700"
+                  >
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Lire
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}
