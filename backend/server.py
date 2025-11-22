@@ -2073,6 +2073,12 @@ async def delete_notification(
         raise HTTPException(status_code=404, detail="Notification not found")
     return {"message": "Notification deleted"}
 
+@api_router.delete("/notifications/clear-all")
+async def clear_all_notifications(current_user: User = Depends(get_current_user)):
+    """Delete all notifications for current user"""
+    result = await db.notifications.delete_many({"user_id": current_user.id})
+    return {"message": f"{result.deleted_count} notifications supprimées"}
+
 # Initialize admin user
 @app.on_event("startup")
 async def create_admin():
