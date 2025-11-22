@@ -554,6 +554,101 @@ async def admin_send_document(doc_data: dict, current_user: dict = Depends(get_c
         "file_url": doc_data['file_url'],
         "created_at": datetime.now(timezone.utc).isoformat()
     }
+    
+    await db.documents.insert_one(document)
+    
+    # Create notification
+    await create_notification(
+        user_id=doc_data['recipient_id'],
+        notification_type="new_document",
+        data={"message": f"Nouveau document de l'admin: {doc_data['title']}"}
+    )
+    
+    logger.info(f"Document sent by admin to {doc_data['recipient_type']}: {doc_data['recipient_id']}")
+    return {"message": "Document sent successfully"}
+
+@api_router.get("/teacher/documents-from-admin")
+async def get_teacher_documents_from_admin(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    documents = await db.documents.find(
+        {"to_user_id": current_user['id'], "from_user_role": "admin"},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(1000)
+    
+    return documents
+
+@api_router.post("/teacher/send-document-to-admin")
+async def teacher_send_document_to_admin(doc_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    # Get admin user
+    admin = await db.users.find_one({"role": "admin"}, {"_id": 0})
+    if not admin:
+        raise HTTPException(status_code=404, detail="Admin not found")
+    
+    document = {
+        "id": str(uuid.uuid4()),
+        "from_user_id": current_user['id'],
+        "from_user_role": "teacher",
+        "to_user_id": admin['id'],
+        "to_user_role": "admin",
+        "title": doc_data['title'],
+        "description": doc_data.get('description', ''),
+        "file_url": doc_data['file_url'],
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.documents.insert_one(document)
+    
+    # Create notification for admin
+    await create_notification(
+        user_id=admin['id'],
+        notification_type="new_document",
+        data={"message": f"Nouveau document du professeur {current_user['first_name']}: {doc_data['title']}"}
+    )
+    
+    logger.info(f"Document sent by teacher {current_user['id']} to admin")
+    return {"message": "Document sent to admin successfully"}
+
+@api_router.get("/admin/documents-from-teachers")
+async def get_admin_documents_from_teachers(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    documents = await db.documents.find(
+        {"to_user_role": "admin", "from_user_role": "teacher"},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(1000)
+    
+    # Enrich with teacher info
+    for doc in documents:
+        teacher = await db.users.find_one(
+            {"id": doc['from_user_id']},
+            {"_id": 0, "first_name": 1, "last_name": 1, "email": 1}
+        )
+        if teacher:
+            doc['teacher_name'] = f"{teacher['first_name']} {teacher['last_name']}"
+            doc['teacher_email'] = teacher['email']
+    
+    return documents
+
+@api_router.delete("/documents/{document_id}")
+async def delete_document(document_id: str, current_user: dict = Depends(get_current_user)):
+    document = await db.documents.find_one({"id": document_id}, {"_id": 0})
+    
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
+    # Check if user has permission to delete
+    if document['from_user_id'] != current_user['id'] and current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Not authorized to delete this document")
+    
+    await db.documents.delete_one({"id": document_id})
+    logger.info(f"Document {document_id} deleted by {current_user['id']}")
+    return {"message": "Document deleted successfully"}
 
 # Notification routes
 @api_router.get("/notifications/my-notifications")
