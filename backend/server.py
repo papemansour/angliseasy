@@ -306,6 +306,10 @@ async def login(credentials: UserLogin):
     if not user.get('is_active'):
         raise HTTPException(status_code=403, detail="Account not activated yet. Please wait for admin approval.")
     
+    # Check if student access is restricted
+    if user.get('role') == 'student' and user.get('is_restricted', False):
+        raise HTTPException(status_code=403, detail="Your access has been restricted. Please contact the administrator.")
+    
     # Verify password
     if not verify_password(credentials.password, user['password_hash']):
         raise HTTPException(status_code=401, detail="Invalid credentials")
