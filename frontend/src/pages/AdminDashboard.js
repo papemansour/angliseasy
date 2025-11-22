@@ -131,6 +131,23 @@ const AdminDashboard = () => {
     toast.success('Déconnexion réussie');
   };
 
+  const handleResetPassword = async (userId, userEmail) => {
+    if (!window.confirm(`Êtes-vous sûr de vouloir réinitialiser le mot de passe de ${userEmail}?\n\nUn nouveau mot de passe temporaire sera généré et envoyé à l'utilisateur par email.`)) {
+      return;
+    }
+    
+    try {
+      const response = await apiClient.post(`/admin/reset-user-password/${userId}`);
+      toast.success(
+        `Mot de passe réinitialisé avec succès!\n\nMot de passe temporaire: ${response.data.temporary_password}\n\n${response.data.email_sent ? '✅ Email envoyé à l\'utilisateur' : '⚠️ Email non envoyé (vérifier la configuration AWS SES)'}`,
+        { duration: 8000 }
+      );
+      fetchData(); // Refresh data to show temporary password
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Erreur lors de la réinitialisation du mot de passe');
+    }
+  };
+
   const handleUpdatePrices = async (e) => {
     e.preventDefault();
     try {
