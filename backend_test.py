@@ -198,9 +198,6 @@ class SecurityTester:
                             self.test_results["admin_reset_password"]["details"].append("Email sending status correctly reported")
                         
                         self.test_results["admin_reset_password"]["passed"] = True
-                        
-                        # Clean up - delete test user
-                        await self.cleanup_test_user(test_user_id)
                         return True
                     else:
                         logger.error(f"❌ Missing required fields in response: {missing_fields}")
