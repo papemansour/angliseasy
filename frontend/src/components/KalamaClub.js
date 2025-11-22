@@ -134,6 +134,18 @@ const KalamaClub = ({ userRole }) => {
     }
   };
 
+  const handleRemoveFromLeaderboard = async (userId) => {
+    if (!window.confirm('Retirer ce membre du classement ?')) return;
+    
+    try {
+      await apiClient.delete(`/club/leaderboard/${userId}`);
+      toast.success('Membre retiré du classement');
+      loadLeaderboard();
+    } catch (error) {
+      toast.error('Erreur lors du retrait');
+    }
+  };
+
   const handleCreateEvent = async (e) => {
     e.preventDefault();
     try {
