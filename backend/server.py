@@ -1001,6 +1001,13 @@ async def submit_homework(homework_data: dict, current_user: dict = Depends(get_
     await db.student_homeworks.insert_one(homework)
     logger.info(f"Homework submitted by student {current_user['id']}: {homework_data['title']}")
     
+    # Create notification for teacher if assigned
+    if student.get('assigned_teacher'):
+        await create_notification(student['assigned_teacher'], 'homework_submitted', {
+            "student_name": f"{student['first_name']} {student['last_name']}",
+            "title": homework_data['title']
+        })
+    
     return {"message": "Homework submitted successfully"}
 
 # Route for teacher to send links to specific student
