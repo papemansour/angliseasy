@@ -884,6 +884,11 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
+          {/* News Tab */}
+          <TabsContent value="news">
+            <NewsManager />
+          </TabsContent>
+
           {/* Kalamathèque Tab */}
           <TabsContent value="kalamatheque">
             <KalamathequeAdmin />
