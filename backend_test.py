@@ -26,16 +26,20 @@ ADMIN_EMAIL = "admin@mykalamaenglish.com"
 ADMIN_PASSWORD = "adminco"
 KALAMATHEQUE_ACCESS_CODE = "Digika"
 
-class SecurityTester:
+class KalamathequeBackendTester:
     def __init__(self):
         self.session = None
         self.admin_token = None
+        self.test_book_id = None
         self.test_results = {
-            "password_security": {"passed": False, "details": []},
-            "admin_reset_password": {"passed": False, "details": []},
-            "contact_form": {"passed": False, "details": []},
-            "change_password": {"passed": False, "details": []},
-            "overall_security": {"passed": False, "details": []}
+            "file_upload": {"passed": False, "details": []},
+            "access_verification": {"passed": False, "details": []},
+            "book_creation": {"passed": False, "details": []},
+            "book_retrieval": {"passed": False, "details": []},
+            "book_deletion": {"passed": False, "details": []},
+            "ai_assistant": {"passed": False, "details": []},
+            "text_to_speech": {"passed": False, "details": []},
+            "overall_kalamatheque": {"passed": False, "details": []}
         }
         
     async def __aenter__(self):
