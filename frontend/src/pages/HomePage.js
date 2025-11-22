@@ -446,12 +446,12 @@ const HomePage = () => {
       <Testimonials />
 
       {/* Test Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
+      <section className="py-12 md:py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
         <div className="container mx-auto max-w-7xl">
-          <h2 className="text-4xl font-bold text-center mb-4">Évaluez votre niveau d'anglais</h2>
-          <p className="text-center text-gray-600 mb-12">Passez un test gratuit pour connaître votre niveau</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 md:mb-4">Évaluez votre niveau d'anglais</h2>
+          <p className="text-center text-sm sm:text-base text-gray-600 mb-8 md:mb-12 px-4">Passez un test gratuit pour connaître votre niveau</p>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
             <Card className="hover:shadow-xl transition-shadow border-teal-100">
               <CardHeader>
                 <CardTitle className="text-teal-800">Test Débutant</CardTitle>
