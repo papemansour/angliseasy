@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import LeaderboardManager from './LeaderboardManager';
 
 const KalamaClub = ({ userRole }) => {
   const [posts, setPosts] = useState([]);
