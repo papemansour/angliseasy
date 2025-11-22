@@ -314,7 +314,7 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="pending" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-11">
+          <TabsList className="grid w-full grid-cols-12">
             <TabsTrigger value="pending" data-testid="admin-tab-pending">En attente</TabsTrigger>
             <TabsTrigger value="students" data-testid="admin-tab-students">Étudiants</TabsTrigger>
             <TabsTrigger value="teachers" data-testid="admin-tab-teachers">Professeurs</TabsTrigger>
@@ -325,6 +325,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="availability" data-testid="admin-tab-availability">Horaire profs</TabsTrigger>
             <TabsTrigger value="news" data-testid="admin-tab-news">📰 News</TabsTrigger>
             <TabsTrigger value="kalamatheque" data-testid="admin-tab-kalamatheque">Kalamathèque</TabsTrigger>
+            <TabsTrigger value="club" data-testid="admin-tab-club">🏆 KALAMA CLUB</TabsTrigger>
             <TabsTrigger value="conversations" data-testid="admin-tab-conversations">💬 Discussion</TabsTrigger>
           </TabsList>
 
