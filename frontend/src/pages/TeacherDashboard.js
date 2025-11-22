@@ -390,6 +390,12 @@ const TeacherDashboard = () => {
             <WelcomeLetter />
           </TabsContent>
 
+          {/* KALAMA CLUB Tab */}
+          <TabsContent value="club">
+            <KalamaClub userRole="teacher" />
+          </TabsContent>
+
+          {/* Students Tab */}
           <TabsContent value="students">
             <Card className="border-teal-100">
               <CardHeader>
