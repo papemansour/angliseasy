@@ -702,9 +702,9 @@ const HomePage = () => {
       </Dialog>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16 px-4">
+      <footer className="bg-gray-900 text-white py-12 md:py-16 px-4">
         <div className="container mx-auto max-w-7xl">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-8 md:mb-12">
             {/* À propos */}
             <div>
               <h3 className="text-xl font-bold mb-4 text-teal-400">MyKalamaenglish</h3>
