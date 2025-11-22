@@ -105,11 +105,6 @@ const LoginPage = () => {
             </div>
           </CardContent>
         </Card>
-
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <p className="text-sm text-gray-700 font-semibold mb-2">Comptes de test :</p>
-          <p className="text-xs text-gray-600">Admin: admin@mykalamaenglish.com / adminco</p>
-        </div>
       </div>
     </div>
   );
