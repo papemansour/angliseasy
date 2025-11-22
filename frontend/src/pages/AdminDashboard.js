@@ -763,9 +763,9 @@ const AdminDashboard = () => {
                       </div>
                     </div>
 
-                    {/* Pack Avancé */}
+                    {/* Pack Packs professionnels */}
                     <div className="space-y-4 p-4 bg-purple-50 rounded-lg md:col-span-2">
-                      <h3 className="text-lg font-semibold text-purple-800">Pack Avancé</h3>
+                      <h3 className="text-lg font-semibold text-purple-800">Pack Packs professionnels</h3>
                       <div className="grid md:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="advanced_eur">Prix en EUR (€)</Label>
