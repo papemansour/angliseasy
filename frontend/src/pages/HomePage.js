@@ -714,38 +714,150 @@ const HomePage = () => {
 
                     <div>
                       <Label htmlFor="level">Niveau d'anglais *</Label>
-                  <Select
-                    value={formData.level}
-                    onValueChange={(value) => setFormData({ ...formData, level: value })}
-                  >
-                    <SelectTrigger data-testid="register-level" className="border-gray-200 focus:border-teal-500 focus:ring-teal-500">
-                      <SelectValue placeholder="Sélectionnez votre niveau" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="beginner">Débutant</SelectItem>
-                      <SelectItem value="intermediate">Intermédiaire</SelectItem>
-                      <SelectItem value="advanced">Avancé</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                      <Select
+                        value={formData.level}
+                        onValueChange={(value) => setFormData({ ...formData, level: value })}
+                      >
+                        <SelectTrigger className="border-gray-200">
+                          <SelectValue placeholder="Sélectionnez votre niveau" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="beginner">Débutant</SelectItem>
+                          <SelectItem value="intermediate">Intermédiaire</SelectItem>
+                          <SelectItem value="advanced">Avancé</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </>
+                ) : (
+                  /* Formulaire cours groupé */
+                  <div className="space-y-6">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-semibold text-lg">Personnes inscrites ({groupMembers.length}/3)</h3>
+                      {groupMembers.length < 3 && (
+                        <Button
+                          type="button"
+                          onClick={handleAddGroupMember}
+                          variant="outline"
+                          size="sm"
+                          className="border-teal-600 text-teal-600"
+                        >
+                          + Ajouter une personne
+                        </Button>
+                      )}
+                    </div>
 
+                    {groupMembers.map((member, index) => (
+                      <div key={index} className="p-4 border-2 border-teal-200 rounded-lg bg-teal-50/50">
+                        <div className="flex justify-between items-center mb-3">
+                          <h4 className="font-semibold">Personne {index + 1}</h4>
+                          {groupMembers.length > 1 && (
+                            <Button
+                              type="button"
+                              onClick={() => handleRemoveGroupMember(index)}
+                              variant="outline"
+                              size="sm"
+                              className="border-red-500 text-red-600"
+                            >
+                              Retirer
+                            </Button>
+                          )}
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-3">
+                          <div>
+                            <Label>Prénom *</Label>
+                            <Input
+                              value={member.first_name}
+                              onChange={(e) => handleGroupMemberChange(index, 'first_name', e.target.value)}
+                              required
+                            />
+                          </div>
+                          <div>
+                            <Label>Nom *</Label>
+                            <Input
+                              value={member.last_name}
+                              onChange={(e) => handleGroupMemberChange(index, 'last_name', e.target.value)}
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mt-3">
+                          <Label>Email de contact *</Label>
+                          <Input
+                            type="email"
+                            value={member.email}
+                            onChange={(e) => handleGroupMemberChange(index, 'email', e.target.value)}
+                            required
+                          />
+                        </div>
+
+                        <div className="mt-3">
+                          <Label>Téléphone *</Label>
+                          <div className="flex gap-2">
+                            <Select
+                              value={member.country_code}
+                              onValueChange={(value) => handleGroupMemberChange(index, 'country_code', value)}
+                            >
+                              <SelectTrigger className="w-[140px]">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="+33">🇫🇷 +33</SelectItem>
+                                <SelectItem value="+221">🇸🇳 +221</SelectItem>
+                                <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Input
+                              value={member.phone}
+                              onChange={(e) => handleGroupMemberChange(index, 'phone', e.target.value)}
+                              placeholder="6 12 34 56 78"
+                              className="flex-1"
+                              required
+                            />
+                          </div>
+                        </div>
+
+                        <div className="mt-3">
+                          <Label>Niveau d'anglais *</Label>
+                          <Select
+                            value={member.level}
+                            onValueChange={(value) => handleGroupMemberChange(index, 'level', value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Sélectionner" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="beginner">Débutant</SelectItem>
+                              <SelectItem value="intermediate">Intermédiaire</SelectItem>
+                              <SelectItem value="advanced">Avancé</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Créneaux (facultatif) */}
                 <div>
                   <Label className="flex items-center gap-2 mb-2">
                     <CalendarIcon className="w-4 h-4 text-teal-600" />
-                    Sélectionnez vos créneaux préférés
+                    Créneaux préférés (facultatif)
                   </Label>
                   <Popover open={showCalendar} onOpenChange={setShowCalendar}>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-start text-left font-normal border-gray-200 hover:border-teal-500"
+                        className="w-full justify-start text-left font-normal"
                         type="button"
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
                         {selectedDates.length > 0 ? `${selectedDates.length} date(s) sélectionnée(s)` : 'Choisir des créneaux'}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="w-auto p-0">
                       <div className="p-4">
                         <Calendar
                           mode="multiple"
@@ -759,69 +871,27 @@ const HomePage = () => {
                           disabled={(date) => date < new Date()}
                           className="rounded-md border"
                         />
-                        
-                        {selectedDates.length > 0 && (
-                          <div className="mt-4 space-y-3 max-h-64 overflow-y-auto">
-                            {selectedDates.map(dateStr => (
-                              <div key={dateStr} className="p-3 bg-teal-50 rounded-lg">
-                                <div className="flex justify-between items-center mb-2">
-                                  <span className="font-semibold text-teal-800">
-                                    {format(new Date(dateStr), 'EEEE dd MMMM', { locale: fr })}
-                                  </span>
-                                  <button
-                                    type="button"
-                                    onClick={() => handleDateSelect(new Date(dateStr))}
-                                    className="text-red-500 hover:text-red-700"
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </button>
-                                </div>
-                                <div className="grid grid-cols-4 gap-2">
-                                  {timeSlots.map(time => (
-                                    <button
-                                      key={time}
-                                      type="button"
-                                      onClick={() => handleTimeSlotSelect(dateStr, time)}
-                                      className={`px-2 py-1 text-xs rounded ${
-                                        selectedTimeSlots[dateStr]?.includes(time)
-                                          ? 'bg-teal-600 text-white'
-                                          : 'bg-white border border-teal-200 text-teal-600 hover:bg-teal-50'
-                                      }`}
-                                    >
-                                      {time}
-                                    </button>
-                                  ))}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                        
                         <Button
                           type="button"
                           onClick={() => setShowCalendar(false)}
-                          className="w-full mt-4 bg-teal-600 hover:bg-teal-700"
+                          className="w-full mt-4 bg-teal-600"
                         >
                           Confirmer
                         </Button>
                       </div>
                     </PopoverContent>
                   </Popover>
-                  {formatPreferredSlots() && (
-                    <p className="text-sm text-gray-600 mt-2">
-                      Créneaux sélectionnés: {formatPreferredSlots()}
-                    </p>
-                  )}
                 </div>
 
+                {/* Comment nous avez connus (facultatif) */}
                 <div>
-                  <Label htmlFor="referral_source">Comment avez-vous connu My KALAMA English ?</Label>
+                  <Label>Comment avez-vous connu My KALAMA English ? (facultatif)</Label>
                   <Select
                     value={formData.referral_source}
                     onValueChange={(value) => setFormData({ ...formData, referral_source: value })}
                   >
-                    <SelectTrigger data-testid="register-referral" className="border-gray-200 focus:border-teal-500 focus:ring-teal-500">
-                      <SelectValue placeholder="Sélectionnez une option" />
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionnez" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="google">Google</SelectItem>
@@ -837,9 +907,8 @@ const HomePage = () => {
                   type="submit"
                   className="w-full bg-teal-600 hover:bg-teal-700"
                   disabled={loading}
-                  data-testid="register-submit-button"
                 >
-                  {loading ? 'Envoi en cours...' : 'Confirmer mon inscription'}
+                  {loading ? 'Envoi en cours...' : courseType === 'group' ? `Confirmer inscription (${groupMembers.length} pers.)` : 'Confirmer mon inscription'}
                 </Button>
 
             <p className="text-sm text-gray-500 text-center">
