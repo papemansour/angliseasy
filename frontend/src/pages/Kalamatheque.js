@@ -127,7 +127,28 @@ const Kalamatheque = () => {
                 IA Assistant
               </Button>
               <Button
-                onClick={handleExit}
+                onClick={() => {
+                  localStorage.removeItem('kalamatheque_access');
+                  if (user?.role === 'student') {
+                    window.location.href = '/student';
+                  } else if (user?.role === 'teacher') {
+                    window.location.href = '/teacher';
+                  } else if (user?.role === 'admin') {
+                    window.location.href = '/admin';
+                  } else {
+                    window.location.href = '/';
+                  }
+                }}
+                variant="outline"
+                className="border-blue-500 text-blue-600 hover:bg-blue-50"
+              >
+                ← Retour au dashboard
+              </Button>
+              <Button
+                onClick={() => {
+                  localStorage.removeItem('kalamatheque_access');
+                  window.location.href = '/';
+                }}
                 variant="outline"
                 className="border-red-500 text-red-500 hover:bg-red-50"
               >
