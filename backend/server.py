@@ -344,7 +344,7 @@ async def send_welcome_email(user_email: str, first_name: str, last_name: str, t
     - Mot de passe KALAMATHÈQUE: digikode
     
     LIEN DE CONNEXION:
-    https://kalama-english.preview.emergentagent.com/login
+    https://myenglishtutor.preview.emergentagent.com/login
     
     CHANGEZ VOTRE MOT DE PASSE:
     Nous vous recommandons fortement de changer votre mot de passe dès votre première connexion pour sécuriser votre compte.
