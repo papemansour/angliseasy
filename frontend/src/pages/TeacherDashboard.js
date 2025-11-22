@@ -350,8 +350,9 @@ const TeacherDashboard = () => {
           </Card>
         </div>
 
-        <Tabs defaultValue="students" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-9 bg-teal-50">
+        <Tabs defaultValue="welcome" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-10 bg-teal-50">
+            <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">💌 Bienvenue</TabsTrigger>
             <TabsTrigger value="students" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Étudiants</TabsTrigger>
             <TabsTrigger value="courses" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Cours</TabsTrigger>
             <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Documents</TabsTrigger>
@@ -362,6 +363,11 @@ const TeacherDashboard = () => {
             <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Kalamathèque</TabsTrigger>
             <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Profil</TabsTrigger>
           </TabsList>
+
+          {/* Welcome Letter Tab */}
+          <TabsContent value="welcome">
+            <WelcomeLetter />
+          </TabsContent>
 
           <TabsContent value="students">
             <Card className="border-teal-100">
