@@ -209,7 +209,7 @@ const HomePage = () => {
               My KALAMA ENGLISH rend l'apprentissage de l'anglais accessible à tous ! Que vous soyez étudiant, professionnel, ou simplement désireux d'apprendre, nos cours sont conçus pour une progression rapide et efficace.
             </p>
             <button 
-              onClick={() => document.getElementById('register').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => openRegistrationModal()}
               className="inline-flex items-center px-6 py-3 bg-teal-600 text-white rounded-full font-semibold hover:bg-teal-700 transition duration-300"
             >
               Commencer à apprendre
