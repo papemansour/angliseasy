@@ -498,13 +498,42 @@ const AdminDashboard = () => {
                                 </p>
                               )}
                             </div>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => handleResetPassword(teacher.id, teacher.email)}
-                            >
-                              🔐 Réinitialiser MDP
-                            </Button>
+                            <div className="flex items-center gap-2">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={async () => {
+                                  try {
+                                    await apiClient.post(`/admin/restrict-user/${teacher.id}`);
+                                    toast.success(teacher.is_restricted ? 'Accès rétabli' : 'Accès restreint');
+                                    fetchData();
+                                  } catch (error) {
+                                    toast.error('Erreur');
+                                  }
+                                }}
+                                className={teacher.is_restricted ? 'border-green-500 text-green-600' : 'border-orange-500 text-orange-600'}
+                              >
+                                <Lock className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={async () => {
+                                  if (window.confirm(`Supprimer ${teacher.first_name} ${teacher.last_name} ?`)) {
+                                    try {
+                                      await apiClient.delete(`/admin/delete-user/${teacher.id}`);
+                                      toast.success('Utilisateur supprimé');
+                                      fetchData();
+                                    } catch (error) {
+                                      toast.error('Erreur de suppression');
+                                    }
+                                  }
+                                }}
+                                className="border-red-500 text-red-600"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       ))}
