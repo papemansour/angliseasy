@@ -173,6 +173,125 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+def generate_welcome_letter_content(first_name: str, level: str, role: str, email: str, temp_password: str) -> str:
+    """Generate welcome letter content based on user level and role"""
+    if role == "teacher":
+        return f"""Dear Professor,
+
+We are delighted to welcome you to MYKALMAENGLISH, our online platform dedicated to English language learning. Your registration is now confirmed, and we look forward to having you join our community of teachers and learners.
+
+Here are some details to help you get started:
+
+**Access to the Platform:** You can log in to your account using the credentials below. You can also change your password in your profile settings.
+
+**Your Credentials:**
+📧 Email: {email}
+🔑 Temporary Password: {temp_password}
+
+**Available Resources:** Explore our digital library, KALAMATHÈQUE, along with other teaching materials designed to enhance your instruction.
+
+**Technical Support:** If you have any questions or encounter any technical issues, please feel free to reach out to our support team at support@mykalmaenglish.com or mykalamaenglish@gmail.com.
+
+**Upcoming Events:** Stay tuned for our webinars and workshops featured in the News section, where you can discover new teaching methods and connect with other professionals.
+
+We wish you great success on your journey with MYKALMAENGLISH. Please do not hesitate to share your suggestions or questions with us.
+
+Best regards,
+
+DIAGNE Mansour
+CEO MYKALAMAENGLISH"""
+    
+    # Student letters based on level
+    if level == "beginner":
+        return f"""Hello {first_name},
+
+Nous sommes ravis de vous accueillir sur MYKALMAENGLISH ! 🎉
+
+Félicitations pour avoir fait le premier pas dans votre parcours d'apprentissage de l'anglais. En tant que débutant, vous trouverez que notre plateforme est conçue pour vous accompagner à chaque étape. Voici ce à quoi vous pouvez vous attendre :
+
+**Leçons interactives :** un contenu engageant adapté aux débutants pour vous aider à construire une base solide en anglais.
+
+**Apprentissage flexible :** accédez à vos cours à tout moment, partout, à votre propre rythme.
+
+**Communauté de soutien :** rejoignez notre communauté dynamique d'apprenants et d'instructeurs qui sont là pour vous aider à réussir.
+
+**Vos identifiants de connexion :**
+📧 Email: {email}
+🔑 Mot de passe provisoire: {temp_password}
+
+**Vos accès :**
+- **Kalamathèque** : Bibliothèque en ligne avec accès illimité pour lire des livres
+- **News** : Section actualités et événements pour rester informé
+- **Profil** : Changez votre mot de passe provisoire dans votre espace, partie Profil
+
+Pour commencer, connectez-vous simplement à votre compte et explorez les cours disponibles. Si vous avez des questions ou avez besoin d'aide, n'hésitez pas à contacter notre équipe de support.
+
+Nous vous souhaitons une expérience d'apprentissage enrichissante et agréable !
+
+Cordialement,
+
+L'équipe MYKALMAENGLISH"""
+    
+    elif level == "intermediate":
+        return f"""Hello {first_name},
+
+Nous sommes ravis de vous accueillir sur MYKALMAENGLISH ! Vous vous êtes inscrit avec succès à notre cours en ligne de niveau intermédiaire, et nous sommes impatients de vous accompagner dans votre apprentissage de la langue.
+
+**Leçons interactives :** un contenu engageant adapté à votre niveau pour vous aider à approfondir vos connaissances en anglais.
+
+**Apprentissage flexible :** accédez à vos cours à tout moment, partout, à votre propre rythme.
+
+**Communauté de soutien :** rejoignez notre communauté dynamique d'apprenants et d'instructeurs qui sont là pour vous aider à réussir.
+
+**Vos identifiants de connexion :**
+📧 Email: {email}
+🔑 Mot de passe provisoire: {temp_password}
+
+**Vos accès :**
+- **Kalamathèque** : Bibliothèque en ligne avec accès illimité pour lire des livres
+- **News** : Section actualités et événements pour rester informé
+- **Profil** : Changez votre mot de passe provisoire dans votre espace, partie Profil
+
+Pour commencer, connectez-vous simplement à votre compte et explorez les cours disponibles. Si vous avez des questions ou avez besoin d'aide, n'hésitez pas à contacter notre équipe de support.
+
+Sur MYKALMAENGLISH, vous trouverez une variété de ressources conçues pour améliorer vos compétences en anglais, notamment des leçons interactives, des exercices engageants et une communauté d'apprenants soudée. Nous vous encourageons à explorer la plateforme et à profiter pleinement de tout ce que nous offrons.
+
+Nous vous souhaitons une expérience d'apprentissage enrichissante et agréable !
+
+Cordialement,
+
+L'équipe MYKALMAENGLISH"""
+    
+    else:  # advanced / Pack professionnel
+        return f"""Hello {first_name},
+
+Nous sommes ravis de vous accueillir sur MYKALMAENGLISH ! Vous avez franchi une étape importante pour améliorer vos compétences en anglais professionnel, et nous sommes impatients de vous accompagner dans cette aventure.
+
+Notre programme de formation intensive et accélérée en anglais est conçu spécialement pour des professionnels comme vous. Voici ce que vous pouvez attendre :
+
+**Apprentissage complet :** Engagez-vous avec un contenu adapté qui se concentre sur des applications concrètes.
+
+**Accès flexible :** Apprenez à votre rythme grâce à notre plateforme en ligne, disponible à tout moment et de n'importe où.
+
+**Communauté de soutien :** Connectez-vous avec d'autres apprenants et des instructeurs qui sont là pour vous soutenir.
+
+**Vos identifiants de connexion :**
+📧 Email: {email}
+🔑 Mot de passe provisoire: {temp_password}
+
+**Vos accès :**
+- **Kalamathèque** : Bibliothèque en ligne avec accès illimité pour lire des livres
+- **News** : Section actualités et événements pour rester informé
+- **Profil** : Changez votre mot de passe provisoire dans votre espace, partie Profil
+
+Pour commencer, veuillez vous connecter à votre compte et explorer les matériaux de cours. Si vous avez des questions ou avez besoin d'assistance, n'hésitez pas à contacter notre équipe de support.
+
+Nous sommes impatients de vous voir progresser dans votre apprentissage de l'anglais !
+
+Cordialement,
+
+L'équipe MYKALMAENGLISH"""
+
 def create_access_token(data: dict, expires_delta: timedelta = timedelta(days=7)):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta
