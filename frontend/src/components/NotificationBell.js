@@ -52,6 +52,7 @@ const NotificationBell = () => {
       setNotifications(notifications.map(n => ({ ...n, is_read: true })));
       setUnreadCount(0);
       toast.success('✅ Toutes les notifications sont lues');
+      setIsOpen(false); // Fermer le popover
     } catch (error) {
       toast.error('Erreur lors du marquage');
     } finally {
