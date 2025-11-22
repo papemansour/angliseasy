@@ -735,6 +735,117 @@ const AdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleUpdatePrices} className="space-y-6">
+                  {/* Pack K-Kid - Enfants */}
+                  <div className="mb-6">
+                    <h3 className="text-lg font-bold text-pink-600 mb-4 flex items-center gap-2">
+                      <span className="text-2xl">👶</span>
+                      Pack K-Kid - Spécial Enfants (3-9 ans)
+                    </h3>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="space-y-4 p-6 bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl border-2 border-pink-300 shadow-sm">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-2xl">🎨</span>
+                          <h4 className="text-md font-bold text-pink-800">Prix K-Kid</h4>
+                        </div>
+                        
+                        {/* EUR */}
+                        <div className="space-y-3 pb-3 border-b border-pink-200">
+                          <p className="text-sm font-semibold text-pink-700">💶 Prix en EURO</p>
+                          <div>
+                            <Label htmlFor="kkid_eur" className="text-pink-700 text-xs">Prix de base (€)</Label>
+                            <Input
+                              id="kkid_eur"
+                              type="number"
+                              value={prices.kkid_eur}
+                              onChange={(e) => setPrices({ ...prices, kkid_eur: parseInt(e.target.value) })}
+                              className="mt-1 border-pink-300 focus:border-pink-500"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="kkid_discount" className="text-pink-700 text-xs">Remise (€)</Label>
+                            <Input
+                              id="kkid_discount"
+                              type="number"
+                              value={prices.kkid_discount || 0}
+                              onChange={(e) => setPrices({ ...prices, kkid_discount: parseInt(e.target.value) || 0 })}
+                              className="mt-1 border-pink-300 focus:border-pink-500"
+                              placeholder="0"
+                            />
+                          </div>
+                          <div className="bg-pink-100 p-2 rounded">
+                            <p className="text-xs font-semibold text-pink-700">Prix final EUR:</p>
+                            <p className="text-2xl font-bold text-pink-800">
+                              {(prices.kkid_eur - (prices.kkid_discount || 0))}€
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* FCFA */}
+                        <div className="space-y-3">
+                          <p className="text-sm font-semibold text-pink-700">🇸🇳 Prix en FCFA</p>
+                          <div>
+                            <Label htmlFor="kkid_fcfa" className="text-pink-700 text-xs">Prix de base (FCFA)</Label>
+                            <Input
+                              id="kkid_fcfa"
+                              type="number"
+                              value={prices.kkid_fcfa || 0}
+                              onChange={(e) => setPrices({ ...prices, kkid_fcfa: parseInt(e.target.value) || 0 })}
+                              className="mt-1 border-pink-300 focus:border-pink-500"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="kkid_discount_fcfa" className="text-pink-700 text-xs">Remise (FCFA)</Label>
+                            <Input
+                              id="kkid_discount_fcfa"
+                              type="number"
+                              value={prices.kkid_discount_fcfa || 0}
+                              onChange={(e) => setPrices({ ...prices, kkid_discount_fcfa: parseInt(e.target.value) || 0 })}
+                              className="mt-1 border-pink-300 focus:border-pink-500"
+                              placeholder="0"
+                            />
+                          </div>
+                          <div className="bg-pink-100 p-2 rounded">
+                            <p className="text-xs font-semibold text-pink-700">Prix final FCFA:</p>
+                            <p className="text-2xl font-bold text-pink-800">
+                              {((prices.kkid_fcfa || 0) - (prices.kkid_discount_fcfa || 0)).toLocaleString('fr-FR')} FCFA
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Info sur K-Kid */}
+                      <div className="space-y-4 p-6 bg-gradient-to-br from-yellow-50 to-orange-100 rounded-xl border-2 border-yellow-300">
+                        <div className="text-center">
+                          <span className="text-6xl mb-4 block">🎈</span>
+                          <h4 className="text-xl font-bold text-orange-800 mb-2">Pack K-Kid</h4>
+                          <p className="text-sm text-orange-700">Pour les enfants de 3 à 9 ans</p>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-sm text-orange-800">
+                            <span>🎨</span>
+                            <span>Cours ludiques et interactifs</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-orange-800">
+                            <span>🎵</span>
+                            <span>Chansons et jeux éducatifs</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-orange-800">
+                            <span>🧸</span>
+                            <span>Apprentissage par le jeu</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-orange-800">
+                            <span>📚</span>
+                            <span>Histoires adaptées aux enfants</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-orange-800">
+                            <span>👨‍👩‍👧</span>
+                            <span>Suivi parental personnalisé</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="grid md:grid-cols-3 gap-6">
                     {/* Pack Débutant */}
                     <div className="space-y-4 p-6 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl border-2 border-teal-200 shadow-sm">
