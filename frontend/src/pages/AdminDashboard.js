@@ -607,7 +607,7 @@ const AdminDashboard = () => {
                       <div key={result.id} className="p-4 border rounded-lg flex justify-between items-center">
                         <div>
                           <h3 className="font-semibold capitalize">
-                            Niveau: {result.level === 'beginner' ? 'Débutant' : result.level === 'intermediate' ? 'Intermédiaire' : 'Avancé'}
+                            Niveau: {result.level === 'beginner' ? 'Débutant' : result.level === 'intermediate' ? 'Intermédiaire' : 'Packs professionnels'}
                           </h3>
                           <p className="text-sm text-gray-600">
                             Score: {result.score} / {result.total_questions}
