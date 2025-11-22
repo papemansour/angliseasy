@@ -548,6 +548,199 @@ async def admin_send_document(doc_data: dict, current_user: dict = Depends(get_c
         "file_url": doc_data['file_url'],
         "created_at": datetime.now(timezone.utc).isoformat()
     }
+
+# Notification routes
+@api_router.get("/notifications/my-notifications")
+async def get_my_notifications(current_user: dict = Depends(get_current_user)):
+    notifications = await db.notifications.find(
+        {"user_id": current_user['id']},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(50).to_list(50)
+    return notifications
+
+@api_router.post("/notifications/mark-read/{notification_id}")
+async def mark_notification_read(notification_id: str, current_user: dict = Depends(get_current_user)):
+    await db.notifications.update_one(
+        {"id": notification_id, "user_id": current_user['id']},
+        {"$set": {"read": True}}
+    )
+    return {"message": "Notification marked as read"}
+
+async def create_notification(user_id: str, notification_type: str, data: dict):
+    """Helper function to create notifications"""
+    notification = {
+        "id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "type": notification_type,
+        **data,
+        "read": False,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.notifications.insert_one(notification)
+    logger.info(f"Notification created for user {user_id}: {notification_type}")
+
+# Admin delete user (teacher or student)
+@api_router.delete("/admin/delete-user/{user_id}")
+async def admin_delete_user(user_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user['role'] == 'admin':
+        raise HTTPException(status_code=403, detail="Cannot delete admin")
+    
+    # Delete user and related data
+    await db.users.delete_one({"id": user_id})
+    await db.test_results.delete_many({"user_id": user_id})
+    await db.messages.delete_many({"$or": [{"from_user_id": user_id}, {"to_user_id": user_id}]})
+    await db.documents.delete_many({"$or": [{"teacher_id": user_id}, {"recipient_id": user_id}]})
+    await db.student_homeworks.delete_many({"$or": [{"student_id": user_id}, {"teacher_id": user_id}]})
+    await db.notifications.delete_many({"user_id": user_id})
+    
+    logger.info(f"User deleted by admin: {user['email']}")
+    return {"message": f"{user['role'].capitalize()} deleted successfully"}
+
+# Change password routes for teacher and student
+@api_router.post("/auth/change-password")
+async def change_password(password_data: dict, current_user: dict = Depends(get_current_user)):
+    new_password = password_data.get('new_password')
+    if not new_password or len(new_password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+    
+    hashed = get_password_hash(new_password)
+    
+    # Update password and store plain text for admin view
+    await db.users.update_one(
+        {"id": current_user['id']},
+        {"$set": {
+            "password_hash": hashed,
+            "current_password_plain": new_password,  # For admin to see
+            "password_changed_at": datetime.now(timezone.utc).isoformat()
+        }}
+    )
+    
+    logger.info(f"Password changed by user {current_user['id']}")
+    return {"message": "Password changed successfully"}
+
+# News routes (admin only can create, everyone can read)
+@api_router.get("/news/all")
+async def get_all_news():
+    news = await db.news.find(
+        {},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    return news
+
+@api_router.post("/admin/create-news")
+async def create_news(news_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    news_item = {
+        "id": str(uuid.uuid4()),
+        "title": news_data['title'],
+        "content": news_data['content'],
+        "type": news_data.get('type', 'article'),  # article, video, link, publication
+        "url": news_data.get('url', ''),
+        "image_url": news_data.get('image_url', ''),
+        "created_by": current_user['id'],
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.news.insert_one(news_item)
+    
+    # Notify all users
+    all_users = await db.users.find({"role": {"$in": ["student", "teacher"]}}, {"_id": 0, "id": 1}).to_list(1000)
+    for user in all_users:
+        await create_notification(user['id'], 'new_news', {
+            "title": news_data['title'],
+            "message": f"Nouvelle actualité: {news_data['title']}"
+        })
+    
+    logger.info(f"News created by admin: {news_data['title']}")
+    return {"message": "News published successfully"}
+
+@api_router.delete("/admin/delete-news/{news_id}")
+async def delete_news(news_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    await db.news.delete_one({"id": news_id})
+    return {"message": "News deleted"}
+
+# Admin annuaire (directory)
+@api_router.get("/admin/directory")
+async def get_directory(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    users = await db.users.find(
+        {"role": {"$in": ["teacher", "student"]}, "is_active": True},
+        {"_id": 0, "id": 1, "email": 1, "first_name": 1, "last_name": 1, "phone": 1, "role": 1}
+    ).to_list(1000)
+    
+    return users
+
+# Teacher availability routes
+@api_router.post("/teacher/set-availability")
+async def set_teacher_availability(availability_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    # availability_data format: { "monday": ["09:00", "10:00", "14:00"], "tuesday": [...], ... }
+    availability = {
+        "id": str(uuid.uuid4()),
+        "teacher_id": current_user['id'],
+        "availability": availability_data['availability'],
+        "week_start": availability_data.get('week_start', datetime.now(timezone.utc).isoformat()),
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    # Replace existing availability
+    await db.teacher_availability.delete_many({"teacher_id": current_user['id']})
+    await db.teacher_availability.insert_one(availability)
+    
+    logger.info(f"Availability set by teacher {current_user['id']}")
+    return {"message": "Availability updated successfully"}
+
+@api_router.get("/teacher/my-availability")
+async def get_my_availability(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    availability = await db.teacher_availability.find_one(
+        {"teacher_id": current_user['id']},
+        {"_id": 0}
+    )
+    
+    return availability or {"availability": {}}
+
+@api_router.get("/admin/all-teacher-availability")
+async def get_all_teacher_availability(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Get all teachers with their availability
+    teachers = await db.users.find({"role": "teacher"}, {"_id": 0}).to_list(1000)
+    
+    result = []
+    for teacher in teachers:
+        availability = await db.teacher_availability.find_one(
+            {"teacher_id": teacher['id']},
+            {"_id": 0}
+        )
+        result.append({
+            "teacher_id": teacher['id'],
+            "teacher_name": f"{teacher['first_name']} {teacher['last_name']}",
+            "email": teacher['email'],
+            "availability": availability.get('availability', {}) if availability else {}
+        })
+    
+    return result
+
     
     await db.admin_documents.insert_one(document)
     logger.info(f"Document sent by admin to {doc_data['recipient_type']} {doc_data['recipient_id']}")
