@@ -165,6 +165,31 @@ const HomePage = () => {
     }
   };
 
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!contactForm.name || !contactForm.email || !contactForm.message) {
+      toast.error('Veuillez remplir tous les champs');
+      return;
+    }
+
+    setSendingContact(true);
+
+    try {
+      await axios.post(`${API}/contact/send`, contactForm);
+      toast.success('Message envoyé avec succès! Nous vous répondrons bientôt.');
+      setContactForm({
+        name: '',
+        email: '',
+        message: ''
+      });
+    } catch (error) {
+      toast.error(error.response?.data?.detail || 'Erreur lors de l\'envoi du message');
+    } finally {
+      setSendingContact(false);
+    }
+  };
+
   const handleDirectPayment = async (plan) => {
     try {
       const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
