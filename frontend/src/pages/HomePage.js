@@ -57,6 +57,8 @@ const HomePage = () => {
     { first_name: '', last_name: '', email: '', phone: '', country_code: '+33', level: '' }
   ]);
   const [pricingData, setPricingData] = useState({
+    kkid_eur: 30,
+    kkid_discount: 0,
     beginner_eur: 60,
     beginner_discount: 0,
     intermediate_eur: 90,
