@@ -2206,6 +2206,31 @@ async def delete_news(news_id: str, current_user: dict = Depends(get_current_use
     logger.info(f"News deleted by {current_user['id']}: {news_id}")
     return {"message": "Actualité supprimée"}
 
+# ============ WELCOME LETTER ROUTES ============
+
+@api_router.get("/welcome-letter")
+async def get_welcome_letter(current_user: dict = Depends(get_current_user)):
+    """Get welcome letter for current user"""
+    letter = await db.welcome_letters.find_one({"user_id": current_user['id']}, {"_id": 0})
+    
+    if not letter:
+        return None
+    
+    return letter
+
+@api_router.put("/welcome-letter/mark-read")
+async def mark_welcome_letter_read(current_user: dict = Depends(get_current_user)):
+    """Mark welcome letter as read"""
+    result = await db.welcome_letters.update_one(
+        {"user_id": current_user['id']},
+        {"$set": {"is_read": True}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Lettre non trouvée")
+    
+    return {"message": "Lettre marquée comme lue"}
+
 app.include_router(api_router)
 
 app.add_middleware(
