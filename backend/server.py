@@ -1886,10 +1886,12 @@ async def send_message(message_data: MessageCreate, current_user: dict = Depends
     await db.messages.insert_one(doc)
     
     # Create notification for recipient
-    await create_notification(message_data.to_user_id, 'new_message', {
-        "from_name": f"{sender['first_name']} {sender['last_name']}",
-        "message": f"Nouveau message de {sender['first_name']} {sender['last_name']}"
-    })
+    await create_notification(
+        user_id=message_data.to_user_id,
+        title=f"💬 Nouveau message",
+        message=f"{sender['first_name']} {sender['last_name']} vous a envoyé un message",
+        notification_type="message"
+    )
     
     return {"message": "Message sent"}
 
