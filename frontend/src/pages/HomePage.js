@@ -180,6 +180,21 @@ const HomePage = () => {
     setShowRegistrationModal(true);
   };
 
+  const handleStripePayment = (plan) => {
+    const stripeLinks = {
+      'beginner': 'https://buy.stripe.com/fZufZheQ304Z5Jtg8I',
+      'intermediate': 'https://buy.stripe.com/dRmdR96jx5pjdbVf4E',
+      'advanced': 'https://buy.stripe.com/00w14nazNg3XefZ2hS'
+    };
+    
+    const link = stripeLinks[plan.level];
+    if (link) {
+      window.location.href = link;
+    } else {
+      toast.error('Erreur lors de la redirection vers le paiement');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
