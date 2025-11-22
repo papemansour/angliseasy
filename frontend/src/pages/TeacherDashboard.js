@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
 import { LogOut, Users, BookOpen, Calendar, MessageCircle, Send, Video, FileText, Upload, Play, Pause, Square, Clock } from 'lucide-react';
+import AvailabilityScheduler from '../components/AvailabilityScheduler';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
