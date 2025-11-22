@@ -347,7 +347,7 @@ const AdminDashboard = () => {
                     {students.map((student) => (
                       <div key={student.id} className="p-4 border rounded-lg">
                         <div className="flex justify-between items-start">
-                          <div>
+                          <div className="flex-1">
                             <h3 className="font-semibold">{student.first_name} {student.last_name}</h3>
                             <p className="text-sm text-gray-600">{student.email}</p>
                             <p className="text-sm text-gray-500">Niveau: {student.level}</p>
@@ -357,11 +357,20 @@ const AdminDashboard = () => {
                               </p>
                             )}
                           </div>
-                          <span className={`px-3 py-1 rounded text-sm ${
-                            student.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
-                          }`}>
-                            {student.is_active ? 'Actif' : 'Inactif'}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className={`px-3 py-1 rounded text-sm ${
+                              student.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'
+                            }`}>
+                              {student.is_active ? 'Actif' : 'Inactif'}
+                            </span>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleResetPassword(student.id, student.email)}
+                            >
+                              🔐 Réinitialiser MDP
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ))}
