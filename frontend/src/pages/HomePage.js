@@ -259,31 +259,31 @@ const HomePage = () => {
       </section>
 
       {/* Features */}
-      <section className="py-16 px-4 bg-white">
+      <section className="py-12 md:py-16 px-4 bg-white">
         <div className="container mx-auto max-w-7xl">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-teal-50 p-6 rounded-lg hover:shadow-md transition-shadow">
-              <div className="p-4 bg-white rounded-lg inline-block mb-4">
-                <BookOpen className="w-8 h-8 text-teal-600" />
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
+            <div className="bg-teal-50 p-4 md:p-6 rounded-lg hover:shadow-md transition-shadow">
+              <div className="p-3 md:p-4 bg-white rounded-lg inline-block mb-3 md:mb-4">
+                <BookOpen className="w-6 h-6 md:w-8 md:h-8 text-teal-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-teal-800">Apprentissage personnalisé</h3>
-              <p className="text-gray-700">Des cours adaptés à votre niveau et à vos objectifs spécifiques</p>
+              <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-teal-800">Apprentissage personnalisé</h3>
+              <p className="text-sm md:text-base text-gray-700">Des cours adaptés à votre niveau et à vos objectifs spécifiques</p>
             </div>
 
-            <div className="bg-teal-50 p-6 rounded-lg hover:shadow-md transition-shadow">
-              <div className="p-4 bg-white rounded-lg inline-block mb-4">
-                <Users className="w-8 h-8 text-teal-600" />
+            <div className="bg-teal-50 p-4 md:p-6 rounded-lg hover:shadow-md transition-shadow">
+              <div className="p-3 md:p-4 bg-white rounded-lg inline-block mb-3 md:mb-4">
+                <Users className="w-6 h-6 md:w-8 md:h-8 text-teal-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-teal-800">Professeurs qualifiés</h3>
-              <p className="text-gray-700">Une équipe d'experts passionnés par l'enseignement de l'anglais</p>
+              <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-teal-800">Professeurs qualifiés</h3>
+              <p className="text-sm md:text-base text-gray-700">Une équipe d'experts passionnés par l'enseignement de l'anglais</p>
             </div>
 
-            <div className="bg-teal-50 p-6 rounded-lg hover:shadow-md transition-shadow">
-              <div className="p-4 bg-white rounded-lg inline-block mb-4">
-                <Clock className="w-8 h-8 text-teal-600" />
+            <div className="bg-teal-50 p-4 md:p-6 rounded-lg hover:shadow-md transition-shadow sm:col-span-2 md:col-span-1">
+              <div className="p-3 md:p-4 bg-white rounded-lg inline-block mb-3 md:mb-4">
+                <Clock className="w-6 h-6 md:w-8 md:h-8 text-teal-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-teal-800">Flexibilité totale</h3>
-              <p className="text-gray-700">Apprenez à votre rythme avec des horaires adaptés à votre emploi du temps</p>
+              <h3 className="text-lg md:text-xl font-bold mb-2 md:mb-3 text-teal-800">Flexibilité totale</h3>
+              <p className="text-sm md:text-base text-gray-700">Apprenez à votre rythme avec des horaires adaptés à votre emploi du temps</p>
             </div>
           </div>
         </div>
