@@ -43,6 +43,7 @@ class User(BaseModel):
     role: str  # admin, student, teacher
     level: Optional[str] = None  # beginner, intermediate, advanced
     is_active: bool = False
+    is_restricted: bool = False  # for restricting student access
     password_hash: str
     temporary_password: Optional[str] = None
     assigned_teacher: Optional[str] = None  # teacher id for students
