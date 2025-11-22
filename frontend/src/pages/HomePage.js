@@ -78,6 +78,9 @@ const HomePage = () => {
     message: ''
   });
   const [sendingContact, setSendingContact] = useState(false);
+  const [showWavePaymentModal, setShowWavePaymentModal] = useState(false);
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('stripe'); // 'stripe' ou 'wave'
 
   const handleDateSelect = (date) => {
     const dateStr = format(date, 'yyyy-MM-dd');
