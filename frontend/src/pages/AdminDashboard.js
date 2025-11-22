@@ -130,6 +130,64 @@ const AdminDashboard = () => {
     toast.success('Déconnexion réussie');
   };
 
+  const handleUpdatePrices = async (e) => {
+    e.preventDefault();
+    try {
+      await apiClient.post('/admin/update-prices', prices);
+      toast.success('Prix mis à jour avec succès!');
+    } catch (error) {
+      toast.error('Erreur lors de la mise à jour des prix');
+    }
+  };
+
+  const handleSelectRecipient = async (recipient) => {
+    setSelectedRecipient(recipient);
+    try {
+      const response = await apiClient.get(`/messages/conversation/${recipient.id}`);
+      setMessages(response.data);
+    } catch (error) {
+      toast.error('Erreur de chargement des messages');
+    }
+  };
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (!selectedRecipient || !messageContent.trim()) return;
+    
+    try {
+      await apiClient.post('/messages/send', {
+        to_user_id: selectedRecipient.id,
+        content: messageContent
+      });
+      setMessageContent('');
+      handleSelectRecipient(selectedRecipient);
+      toast.success('Message envoyé!');
+    } catch (error) {
+      toast.error('Erreur lors de l\'envoi');
+    }
+  };
+
+  const handleSendDocument = async (e) => {
+    e.preventDefault();
+    if (!selectedRecipient) {
+      toast.error('Sélectionnez un destinataire');
+      return;
+    }
+    
+    try {
+      await apiClient.post('/admin/send-document', {
+        ...documentToSend,
+        recipient_id: selectedRecipient.id,
+        recipient_type: selectedRecipient.role
+      });
+      toast.success('Document envoyé avec succès!');
+      setDocumentToSend({ title: '', description: '', file_url: '', recipient_id: '' });
+    } catch (error) {
+      toast.error('Erreur lors de l\'envoi du document');
+    }
+  };
+
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
