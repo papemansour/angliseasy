@@ -1947,6 +1947,82 @@ async def text_to_speech(data: dict):
         logger.error(f"TTS error: {str(e)}")
         raise HTTPException(status_code=500, detail="Erreur de synthèse vocale")
 
+# ============ NEWS ROUTES ============
+
+@api_router.get("/news")
+async def get_all_news():
+    """Get all news (public access for students and teachers)"""
+    news_list = await db.news.find({}, {"_id": 0}).sort("published_date", -1).to_list(1000)
+    return news_list
+
+@api_router.get("/news/{news_id}")
+async def get_news_by_id(news_id: str):
+    """Get a specific news item"""
+    news = await db.news.find_one({"id": news_id}, {"_id": 0})
+    if not news:
+        raise HTTPException(status_code=404, detail="News non trouvée")
+    return news
+
+@api_router.post("/news")
+async def create_news(news_data: NewsCreate, current_user: dict = Depends(get_current_user)):
+    """Create news (Admin only)"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    news = News(
+        title=news_data.title,
+        content=news_data.content,
+        image_url=news_data.image_url,
+        event_date=datetime.fromisoformat(news_data.event_date) if news_data.event_date else None,
+        author_id=current_user['id'],
+        author_name=f"{current_user['first_name']} {current_user['last_name']}"
+    )
+    
+    doc = news.model_dump()
+    doc['published_date'] = doc['published_date'].isoformat()
+    if doc.get('event_date'):
+        doc['event_date'] = doc['event_date'].isoformat()
+    
+    await db.news.insert_one(doc)
+    logger.info(f"News created by {current_user['id']}: {news.title}")
+    
+    return {"message": "Actualité créée avec succès", "id": news.id}
+
+@api_router.put("/news/{news_id}")
+async def update_news(news_id: str, news_data: NewsCreate, current_user: dict = Depends(get_current_user)):
+    """Update news (Admin only)"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    existing_news = await db.news.find_one({"id": news_id})
+    if not existing_news:
+        raise HTTPException(status_code=404, detail="News non trouvée")
+    
+    update_data = {
+        "title": news_data.title,
+        "content": news_data.content,
+        "image_url": news_data.image_url,
+        "event_date": datetime.fromisoformat(news_data.event_date).isoformat() if news_data.event_date else None
+    }
+    
+    await db.news.update_one({"id": news_id}, {"$set": update_data})
+    logger.info(f"News updated by {current_user['id']}: {news_id}")
+    
+    return {"message": "Actualité mise à jour"}
+
+@api_router.delete("/news/{news_id}")
+async def delete_news(news_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete news (Admin only)"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.news.delete_one({"id": news_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="News non trouvée")
+    
+    logger.info(f"News deleted by {current_user['id']}: {news_id}")
+    return {"message": "Actualité supprimée"}
+
 app.include_router(api_router)
 
 app.add_middleware(
