@@ -837,12 +837,12 @@ const AdminDashboard = () => {
                 ) : (
                   <div className="space-y-6">
                     {teacherAvailability.map((item) => (
-                      <div key={item.teacher.id} className="border rounded-lg p-4">
+                      <div key={item.teacher_id} className="border rounded-lg p-4">
                         <div className="mb-4">
                           <h3 className="font-semibold text-lg">
-                            {item.teacher.first_name} {item.teacher.last_name}
+                            {item.teacher_name}
                           </h3>
-                          <p className="text-sm text-gray-600">{item.teacher.email}</p>
+                          <p className="text-sm text-gray-600">{item.email}</p>
                         </div>
 
                         {item.availability && Object.keys(item.availability).length > 0 ? (
