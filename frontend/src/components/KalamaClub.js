@@ -476,33 +476,76 @@ const KalamaClub = ({ userRole }) => {
                       return null;
                     };
                     
+                    // Le 1er est mis en TRÈS grande évidence
+                    if (member.rank === 1) {
+                      return (
+                        <div
+                          key={member.id}
+                          className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-yellow-100 via-yellow-200 to-amber-200 border-4 border-yellow-500 p-8 shadow-2xl transform hover:scale-[1.03] transition-all"
+                        >
+                          {/* Effet brillant animé */}
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse"></div>
+                          
+                          <div className="relative z-10 text-center">
+                            <div className="relative inline-block mb-4">
+                              <div className="w-32 h-32 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
+                                <span className="text-6xl">🥇</span>
+                              </div>
+                              <Sparkles className="absolute top-0 right-0 w-8 h-8 text-yellow-600 animate-ping" />
+                              <Sparkles className="absolute bottom-0 left-0 w-6 h-6 text-yellow-600 animate-pulse" />
+                            </div>
+                            
+                            <div className="bg-white/80 backdrop-blur rounded-xl p-4 mb-4">
+                              <p className="text-3xl font-black text-yellow-800 mb-2">{member.user_name}</p>
+                              <p className="text-lg text-yellow-700 font-semibold flex items-center justify-center gap-2">
+                                {member.user_role === 'teacher' ? '👨‍🏫 Professeur' : '🎓 Étudiant'}
+                                <Star className="w-6 h-6 text-yellow-600 fill-yellow-600 animate-pulse" />
+                              </p>
+                            </div>
+                            
+                            <div className="flex items-center justify-center gap-2">
+                              <Trophy className="w-6 h-6 text-yellow-700" />
+                              <p className="text-xl font-bold text-yellow-900">CHAMPION(NE) 2024</p>
+                              <Trophy className="w-6 h-6 text-yellow-700" />
+                            </div>
+                            
+                            {userRole === 'admin' && (
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="mt-4 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                onClick={() => handleRemoveFromLeaderboard(member.user_id)}
+                              >
+                                Retirer
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    }
+                    
+                    // Les 2ème et 3ème places
                     return (
                       <div
                         key={member.id}
-                        className={`flex items-center justify-between p-4 rounded-xl transition-all hover:scale-[1.02] ${
-                          member.rank === 1 ? 'bg-gradient-to-r from-yellow-50 to-yellow-100 border-2 border-yellow-400 shadow-lg' :
-                          member.rank === 2 ? 'bg-gradient-to-r from-gray-50 to-gray-100 border-2 border-gray-400 shadow-md' :
-                          member.rank === 3 ? 'bg-gradient-to-r from-orange-50 to-orange-100 border-2 border-orange-400 shadow-md' :
-                          'bg-gray-50 border border-gray-200'
+                        className={`flex items-center justify-between p-6 rounded-xl transition-all hover:scale-[1.02] ${
+                          member.rank === 2 ? 'bg-gradient-to-r from-gray-100 to-gray-200 border-3 border-gray-400 shadow-lg' :
+                          'bg-gradient-to-r from-orange-100 to-orange-200 border-3 border-orange-400 shadow-lg'
                         }`}
                       >
                         <div className="flex items-center gap-4">
-                          <div className={`relative w-14 h-14 rounded-full flex items-center justify-center font-bold text-xl ${
-                            member.rank === 1 ? 'bg-gradient-to-br from-yellow-400 to-yellow-500 text-white shadow-lg' :
-                            member.rank === 2 ? 'bg-gradient-to-br from-gray-400 to-gray-500 text-white shadow-md' :
-                            member.rank === 3 ? 'bg-gradient-to-br from-orange-400 to-orange-500 text-white shadow-md' :
-                            'bg-gradient-to-br from-teal-100 to-teal-200 text-teal-800'
+                          <div className={`relative w-20 h-20 rounded-full flex items-center justify-center font-bold text-2xl ${
+                            member.rank === 2 ? 'bg-gradient-to-br from-gray-400 to-gray-600 text-white shadow-xl' :
+                            'bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-xl'
                           }`}>
-                            {getMedal(member.rank) || member.rank}
-                            {member.rank <= 3 && (
-                              <Sparkles className="absolute -top-1 -right-1 w-5 h-5 text-yellow-500 animate-pulse" />
-                            )}
+                            {getMedal(member.rank)}
+                            <Sparkles className="absolute -top-1 -right-1 w-6 h-6 text-yellow-400 animate-pulse" />
                           </div>
                           <div>
-                            <p className="font-bold text-lg">{member.user_name}</p>
-                            <p className="text-sm text-gray-600 flex items-center gap-1">
+                            <p className="font-bold text-2xl">{member.user_name}</p>
+                            <p className="text-base text-gray-700 flex items-center gap-1">
                               {member.user_role === 'teacher' ? '👨‍🏫 Professeur' : '🎓 Étudiant'}
-                              {member.rank <= 3 && <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />}
+                              <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
                             </p>
                           </div>
                         </div>
