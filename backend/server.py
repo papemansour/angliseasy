@@ -24,6 +24,9 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
+# Frontend URL for emails and notifications
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://englishlearn-4.preview.emergentagent.com')
+
 # Security
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
