@@ -575,7 +575,7 @@ const HomePage = () => {
                       {formatPrice(pricingData.intermediate_eur)}
                     </div>
                   )}
-                  <div className="text-4xl md:text-5xl font-bold text-teal-600">
+                  <div className="text-2xl md:text-3xl font-bold text-teal-600">
                     {formatPriceWithSmallFCFA(pricingData.intermediate_eur - pricingData.intermediate_discount)}
                   </div>
                   {pricingData.intermediate_discount > 0 && (
