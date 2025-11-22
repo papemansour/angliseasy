@@ -605,6 +605,68 @@ async def admin_delete_user(user_id: str, current_user: dict = Depends(get_curre
 
 # Endpoint en doublon supprimé - le changement de mot de passe se fait via la route ligne 339
 
+# ADMIN: Reset user password (SECURE)
+@api_router.post("/admin/reset-user-password/{user_id}")
+async def admin_reset_user_password(user_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if user['role'] == 'admin':
+        raise HTTPException(status_code=403, detail="Cannot reset admin password")
+    
+    # Generate a secure temporary password
+    import secrets
+    import string
+    alphabet = string.ascii_letters + string.digits
+    temporary_password = ''.join(secrets.choice(alphabet) for i in range(10))
+    
+    # Hash the temporary password
+    hashed = get_password_hash(temporary_password)
+    
+    # Update user with temporary password
+    await db.users.update_one(
+        {"id": user_id},
+        {"$set": {
+            "password_hash": hashed,
+            "temporary_password": temporary_password,
+            "password_reset_at": datetime.now(timezone.utc).isoformat(),
+            "password_reset_by": current_user['id']
+        }}
+    )
+    
+    # Send email to user with the temporary password
+    try:
+        from email_service import send_password_reset_email
+        await send_password_reset_email(
+            to_email=user['email'],
+            user_name=f"{user.get('first_name', '')} {user.get('last_name', '')}".strip(),
+            temporary_password=temporary_password
+        )
+        email_sent = True
+    except Exception as e:
+        logger.error(f"Failed to send password reset email: {str(e)}")
+        email_sent = False
+    
+    # Create notification for user
+    await create_notification(
+        user_id=user_id,
+        notification_type="password_reset",
+        message="Votre mot de passe a été réinitialisé par l'administrateur. Veuillez vérifier votre email."
+    )
+    
+    logger.info(f"Password reset by admin {current_user['email']} for user {user['email']}")
+    
+    return {
+        "message": "Password reset successfully",
+        "temporary_password": temporary_password,
+        "email_sent": email_sent,
+        "note": "User will receive email with temporary password. They should change it after login."
+    }
+
 # News routes (admin only can create, everyone can read)
 @api_router.get("/news/all")
 async def get_all_news():
