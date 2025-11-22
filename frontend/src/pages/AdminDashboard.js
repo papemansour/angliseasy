@@ -732,6 +732,79 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
+          {/* Teacher Availability Tab */}
+          <TabsContent value="availability">
+            <Card>
+              <CardHeader>
+                <CardTitle>📅 Disponibilités des professeurs</CardTitle>
+                <CardDescription>Consultez les horaires disponibles de tous les professeurs</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  onClick={async () => {
+                    try {
+                      const res = await apiClient.get('/admin/all-teacher-availability');
+                      setTeacherAvailability(res.data);
+                      toast.success('Disponibilités actualisées');
+                    } catch (error) {
+                      toast.error('Erreur de chargement');
+                    }
+                  }}
+                  className="mb-4"
+                >
+                  🔄 Actualiser les disponibilités
+                </Button>
+
+                {teacherAvailability.length === 0 ? (
+                  <p className="text-gray-500 text-center py-8">Aucune disponibilité enregistrée</p>
+                ) : (
+                  <div className="space-y-6">
+                    {teacherAvailability.map((item) => (
+                      <div key={item.teacher.id} className="border rounded-lg p-4">
+                        <div className="mb-4">
+                          <h3 className="font-semibold text-lg">
+                            {item.teacher.first_name} {item.teacher.last_name}
+                          </h3>
+                          <p className="text-sm text-gray-600">{item.teacher.email}</p>
+                        </div>
+
+                        {item.availability && Object.keys(item.availability).length > 0 ? (
+                          <div className="grid grid-cols-7 gap-2">
+                            {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map((day, idx) => {
+                              const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                              const daySlots = item.availability[dayKeys[idx]] || [];
+                              
+                              return (
+                                <div key={idx} className="border rounded p-2">
+                                  <p className="font-semibold text-center mb-2 text-sm">{day}</p>
+                                  <div className="space-y-1">
+                                    {daySlots.length > 0 ? (
+                                      daySlots.map((slot, slotIdx) => (
+                                        <div key={slotIdx} className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded text-center">
+                                          {slot}
+                                        </div>
+                                      ))
+                                    ) : (
+                                      <div className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded text-center">
+                                        Indispo
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <p className="text-gray-500 italic">Aucune disponibilité définie</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Conversations Tab */}
           <TabsContent value="conversations">
             <div className="grid md:grid-cols-3 gap-6">
