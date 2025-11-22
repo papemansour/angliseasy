@@ -197,7 +197,7 @@ backend:
 
   - task: "Kalamathèque AI Assistant Integration"
     implemented: true
-    working: false
+    working: true
     file: "server.py"
     stuck_count: 1
     priority: "high"
@@ -206,6 +206,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "❌ FAILED - POST /api/kalamatheque/ai-assistant returns 500 error. Issue: 'cannot import name OpenAI from emergentintegrations'. The emergentintegrations library uses LlmChat class, not OpenAI class. Import needs to be fixed from 'from emergentintegrations import OpenAI' to proper import."
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - AI Assistant endpoint now works without authentication. Direct API test successful: POST /api/kalamatheque/ai-assistant returns French summaries/explanations. Example: 'Machine learning enables computers...' → 'Le machine learning permet aux ordinateurs d'apprendre et de s'améliorer grâce à l'expérience, sans programmation explicite.' No 403 errors, authentication requirement successfully removed."
 
   - task: "Kalamathèque Text-to-Speech Integration"
     implemented: true
