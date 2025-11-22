@@ -167,7 +167,7 @@ const HomePage = () => {
       {/* Navigation */}
       <nav className="bg-white shadow-sm fixed w-full top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">KALAMAENGLISH</h1>
+          <h1 className="text-2xl font-bold text-gray-900">MyKalamaenglish</h1>
           <Link to="/login">
             <Button variant="outline" data-testid="login-nav-button" className="border-teal-600 text-teal-600 hover:bg-teal-50">
               Connexion
