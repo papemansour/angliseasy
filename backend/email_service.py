@@ -86,7 +86,7 @@ class EmailService:
                     </div>
                     
                     <center>
-                        <a href="https://englishlearn-4.preview.emergentagent.com/login" class="button">
+                        <a href="{self.frontend_url}/login" class="button">
                             Se connecter maintenant
                         </a>
                     </center>
@@ -127,7 +127,7 @@ class EmailService:
         - Mot de passe KALAMATHÈQUE: digikode
         
         LIEN DE CONNEXION:
-        https://englishlearn-4.preview.emergentagent.com/login
+        {self.frontend_url}/login
         
         CHANGEZ VOTRE MOT DE PASSE:
         Nous vous recommandons fortement de changer votre mot de passe dès votre première connexion pour sécuriser votre compte.
@@ -353,7 +353,7 @@ class EmailService:
                     </div>
                     
                     <center>
-                        <a href="https://englishlearn-4.preview.emergentagent.com/login" class="button">
+                        <a href="{self.frontend_url}/login" class="button">
                             Se connecter maintenant
                         </a>
                     </center>
@@ -398,7 +398,7 @@ class EmailService:
         - Changez-le immédiatement après connexion depuis votre espace personnel
         
         LIEN DE CONNEXION:
-        https://englishlearn-4.preview.emergentagent.com/login
+        {self.frontend_url}/login
         
         COMMENT CHANGER VOTRE MOT DE PASSE:
         1. Connectez-vous avec le mot de passe temporaire ci-dessus
@@ -557,7 +557,7 @@ class EmailService:
         - Profil : Changez votre mot de passe provisoire
         
         LIEN DE CONNEXION:
-        https://englishlearn-4.preview.emergentagent.com/login
+        {self.frontend_url}/login
         
         Pour commencer, connectez-vous simplement à votre compte et explorez les cours disponibles.
         
