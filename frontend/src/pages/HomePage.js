@@ -134,11 +134,32 @@ const HomePage = () => {
       });
       setSelectedDates([]);
       setSelectedTimeSlots({});
+      setShowRegistrationModal(false);
+      
+      // Redirect to Stripe payment if plan selected
+      if (selectedPlan) {
+        handleStripePayment(selectedPlan);
+      }
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Erreur lors de l\'inscription');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleStripePayment = (plan) => {
+    toast.info('Redirection vers le paiement Stripe...');
+    // TODO: Integrate with Stripe Checkout
+    // For now, just show a message
+    toast.success(`Paiement pour ${plan.name} - ${formatPrice(plan.price)}`);
+  };
+
+  const openRegistrationModal = (plan = null) => {
+    setSelectedPlan(plan);
+    if (plan) {
+      setFormData({ ...formData, level: plan.level });
+    }
+    setShowRegistrationModal(true);
   };
 
   return (
