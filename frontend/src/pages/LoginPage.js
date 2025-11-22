@@ -50,8 +50,39 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
+    <div className={`min-h-screen flex items-center justify-center px-4 relative overflow-hidden ${
+      isChristmas ? 'bg-gradient-to-br from-red-50 via-green-50 to-red-100' : 
+      isNewYear ? 'bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-100' :
+      'bg-gradient-to-br from-blue-50 via-white to-purple-50'
+    }`}>
+      {/* Christmas decorations */}
+      {isChristmas && (
+        <>
+          <div className="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-green-700 to-transparent opacity-30"></div>
+          <div className="absolute top-5 left-10 text-6xl animate-bounce">🎄</div>
+          <div className="absolute top-5 right-10 text-6xl animate-bounce" style={{ animationDelay: '0.5s' }}>🎅</div>
+          <div className="absolute bottom-10 left-20 text-4xl animate-pulse">⛄</div>
+          <div className="absolute bottom-10 right-20 text-4xl animate-pulse" style={{ animationDelay: '1s' }}>🎁</div>
+          <div className="absolute top-1/4 left-1/4 text-3xl animate-spin" style={{ animationDuration: '3s' }}>❄️</div>
+          <div className="absolute top-1/3 right-1/4 text-3xl animate-spin" style={{ animationDuration: '4s', animationDelay: '1s' }}>⭐</div>
+          <div className="absolute top-1/2 left-10 text-2xl opacity-50">🔔</div>
+          <div className="absolute top-2/3 right-10 text-2xl opacity-50">🕯️</div>
+        </>
+      )}
+      
+      {/* New Year decorations */}
+      {isNewYear && (
+        <>
+          <div className="absolute top-10 left-10 text-6xl animate-bounce">🎊</div>
+          <div className="absolute top-10 right-10 text-6xl animate-bounce" style={{ animationDelay: '0.5s' }}>🎉</div>
+          <div className="absolute bottom-20 left-20 text-5xl animate-pulse">🥳</div>
+          <div className="absolute bottom-20 right-20 text-5xl animate-pulse" style={{ animationDelay: '0.5s' }}>🎆</div>
+          <div className="absolute top-1/3 left-1/4 text-4xl animate-bounce" style={{ animationDelay: '1s' }}>✨</div>
+          <div className="absolute top-1/2 right-1/4 text-4xl animate-bounce" style={{ animationDelay: '1.5s' }}>🎈</div>
+        </>
+      )}
+      
+      <div className="w-full max-w-md relative z-10">
         <Link to="/" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Retour à l'accueil
