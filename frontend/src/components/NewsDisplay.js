@@ -122,6 +122,57 @@ const NewsDisplay = () => {
           ))}
         </div>
       )}
+
+      {/* Read News Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-teal-800">{selectedNews?.title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            {selectedNews?.image_url && (
+              <img 
+                src={selectedNews.image_url} 
+                alt={selectedNews.title}
+                className="w-full rounded-lg"
+              />
+            )}
+            <div className="flex items-center gap-4 text-sm text-gray-600">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                {selectedNews && new Date(selectedNews.published_date).toLocaleDateString('fr-FR', {
+                  day: 'numeric',
+                  month: 'long',
+                  year: 'numeric'
+                })}
+              </div>
+              <span className="text-gray-400">•</span>
+              <span className="italic">Par {selectedNews?.author_name}</span>
+            </div>
+            {selectedNews?.event_date && (
+              <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                <p className="text-sm text-orange-800 font-semibold flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  Date de l'événement
+                </p>
+                <p className="text-sm text-orange-700 mt-1">
+                  {new Date(selectedNews.event_date).toLocaleDateString('fr-FR', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                  })}
+                </p>
+              </div>
+            )}
+            <div className="prose max-w-none">
+              <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
+                {selectedNews?.content}
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
