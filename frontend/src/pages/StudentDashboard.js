@@ -362,85 +362,16 @@ const StudentDashboard = () => {
               </CardHeader>
               <CardContent className="pt-6">
                 {!teacher ? (
-                  <p className="text-gray-500 text-center py-8">Vous n'avez pas encore de professeur assigné</p>
-                ) : (
-                  <div className="space-y-4">
-                    {/* Messages container */}
-                    <div className="border rounded-lg p-4 h-96 overflow-y-auto bg-gray-50">
-                      {messages.length === 0 ? (
-                        <p className="text-gray-500 text-center py-8">Aucun message</p>
-                      ) : (
-                        <div className="space-y-3">
-                          {messages.map((msg) => (
-                            <div 
-                              key={msg.id} 
-                              className={`p-3 rounded-lg ${
-                                msg.from_user_id === user?.id 
-                                  ? 'bg-teal-100 ml-auto max-w-[80%]' 
-                                  : 'bg-white border max-w-[80%]'
-                              }`}
-                            >
-                              <p className="text-sm font-semibold text-teal-700 mb-1">
-                                {msg.from_user_id === user?.id ? 'Vous' : teacher.first_name}
-                              </p>
-                              <p className="text-gray-800">{msg.content}</p>
-                              <p className="text-xs text-gray-500 mt-1">
-                                {new Date(msg.sent_at).toLocaleString('fr-FR')}
-                              </p>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Send message form */}
-                    <form onSubmit={async (e) => {
-                      e.preventDefault();
-                      if (!newMessage.trim()) return;
-
-                      try {
-                        await apiClient.post('/messages/send', {
-                          to_user_id: teacher.id,
-                          content: newMessage
-                        });
-                        toast.success('Message envoyé!');
-                        setNewMessage('');
-                        
-                        // Refresh messages
-                        const res = await apiClient.get(`/messages/conversation/${teacher.id}`);
-                        setMessages(res.data);
-                      } catch (error) {
-                        toast.error('Erreur lors de l\'envoi du message');
-                      }
-                    }} className="flex gap-2">
-                      <Textarea
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Écrivez votre message..."
-                        className="flex-1 border-teal-200"
-                        rows={3}
-                      />
-                      <Button type="submit" className="bg-teal-600 hover:bg-teal-700">
-                        📤 Envoyer
-                      </Button>
-                    </form>
-
-                    <Button 
-                      onClick={async () => {
-                        try {
-                          const res = await apiClient.get(`/messages/conversation/${teacher.id}`);
-                          setMessages(res.data);
-                          toast.success('Messages actualisés');
-                        } catch (error) {
-                          toast.error('Erreur de chargement');
-                        }
-                      }}
-                      variant="outline"
-                      className="w-full"
-                    >
-                      🔄 Actualiser les messages
-                    </Button>
+                  <div className="text-center py-12">
+                    <MessageCircle className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">Vous n'avez pas encore de professeur assigné</p>
                   </div>
+                ) : (
+                  <ConversationChat
+                    recipientId={teacher.id}
+                    recipientName={`${teacher.first_name} ${teacher.last_name}`}
+                    currentUserId={user?.id}
+                  />
                 )}
               </CardContent>
             </Card>
