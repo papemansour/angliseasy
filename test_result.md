@@ -212,7 +212,7 @@ backend:
 
   - task: "Kalamathèque Text-to-Speech Integration"
     implemented: true
-    working: false
+    working: true
     file: "server.py"
     stuck_count: 1
     priority: "high"
@@ -221,6 +221,9 @@ backend:
         - working: false
           agent: "testing"
           comment: "❌ FAILED - POST /api/kalamatheque/text-to-speech returns 500 error. Issue: 'cannot import name OpenAI from emergentintegrations'. Should use OpenAITextToSpeech class from emergentintegrations.llm.openai.text_to_speech instead."
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - TTS endpoint now works without authentication. Direct API test successful: POST /api/kalamatheque/text-to-speech returns base64 encoded MP3 audio (18,579 characters of audio data for 'Hello world'). No 403 errors, authentication requirement successfully removed."
 
 frontend:
   - task: "Kalamathèque Access Code Verification"
