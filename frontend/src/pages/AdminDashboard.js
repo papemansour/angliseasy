@@ -732,37 +732,69 @@ const AdminDashboard = () => {
                         <span className="text-2xl">🌱</span>
                         <h3 className="text-lg font-bold text-teal-800">Pack Débutant</h3>
                       </div>
-                      <div>
-                        <Label htmlFor="beginner_eur" className="text-teal-700">Prix de base (€)</Label>
-                        <Input
-                          id="beginner_eur"
-                          type="number"
-                          value={prices.beginner_eur}
-                          onChange={(e) => setPrices({ ...prices, beginner_eur: parseInt(e.target.value) })}
-                          className="mt-1 border-teal-300 focus:border-teal-500"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="beginner_discount" className="text-teal-700">Remise (€)</Label>
-                        <Input
-                          id="beginner_discount"
-                          type="number"
-                          value={prices.beginner_discount || 0}
-                          onChange={(e) => setPrices({ ...prices, beginner_discount: parseInt(e.target.value) || 0 })}
-                          className="mt-1 border-teal-300 focus:border-teal-500"
-                          placeholder="0"
-                        />
-                      </div>
-                      <div className="pt-3 border-t border-teal-300">
-                        <p className="text-sm font-semibold text-teal-700">Prix final :</p>
-                        <p className="text-3xl font-bold text-teal-800">
-                          {(prices.beginner_eur - (prices.beginner_discount || 0))}€
-                        </p>
-                        {prices.beginner_discount > 0 && (
-                          <p className="text-xs text-teal-600 mt-1">
-                            <span className="line-through">{prices.beginner_eur}€</span> → Économie de {prices.beginner_discount}€
+                      
+                      {/* EUR */}
+                      <div className="space-y-3 pb-3 border-b border-teal-200">
+                        <p className="text-sm font-semibold text-teal-700">💶 Prix en EURO</p>
+                        <div>
+                          <Label htmlFor="beginner_eur" className="text-teal-700 text-xs">Prix de base (€)</Label>
+                          <Input
+                            id="beginner_eur"
+                            type="number"
+                            value={prices.beginner_eur}
+                            onChange={(e) => setPrices({ ...prices, beginner_eur: parseInt(e.target.value) })}
+                            className="mt-1 border-teal-300 focus:border-teal-500"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="beginner_discount" className="text-teal-700 text-xs">Remise (€)</Label>
+                          <Input
+                            id="beginner_discount"
+                            type="number"
+                            value={prices.beginner_discount || 0}
+                            onChange={(e) => setPrices({ ...prices, beginner_discount: parseInt(e.target.value) || 0 })}
+                            className="mt-1 border-teal-300 focus:border-teal-500"
+                            placeholder="0"
+                          />
+                        </div>
+                        <div className="bg-teal-100 p-2 rounded">
+                          <p className="text-xs font-semibold text-teal-700">Prix final EUR:</p>
+                          <p className="text-2xl font-bold text-teal-800">
+                            {(prices.beginner_eur - (prices.beginner_discount || 0))}€
                           </p>
-                        )}
+                        </div>
+                      </div>
+
+                      {/* FCFA */}
+                      <div className="space-y-3">
+                        <p className="text-sm font-semibold text-teal-700">🇸🇳 Prix en FCFA</p>
+                        <div>
+                          <Label htmlFor="beginner_fcfa" className="text-teal-700 text-xs">Prix de base (FCFA)</Label>
+                          <Input
+                            id="beginner_fcfa"
+                            type="number"
+                            value={prices.beginner_fcfa || 0}
+                            onChange={(e) => setPrices({ ...prices, beginner_fcfa: parseInt(e.target.value) || 0 })}
+                            className="mt-1 border-teal-300 focus:border-teal-500"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="beginner_discount_fcfa" className="text-teal-700 text-xs">Remise (FCFA)</Label>
+                          <Input
+                            id="beginner_discount_fcfa"
+                            type="number"
+                            value={prices.beginner_discount_fcfa || 0}
+                            onChange={(e) => setPrices({ ...prices, beginner_discount_fcfa: parseInt(e.target.value) || 0 })}
+                            className="mt-1 border-teal-300 focus:border-teal-500"
+                            placeholder="0"
+                          />
+                        </div>
+                        <div className="bg-teal-100 p-2 rounded">
+                          <p className="text-xs font-semibold text-teal-700">Prix final FCFA:</p>
+                          <p className="text-2xl font-bold text-teal-800">
+                            {((prices.beginner_fcfa || 0) - (prices.beginner_discount_fcfa || 0)).toLocaleString('fr-FR')} FCFA
+                          </p>
+                        </div>
                       </div>
                     </div>
 
