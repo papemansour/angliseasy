@@ -881,6 +881,9 @@ async def send_document(doc_data: DocumentCreate, current_user: dict = Depends(g
     if current_user['role'] != 'teacher':
         raise HTTPException(status_code=403, detail="Teacher access required")
     
+    # Get teacher info
+    teacher = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+    
     document = Document(
         teacher_id=current_user['id'],
         title=doc_data.title,
@@ -892,6 +895,7 @@ async def send_document(doc_data: DocumentCreate, current_user: dict = Depends(g
     
     doc = document.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
+    doc['from_teacher_name'] = f"{teacher['first_name']} {teacher['last_name']}"
     await db.documents.insert_one(doc)
     
     logger.info(f"Document sent by teacher {current_user['id']} to {doc_data.recipient_type}")
