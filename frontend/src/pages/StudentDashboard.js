@@ -20,7 +20,7 @@ import NewsDisplay from '../components/NewsDisplay';
 import WelcomeLetter from '../components/WelcomeLetter';
 import DonationButton from '../components/DonationButton';
 import KalamaClub from '../components/KalamaClub';
-import ActivityFeed from '../components/ActivityFeed';
+// ActivityFeed removed
 import StudentOfMonthBadge from '../components/StudentOfMonthBadge';
 
 const StudentDashboard = () => {
