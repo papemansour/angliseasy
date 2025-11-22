@@ -385,39 +385,39 @@ const HomePage = () => {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all">
-              <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-6">
-                <h3 className="text-2xl font-bold text-teal-800">Pack Avancé</h3>
-                <p className="text-teal-600">Pour les experts</p>
+            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all sm:col-span-2 lg:col-span-1">
+              <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-4 md:p-6">
+                <h3 className="text-xl md:text-2xl font-bold text-teal-800">Pack Avancé</h3>
+                <p className="text-sm md:text-base text-teal-600">Pour les experts</p>
               </div>
-              <div className="p-6">
-                <div className="text-center mb-6">
-                  <div className="text-gray-400 line-through text-xl">{formatPrice(120)}</div>
-                  <div className="text-5xl font-bold text-teal-600">{formatPrice(102)}</div>
-                  <div className="text-green-600 font-semibold mt-2">-15% de réduction</div>
+              <div className="p-4 md:p-6">
+                <div className="text-center mb-4 md:mb-6">
+                  <div className="text-gray-400 line-through text-lg md:text-xl">{formatPrice(120)}</div>
+                  <div className="text-4xl md:text-5xl font-bold text-teal-600">{formatPrice(102)}</div>
+                  <div className="text-green-600 font-semibold mt-1 md:mt-2 text-sm md:text-base">-15% de réduction</div>
                 </div>
-                <ul className="space-y-3">
+                <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-teal-600" />
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-teal-600 flex-shrink-0" />
                     <span>Cours niveau avancé</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-teal-600" />
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-teal-600 flex-shrink-0" />
                     <span>Préparation examens</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <ChevronRight className="w-5 h-5 text-teal-600" />
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-teal-600 flex-shrink-0" />
                     <span>Anglais professionnel</span>
                   </li>
                 </ul>
                 <Button 
-                  className="w-full mt-6 bg-teal-600 hover:bg-teal-700" 
+                  className="w-full mt-4 md:mt-6 bg-teal-600 hover:bg-teal-700 text-sm md:text-base py-2 md:py-3" 
                   data-testid="pay-advanced"
                   onClick={() => openRegistrationModal({ name: 'Pack Avancé', level: 'advanced', price: 102 })}
                 >
                   Payer maintenant
                 </Button>
-                <p className="text-xs text-center text-gray-500 mt-3">
+                <p className="text-xs text-center text-gray-500 mt-2 md:mt-3">
                   💳 Paiement sécurisé par Stripe (PCI Niveau 1)
                 </p>
               </div>
