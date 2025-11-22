@@ -300,15 +300,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Student Login Functionality"
-    - "Student Dashboard Navigation"
-    - "Profile Tab Information Display"
-    - "Password Change Form Functionality"
-    - "Password Change Validation"
-    - "Password Change Security Verification"
-  stuck_tasks: []
+    - "Kalamathèque AI Assistant Integration"
+    - "Kalamathèque Text-to-Speech Integration"
+  stuck_tasks:
+    - "Kalamathèque AI Assistant Integration"
+    - "Kalamathèque Text-to-Speech Integration"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "stuck_first"
 
 agent_communication:
     - agent: "testing"
