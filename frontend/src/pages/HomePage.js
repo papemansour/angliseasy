@@ -1014,38 +1014,61 @@ const HomePage = () => {
               <div className="bg-gradient-to-br from-blue-50 to-teal-50 border-2 border-teal-300 rounded-lg p-6 animate-in slide-in-from-top duration-300">
                 <h4 className="text-lg font-bold text-teal-800 mb-4 flex items-center gap-2">
                   <span className="text-2xl">📋</span>
-                  Instructions de paiement Wave
+                  Instructions de paiement Wave Sénégal
                 </h4>
                 
                 <div className="space-y-4">
                   <div className="bg-white rounded-lg p-4 shadow-sm">
                     <p className="text-sm font-semibold text-gray-700 mb-2">
-                      Montant à payer : 
+                      💰 Montant à payer en FCFA : 
                       <span className="text-2xl text-teal-600 font-bold ml-2">
-                        {selectedPlan ? formatPrice(selectedPlan.price) : ''}
+                        {selectedPlan ? `${Math.round(selectedPlan.price * EUR_TO_FCFA).toLocaleString('fr-FR')} FCFA` : ''}
                       </span>
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      (Équivalent à {selectedPlan ? formatPrice(selectedPlan.price) : ''})
                     </p>
                   </div>
 
                   <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <p className="text-sm font-semibold text-gray-700 mb-2">
-                      📱 Numéro Wave à contacter :
+                    <p className="text-sm font-semibold text-gray-700 mb-3">
+                      👤 Bénéficiaire du transfert :
                     </p>
-                    <div className="flex items-center gap-3 bg-teal-50 p-3 rounded-md">
-                      <span className="text-xl font-bold text-teal-800">
-                        +221 77 123 45 67
-                      </span>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
-                        onClick={() => {
-                          navigator.clipboard.writeText('+221771234567');
-                          toast.success('Numéro copié !');
-                        }}
-                      >
-                        Copier
-                      </Button>
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 bg-teal-50 p-3 rounded-md">
+                        <div className="flex-1">
+                          <p className="text-xs text-gray-600">Nom complet</p>
+                          <p className="text-lg font-bold text-teal-800">Mouhamadou Mansour DIAGNE</p>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
+                          onClick={() => {
+                            navigator.clipboard.writeText('Mouhamadou Mansour DIAGNE');
+                            toast.success('Nom copié !');
+                          }}
+                        >
+                          Copier
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-3 bg-blue-50 p-3 rounded-md">
+                        <div className="flex-1">
+                          <p className="text-xs text-gray-600">Numéro Wave</p>
+                          <p className="text-lg font-bold text-blue-800">77 494 65 61</p>
+                        </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
+                          onClick={() => {
+                            navigator.clipboard.writeText('77 494 65 61');
+                            toast.success('Numéro copié !');
+                          }}
+                        >
+                          Copier
+                        </Button>
+                      </div>
                     </div>
                   </div>
 
@@ -1060,23 +1083,27 @@ const HomePage = () => {
                       </li>
                       <li className="flex gap-3">
                         <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
-                        <span>Sélectionnez <strong>"Envoyer de l'argent"</strong></span>
+                        <span>Sélectionnez <strong>"Transfert"</strong></span>
                       </li>
                       <li className="flex gap-3">
                         <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
-                        <span>Entrez le numéro : <strong>+221 77 123 45 67</strong></span>
+                        <span>Cliquez sur <strong>"Saisir un nouveau numéro"</strong></span>
                       </li>
                       <li className="flex gap-3">
                         <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
-                        <span>Entrez le montant : <strong>{selectedPlan ? formatPrice(selectedPlan.price) : ''}</strong></span>
+                        <span>Dans "Nom complet", entrez : <strong>Mouhamadou Mansour DIAGNE</strong></span>
                       </li>
                       <li className="flex gap-3">
                         <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">5</span>
-                        <span>Dans le message, indiquez votre <strong>nom complet et email</strong> utilisés lors de l'inscription</span>
+                        <span>Entrez le numéro : <strong>77 494 65 61</strong></span>
                       </li>
                       <li className="flex gap-3">
                         <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">6</span>
-                        <span>Confirmez le paiement</span>
+                        <span>Entrez le montant : <strong>{selectedPlan ? `${Math.round(selectedPlan.price * EUR_TO_FCFA).toLocaleString('fr-FR')} FCFA` : ''}</strong></span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">7</span>
+                        <span>Cliquez sur <strong>"Envoyer"</strong> pour finaliser le transfert</span>
                       </li>
                     </ol>
                   </div>
