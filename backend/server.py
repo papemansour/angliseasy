@@ -1653,6 +1653,150 @@ async def create_admin():
         await db.users.insert_one(doc)
         logger.info("Admin user created")
 
+# ============ KALAMATHÈQUE ROUTES ============
+
+@api_router.post("/kalamatheque/verify-access")
+async def verify_kalamatheque_access(data: dict):
+    """Verify access code for Kalamathèque"""
+    access_code = data.get('access_code')
+    correct_code = os.environ.get('KALAMATHEQUE_ACCESS_CODE', 'Digika')
+    
+    if access_code == correct_code:
+        return {"access": True, "message": "Accès accordé"}
+    else:
+        raise HTTPException(status_code=403, detail="Code d'accès incorrect")
+
+@api_router.post("/kalamatheque/books")
+async def create_book(book_data: dict, current_user: dict = Depends(get_current_user)):
+    """Admin: Add a new book to Kalamathèque"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    book = {
+        "id": str(uuid.uuid4()),
+        "title": book_data['title'],
+        "author": book_data.get('author', ''),
+        "description": book_data.get('description', ''),
+        "level": book_data['level'],  # beginner, intermediate, advanced
+        "file_url": book_data['file_url'],
+        "file_type": book_data['file_type'],  # pdf, epub, txt, html, docx
+        "cover_image": book_data.get('cover_image', ''),
+        "created_by": current_user['id'],
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.kalamatheque_books.insert_one(book)
+    logger.info(f"Book added to Kalamathèque: {book['title']} by admin {current_user['id']}")
+    return {"message": "Livre ajouté avec succès", "book_id": book['id']}
+
+@api_router.get("/kalamatheque/books")
+async def get_books(level: Optional[str] = None):
+    """Get all books, optionally filtered by level"""
+    query = {}
+    if level:
+        query['level'] = level
+    
+    books = await db.kalamatheque_books.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    return books
+
+@api_router.get("/kalamatheque/books/{book_id}")
+async def get_book(book_id: str):
+    """Get a specific book by ID"""
+    book = await db.kalamatheque_books.find_one({"id": book_id}, {"_id": 0})
+    if not book:
+        raise HTTPException(status_code=404, detail="Livre non trouvé")
+    return book
+
+@api_router.delete("/kalamatheque/books/{book_id}")
+async def delete_book(book_id: str, current_user: dict = Depends(get_current_user)):
+    """Admin: Delete a book from Kalamathèque"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.kalamatheque_books.delete_one({"id": book_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Livre non trouvé")
+    
+    logger.info(f"Book {book_id} deleted from Kalamathèque by admin {current_user['id']}")
+    return {"message": "Livre supprimé avec succès"}
+
+@api_router.post("/kalamatheque/ai-assistant")
+async def kalamatheque_ai_assistant(data: dict, current_user: dict = Depends(get_current_user)):
+    """AI Assistant for Kalamathèque - summarize, explain, or give examples"""
+    action = data.get('action')  # 'summarize', 'explain', 'examples'
+    selected_text = data.get('text')
+    
+    if not selected_text:
+        raise HTTPException(status_code=400, detail="Texte requis")
+    
+    try:
+        from openai import OpenAI
+        client_openai = OpenAI(api_key=os.environ.get('EMERGENT_LLM_KEY'))
+        
+        prompts = {
+            'summarize': f"Résumez ce texte en français de manière concise :\n\n{selected_text}",
+            'explain': f"Expliquez ce texte en français de manière claire et pédagogique :\n\n{selected_text}",
+            'examples': f"Donnez 3 exemples concrets en français pour illustrer ce texte :\n\n{selected_text}"
+        }
+        
+        prompt = prompts.get(action, prompts['explain'])
+        
+        response = client_openai.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "Vous êtes un assistant pédagogique qui aide les étudiants à comprendre les textes."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=500
+        )
+        
+        result = response.choices[0].message.content
+        
+        logger.info(f"AI Assistant used by {current_user['id']} - action: {action}")
+        return {"result": result}
+        
+    except Exception as e:
+        logger.error(f"AI Assistant error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur de l'assistant IA")
+
+@api_router.post("/kalamatheque/text-to-speech")
+async def text_to_speech(data: dict, current_user: dict = Depends(get_current_user)):
+    """Generate speech from text using OpenAI TTS"""
+    text = data.get('text')
+    
+    if not text:
+        raise HTTPException(status_code=400, detail="Texte requis")
+    
+    try:
+        from openai import OpenAI
+        client_openai = OpenAI(api_key=os.environ.get('EMERGENT_LLM_KEY'))
+        
+        response = client_openai.audio.speech.create(
+            model="tts-1",
+            voice="alloy",
+            input=text
+        )
+        
+        # Save audio file temporarily
+        audio_filename = f"audio_{uuid.uuid4()}.mp3"
+        audio_path = f"/tmp/{audio_filename}"
+        response.stream_to_file(audio_path)
+        
+        # In production, upload to S3 or CDN
+        # For now, return a base64 encoded audio
+        import base64
+        with open(audio_path, 'rb') as audio_file:
+            audio_data = base64.b64encode(audio_file.read()).decode('utf-8')
+        
+        os.remove(audio_path)
+        
+        logger.info(f"TTS used by {current_user['id']}")
+        return {"audio_base64": audio_data}
+        
+    except Exception as e:
+        logger.error(f"TTS error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Erreur de synthèse vocale")
+
 app.include_router(api_router)
 
 app.add_middleware(
