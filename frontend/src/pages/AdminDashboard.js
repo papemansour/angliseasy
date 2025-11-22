@@ -26,6 +26,7 @@ import { LogOut, Users, UserCheck, UserPlus, Award, BookOpen, Clock, Send, FileT
 import KalamathequeAdmin from '../components/KalamathequeAdmin';
 import NewsManager from '../components/NewsManager';
 import ConversationChat from '../components/ConversationChat';
+import KalamaClub from '../components/KalamaClub';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
