@@ -595,20 +595,44 @@ const TeacherDashboard = () => {
                       </div>
                     )}
                     <div>
+                      <Label htmlFor="file_upload">Télécharger un fichier depuis votre appareil</Label>
+                      <div className="mt-2">
+                        <input
+                          type="file"
+                          id="file_upload"
+                          onChange={handleFileChange}
+                          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer"
+                          accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png,.mp3,.mp4"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          PDF, Word, Excel, PowerPoint, Images, Audio, Vidéo (max 10MB)
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 h-px bg-gray-300"></div>
+                      <span className="text-xs text-gray-500">OU</span>
+                      <div className="flex-1 h-px bg-gray-300"></div>
+                    </div>
+                    <div>
                       <Label htmlFor="file_url">Lien du document (URL)</Label>
                       <Input
                         id="file_url"
-                        required
                         value={documentData.file_url}
                         onChange={(e) => setDocumentData({ ...documentData, file_url: e.target.value })}
                         placeholder="https://..."
                         className="border-teal-200 focus:border-teal-500"
+                        disabled={uploadingFile}
                       />
                       <p className="text-xs text-gray-500 mt-1">Google Drive, Dropbox, etc.</p>
                     </div>
-                    <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700">
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-teal-600 hover:bg-teal-700"
+                      disabled={uploadingFile}
+                    >
                       <Upload className="w-4 h-4 mr-2" />
-                      Envoyer le document
+                      {uploadingFile ? 'Téléchargement...' : 'Envoyer le document'}
                     </Button>
                   </form>
                 </CardContent>
