@@ -561,7 +561,7 @@ const HomePage = () => {
                 <span className="bg-teal-600 text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold">Populaire</span>
               </div>
               <div className="bg-gradient-to-br from-teal-100 to-teal-200 p-4 md:p-6">
-                <h3 className="text-xl md:text-2xl font-bold text-teal-800">🚀 Pack Intermédiaire</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-teal-800">🚀 Pack K-Intermédiaire</h3>
                 <p className="text-sm md:text-base text-teal-700">Le plus choisi</p>
               </div>
               <div className="p-4 md:p-6">
