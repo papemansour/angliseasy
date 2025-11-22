@@ -148,22 +148,54 @@ const HomePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.level) {
-      toast.error('Veuillez sélectionner votre niveau');
-      return;
+    // Validation pour cours groupé
+    if (courseType === 'group') {
+      const hasInvalidMember = groupMembers.some(member => 
+        !member.first_name || !member.last_name || !member.email || !member.phone || !member.level
+      );
+      if (hasInvalidMember) {
+        toast.error('Veuillez remplir tous les champs obligatoires pour chaque personne');
+        return;
+      }
+    } else {
+      if (!formData.level) {
+        toast.error('Veuillez sélectionner votre niveau');
+        return;
+      }
     }
 
     setLoading(true);
 
     try {
       const preferredSlots = formatPreferredSlots();
-      const fullPhone = `${formData.country_code}${formData.phone}`;
-      await axios.post(`${API}/auth/register`, {
-        ...formData,
-        phone: fullPhone,
-        preferred_slots: preferredSlots || formData.preferred_slots
-      });
-      toast.success('Inscription envoyée avec succès! Attendez l\'approbation de l\'administrateur.');
+      
+      if (courseType === 'group') {
+        // Inscription groupée
+        const groupData = {
+          course_type: 'group',
+          preferred_slots: preferredSlots || '',
+          referral_source: formData.referral_source || '',
+          members: groupMembers.map(member => ({
+            ...member,
+            phone: `${member.country_code}${member.phone}`
+          }))
+        };
+        
+        await axios.post(`${API}/auth/register-group`, groupData);
+        toast.success(`Inscription groupée envoyée avec succès pour ${groupMembers.length} personne(s)!`);
+      } else {
+        // Inscription individuelle
+        const fullPhone = `${formData.country_code}${formData.phone}`;
+        await axios.post(`${API}/auth/register`, {
+          ...formData,
+          phone: fullPhone,
+          preferred_slots: preferredSlots || formData.preferred_slots,
+          course_type: 'individual'
+        });
+        toast.success('Inscription envoyée avec succès! Attendez l\'approbation de l\'administrateur.');
+      }
+      
+      // Reset form
       setFormData({
         first_name: '',
         last_name: '',
@@ -174,6 +206,9 @@ const HomePage = () => {
         preferred_slots: '',
         referral_source: ''
       });
+      setGroupMembers([
+        { first_name: '', last_name: '', email: '', phone: '', country_code: '+33', level: '' }
+      ]);
       setSelectedDates([]);
       setSelectedTimeSlots({});
       setShowRegistrationModal(false);
