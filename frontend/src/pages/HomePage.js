@@ -55,6 +55,7 @@ const HomePage = () => {
     last_name: '',
     email: '',
     phone: '',
+    country_code: '+33',
     level: '',
     preferred_slots: '',
     referral_source: ''
