@@ -209,20 +209,20 @@ Nous sommes ravis de vous accueillir sur MYKALMAENGLISH ! 🎉
 
 Félicitations pour avoir fait le premier pas dans votre parcours d'apprentissage de l'anglais. En tant que débutant, vous trouverez que notre plateforme est conçue pour vous accompagner à chaque étape. Voici ce à quoi vous pouvez vous attendre :
 
-**Leçons interactives :** un contenu engageant adapté aux débutants pour vous aider à construire une base solide en anglais.
+Leçons interactives : un contenu engageant adapté aux débutants pour vous aider à construire une base solide en anglais.
 
-**Apprentissage flexible :** accédez à vos cours à tout moment, partout, à votre propre rythme.
+Apprentissage flexible : accédez à vos cours à tout moment, partout, à votre propre rythme.
 
-**Communauté de soutien :** rejoignez notre communauté dynamique d'apprenants et d'instructeurs qui sont là pour vous aider à réussir.
+Communauté de soutien : rejoignez notre communauté dynamique d'apprenants et d'instructeurs qui sont là pour vous aider à réussir.
 
-**Vos identifiants de connexion :**
+Vos identifiants de connexion :
 📧 Email: {email}
 🔑 Mot de passe provisoire: {temp_password}
 
-**Vos accès :**
-- **Kalamathèque** : Bibliothèque en ligne avec accès illimité pour lire des livres
-- **News** : Section actualités et événements pour rester informé
-- **Profil** : Changez votre mot de passe provisoire dans votre espace, partie Profil
+Vos accès :
+- Kalamathèque : Bibliothèque en ligne avec accès illimité pour lire des livres
+- News : Section actualités et événements pour rester informé
+- Profil : Changez votre mot de passe provisoire dans votre espace, partie Profil
 
 Pour commencer, connectez-vous simplement à votre compte et explorez les cours disponibles. Si vous avez des questions ou avez besoin d'aide, n'hésitez pas à contacter notre équipe de support.
 
