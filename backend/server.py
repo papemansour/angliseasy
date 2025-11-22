@@ -2281,6 +2281,141 @@ async def mark_welcome_letter_read(current_user: dict = Depends(get_current_user
     
     return {"message": "Lettre marquée comme lue"}
 
+# ============ KALAMA CLUB ROUTES ============
+
+@api_router.get("/club/posts")
+async def get_club_posts(category: Optional[str] = None):
+    """Get all club posts or filter by category"""
+    query = {"category": category} if category else {}
+    posts = await db.club_posts.find(query, {"_id": 0}).sort("created_at", -1).to_list(1000)
+    return posts
+
+@api_router.post("/club/posts")
+async def create_club_post(post_data: ClubPostCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new club post"""
+    post = ClubPost(
+        author_id=current_user['id'],
+        author_name=f"{current_user['first_name']} {current_user['last_name']}",
+        author_role=current_user['role'],
+        title=post_data.title,
+        content=post_data.content,
+        category=post_data.category
+    )
+    
+    doc = post.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    await db.club_posts.insert_one(doc)
+    
+    logger.info(f"Club post created by {current_user['id']}: {post.title}")
+    return {"message": "Post créé", "id": post.id}
+
+@api_router.post("/club/posts/{post_id}/like")
+async def like_club_post(post_id: str, current_user: dict = Depends(get_current_user)):
+    """Like a club post"""
+    await db.club_posts.update_one(
+        {"id": post_id},
+        {"$inc": {"likes": 1}}
+    )
+    return {"message": "Post liké"}
+
+@api_router.get("/club/posts/{post_id}/comments")
+async def get_post_comments(post_id: str):
+    """Get comments for a post"""
+    comments = await db.club_comments.find({"post_id": post_id}, {"_id": 0}).sort("created_at", 1).to_list(1000)
+    return comments
+
+@api_router.post("/club/posts/{post_id}/comments")
+async def create_comment(post_id: str, comment_data: ClubCommentCreate, current_user: dict = Depends(get_current_user)):
+    """Add comment to a post"""
+    comment = ClubComment(
+        post_id=post_id,
+        author_id=current_user['id'],
+        author_name=f"{current_user['first_name']} {current_user['last_name']}",
+        author_role=current_user['role'],
+        content=comment_data.content
+    )
+    
+    doc = comment.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    await db.club_comments.insert_one(doc)
+    
+    # Increment comment count
+    await db.club_posts.update_one(
+        {"id": post_id},
+        {"$inc": {"comments_count": 1}}
+    )
+    
+    return {"message": "Commentaire ajouté", "id": comment.id}
+
+@api_router.get("/club/events")
+async def get_club_events():
+    """Get all upcoming club events"""
+    events = await db.club_events.find({}, {"_id": 0}).sort("event_date", 1).to_list(1000)
+    return events
+
+@api_router.post("/club/events")
+async def create_club_event(event_data: ClubEventCreate, current_user: dict = Depends(get_current_user)):
+    """Create a new club event (teachers and admin only)"""
+    if current_user['role'] not in ['teacher', 'admin']:
+        raise HTTPException(status_code=403, detail="Seuls les professeurs et admins peuvent créer des événements")
+    
+    event = ClubEvent(
+        title=event_data.title,
+        description=event_data.description,
+        event_date=datetime.fromisoformat(event_data.event_date),
+        duration_minutes=event_data.duration_minutes,
+        max_participants=event_data.max_participants,
+        created_by=current_user['id']
+    )
+    
+    doc = event.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    doc['event_date'] = doc['event_date'].isoformat()
+    await db.club_events.insert_one(doc)
+    
+    logger.info(f"Club event created by {current_user['id']}: {event.title}")
+    return {"message": "Événement créé", "id": event.id}
+
+@api_router.post("/club/events/{event_id}/join")
+async def join_club_event(event_id: str, current_user: dict = Depends(get_current_user)):
+    """Join a club event"""
+    event = await db.club_events.find_one({"id": event_id}, {"_id": 0})
+    
+    if not event:
+        raise HTTPException(status_code=404, detail="Événement non trouvé")
+    
+    if current_user['id'] in event.get('participants', []):
+        raise HTTPException(status_code=400, detail="Déjà inscrit")
+    
+    if len(event.get('participants', [])) >= event['max_participants']:
+        raise HTTPException(status_code=400, detail="Événement complet")
+    
+    await db.club_events.update_one(
+        {"id": event_id},
+        {"$push": {"participants": current_user['id']}}
+    )
+    
+    return {"message": "Inscription confirmée"}
+
+@api_router.get("/club/leaderboard")
+async def get_club_leaderboard():
+    """Get club leaderboard based on contributions"""
+    # Get post counts per user
+    pipeline = [
+        {"$group": {
+            "_id": "$author_id",
+            "author_name": {"$first": "$author_name"},
+            "author_role": {"$first": "$author_role"},
+            "post_count": {"$sum": 1},
+            "total_likes": {"$sum": "$likes"}
+        }},
+        {"$sort": {"total_likes": -1}},
+        {"$limit": 10}
+    ]
+    
+    leaderboard = await db.club_posts.aggregate(pipeline).to_list(10)
+    return leaderboard
+
 app.include_router(api_router)
 
 app.add_middleware(
