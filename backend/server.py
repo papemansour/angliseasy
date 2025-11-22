@@ -504,6 +504,19 @@ async def restrict_student(student_id: str, current_user: dict = Depends(get_cur
         "is_restricted": new_status
     }
 
+@api_router.get("/admin/session-notifications")
+async def get_session_notifications(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    notifications = await db.admin_notifications.find(
+        {"type": "session_completed"},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(100)
+    
+    return notifications
+
+
 # TEST ROUTES
 @api_router.get("/tests/{level}")
 async def get_test(level: str):
