@@ -496,6 +496,309 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
+
+
+          {/* Assiduité Tab */}
+          <TabsContent value="attendance">
+            <Card>
+              <CardHeader>
+                <CardTitle>Assiduité des professeurs</CardTitle>
+                <CardDescription>Pointages des cours terminés</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {sessions.length === 0 ? (
+                  <p className="text-gray-500">Aucune session enregistrée</p>
+                ) : (
+                  <div className="space-y-4">
+                    {sessions.map((session) => (
+                      <div key={session.id} className="p-4 border rounded-lg bg-white shadow-sm">
+                        <div className="flex justify-between items-start mb-3">
+                          <div>
+                            <h3 className="font-semibold text-lg">{session.teacher_name}</h3>
+                            <p className="text-sm text-gray-600">Session ID: {session.session_id}</p>
+                          </div>
+                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
+                            Terminé
+                          </span>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
+                          <div>
+                            <p className="text-xs text-gray-500">Début</p>
+                            <p className="font-medium">{new Date(session.start_time).toLocaleString('fr-FR')}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Fin</p>
+                            <p className="font-medium">{new Date(session.end_time).toLocaleString('fr-FR')}</p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Durée totale</p>
+                            <p className="font-medium text-blue-600">
+                              {Math.floor(session.total_time_seconds / 3600)}h {Math.floor((session.total_time_seconds % 3600) / 60)}m {session.total_time_seconds % 60}s
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs text-gray-500">Temps de pause</p>
+                            <p className="font-medium text-orange-600">
+                              {Math.floor(session.paused_duration_seconds / 3600)}h {Math.floor((session.paused_duration_seconds % 3600) / 60)}m {session.paused_duration_seconds % 60}s
+                            </p>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-3 pt-3 border-t">
+                          <p className="text-xs text-gray-500">
+                            Enregistré le {new Date(session.created_at).toLocaleString('fr-FR')}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Prix Tab */}
+          <TabsContent value="pricing">
+            <Card>
+              <CardHeader>
+                <CardTitle>Gestion des prix des packs</CardTitle>
+                <CardDescription>Modifier les prix en EUR et FCFA</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleUpdatePrices} className="space-y-6">
+                  <div className="grid md:grid-cols-2 gap-8">
+                    {/* Pack Débutant */}
+                    <div className="space-y-4 p-4 bg-teal-50 rounded-lg">
+                      <h3 className="text-lg font-semibold text-teal-800">Pack Débutant</h3>
+                      <div>
+                        <Label htmlFor="beginner_eur">Prix en EUR (€)</Label>
+                        <Input
+                          id="beginner_eur"
+                          type="number"
+                          value={prices.beginner_eur}
+                          onChange={(e) => setPrices({ ...prices, beginner_eur: parseInt(e.target.value) })}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="beginner_fcfa">Prix en FCFA (FCFA)</Label>
+                        <Input
+                          id="beginner_fcfa"
+                          type="number"
+                          value={prices.beginner_fcfa}
+                          onChange={(e) => setPrices({ ...prices, beginner_fcfa: parseInt(e.target.value) })}
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Pack Intermédiaire */}
+                    <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
+                      <h3 className="text-lg font-semibold text-blue-800">Pack Intermédiaire</h3>
+                      <div>
+                        <Label htmlFor="intermediate_eur">Prix en EUR (€)</Label>
+                        <Input
+                          id="intermediate_eur"
+                          type="number"
+                          value={prices.intermediate_eur}
+                          onChange={(e) => setPrices({ ...prices, intermediate_eur: parseInt(e.target.value) })}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="intermediate_fcfa">Prix en FCFA (FCFA)</Label>
+                        <Input
+                          id="intermediate_fcfa"
+                          type="number"
+                          value={prices.intermediate_fcfa}
+                          onChange={(e) => setPrices({ ...prices, intermediate_fcfa: parseInt(e.target.value) })}
+                          className="mt-1"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Pack Avancé */}
+                    <div className="space-y-4 p-4 bg-purple-50 rounded-lg md:col-span-2">
+                      <h3 className="text-lg font-semibold text-purple-800">Pack Avancé</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="advanced_eur">Prix en EUR (€)</Label>
+                          <Input
+                            id="advanced_eur"
+                            type="number"
+                            value={prices.advanced_eur}
+                            onChange={(e) => setPrices({ ...prices, advanced_eur: parseInt(e.target.value) })}
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="advanced_fcfa">Prix en FCFA (FCFA)</Label>
+                          <Input
+                            id="advanced_fcfa"
+                            type="number"
+                            value={prices.advanced_fcfa}
+                            onChange={(e) => setPrices({ ...prices, advanced_fcfa: parseInt(e.target.value) })}
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                    Enregistrer les modifications
+                  </Button>
+                </form>
+
+                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                  <p className="text-sm text-yellow-800">
+                    <strong>Note :</strong> Les prix seront automatiquement mis à jour sur le site après enregistrement.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Conversations Tab */}
+          <TabsContent value="conversations">
+            <div className="grid md:grid-cols-3 gap-6">
+              {/* Liste des conversations */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Contacts</CardTitle>
+                  <CardDescription>Professeurs et Étudiants</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2 max-h-[600px] overflow-y-auto">
+                    {conversations.map((contact) => (
+                      <button
+                        key={contact.id}
+                        onClick={() => handleSelectRecipient(contact)}
+                        className={`w-full p-3 rounded-lg text-left transition ${
+                          selectedRecipient?.id === contact.id
+                            ? 'bg-blue-100 border-2 border-blue-600'
+                            : 'bg-gray-50 hover:bg-blue-50 border-2 border-transparent'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
+                            {contact.first_name?.charAt(0)}{contact.last_name?.charAt(0)}
+                          </div>
+                          <div>
+                            <p className="font-semibold text-sm">{contact.first_name} {contact.last_name}</p>
+                            <p className="text-xs text-gray-500">{contact.role === 'teacher' ? 'Professeur' : 'Étudiant'}</p>
+                          </div>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Zone de conversation */}
+              <Card className="md:col-span-2">
+                <CardHeader>
+                  <CardTitle>
+                    {selectedRecipient ? `${selectedRecipient.first_name} ${selectedRecipient.last_name}` : 'Sélectionnez un contact'}
+                  </CardTitle>
+                  <CardDescription>
+                    {selectedRecipient ? (selectedRecipient.role === 'teacher' ? 'Professeur' : 'Étudiant') : ''}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {!selectedRecipient ? (
+                    <div className="text-center py-12">
+                      <Users className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-500">Sélectionnez un contact pour commencer la conversation</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {/* Messages */}
+                      <div className="border rounded-lg p-4 max-h-[400px] overflow-y-auto space-y-3 bg-gray-50">
+                        {messages.length === 0 ? (
+                          <p className="text-gray-500 text-center py-8">Aucun message</p>
+                        ) : (
+                          messages.map((msg) => (
+                            <div
+                              key={msg.id}
+                              className={`flex ${
+                                msg.from_user_id === user.id ? 'justify-end' : 'justify-start'
+                              }`}
+                            >
+                              <div
+                                className={`max-w-[70%] p-3 rounded-lg ${
+                                  msg.from_user_id === user.id
+                                    ? 'bg-blue-600 text-white'
+                                    : 'bg-white border'
+                                }`}
+                              >
+                                <p className="text-sm">{msg.content}</p>
+                                <p className="text-xs mt-1 opacity-70">
+                                  {new Date(msg.created_at).toLocaleString('fr-FR')}
+                                </p>
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+
+                      {/* Formulaire message */}
+                      <form onSubmit={handleSendMessage} className="flex gap-2">
+                        <Input
+                          value={messageContent}
+                          onChange={(e) => setMessageContent(e.target.value)}
+                          placeholder="Écrivez votre message..."
+                          className="flex-1"
+                        />
+                        <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+                          Envoyer
+                        </Button>
+                      </form>
+
+                      {/* Formulaire document */}
+                      <div className="mt-4 pt-4 border-t">
+                        <h4 className="font-semibold mb-3">Envoyer un document</h4>
+                        <form onSubmit={handleSendDocument} className="space-y-3">
+                          <div>
+                            <Label htmlFor="doc_title">Titre</Label>
+                            <Input
+                              id="doc_title"
+                              value={documentToSend.title}
+                              onChange={(e) => setDocumentToSend({ ...documentToSend, title: e.target.value })}
+                              required
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="doc_description">Description</Label>
+                            <Input
+                              id="doc_description"
+                              value={documentToSend.description}
+                              onChange={(e) => setDocumentToSend({ ...documentToSend, description: e.target.value })}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="doc_url">Lien du document</Label>
+                            <Input
+                              id="doc_url"
+                              value={documentToSend.file_url}
+                              onChange={(e) => setDocumentToSend({ ...documentToSend, file_url: e.target.value })}
+                              placeholder="https://..."
+                              required
+                            />
+                          </div>
+                          <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+                            Envoyer le document
+                          </Button>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
         </Tabs>
       </div>
     </div>
