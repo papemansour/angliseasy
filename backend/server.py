@@ -2385,6 +2385,25 @@ async def create_club_post(post_data: ClubPostCreate, current_user: dict = Depen
     await db.club_posts.insert_one(doc)
     
     logger.info(f"Club post created by {current_user['id']}: {post.title}")
+    
+    # Create notifications for all users except the author
+    all_users = await db.users.find(
+        {
+            "role": {"$in": ["teacher", "student", "admin"]}, 
+            "status": "approved",
+            "id": {"$ne": current_user['id']}
+        },
+        {"_id": 0, "id": 1}
+    ).to_list(1000)
+    
+    for user in all_users:
+        await create_notification(
+            user_id=user["id"],
+            title="🏆 Nouveau post KALAMA CLUB !",
+            message=f"{current_user['first_name']} {current_user['last_name']} a publié : {post.title}",
+            notification_type="club"
+        )
+    
     return {"message": "Post créé", "id": post.id}
 
 @api_router.post("/club/posts/{post_id}/like")
