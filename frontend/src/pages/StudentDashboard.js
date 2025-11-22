@@ -8,11 +8,12 @@ import { Textarea } from '../components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
-import { LogOut, BookOpen, FileText, Link as LinkIcon, Upload, Send, User, Mail, MessageCircle, Heart } from 'lucide-react';
+import { LogOut, BookOpen, FileText, Link as LinkIcon, Upload, Send, User, Mail, MessageCircle, Heart, Sparkles } from 'lucide-react';
 import ConversationChat from '../components/ConversationChat';
 import NewsDisplay from '../components/NewsDisplay';
 import WelcomeLetter from '../components/WelcomeLetter';
 import DonationButton from '../components/DonationButton';
+import KalamaClub from '../components/KalamaClub';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
