@@ -268,7 +268,6 @@ const AdminDashboard = () => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-green-600">KALAMAENGLISH - Admin</h1>
           <div className="flex items-center gap-4">
-            <ActivityFeed />
             <span className="text-gray-700">{user?.first_name} {user?.last_name}</span>
             <Button variant="outline" onClick={handleLogout} data-testid="admin-logout-button">
               <LogOut className="w-4 h-4 mr-2" />
