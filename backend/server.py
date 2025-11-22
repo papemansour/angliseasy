@@ -1876,8 +1876,8 @@ async def kalamatheque_ai_assistant(data: dict):
         raise HTTPException(status_code=500, detail="Erreur de l'assistant IA")
 
 @api_router.post("/kalamatheque/text-to-speech")
-async def text_to_speech(data: dict, current_user: dict = Depends(get_current_user)):
-    """Generate speech from text using OpenAI TTS"""
+async def text_to_speech(data: dict):
+    """Generate speech from text using OpenAI TTS (public access)"""
     text = data.get('text')
     
     if not text:
@@ -1896,7 +1896,7 @@ async def text_to_speech(data: dict, current_user: dict = Depends(get_current_us
             response_format="mp3"
         )
         
-        logger.info(f"TTS used by {current_user['id']}")
+        logger.info(f"TTS used for Kalamathèque")
         return {"audio_base64": audio_base64}
         
     except Exception as e:
