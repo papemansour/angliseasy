@@ -2283,6 +2283,20 @@ async def create_news(news_data: NewsCreate, current_user: dict = Depends(get_cu
     await db.news.insert_one(doc)
     logger.info(f"News created by {current_user['id']}: {news.title}")
     
+    # Create notifications for all users (teachers and students)
+    all_users = await db.users.find(
+        {"role": {"$in": ["teacher", "student"]}, "status": "approved"},
+        {"_id": 0, "id": 1}
+    ).to_list(1000)
+    
+    for user in all_users:
+        await create_notification(
+            user_id=user["id"],
+            title="📰 Nouvelle actualité !",
+            message=f"Découvrez : {news.title}",
+            notification_type="news"
+        )
+    
     return {"message": "Actualité créée avec succès", "id": news.id}
 
 @api_router.put("/news/{news_id}")
