@@ -49,6 +49,7 @@ const AdminDashboard = () => {
   const [messages, setMessages] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [selectedRecipients, setSelectedRecipients] = useState([]);
   const [messageContent, setMessageContent] = useState('');
   const [documentToSend, setDocumentToSend] = useState({
     title: '',
