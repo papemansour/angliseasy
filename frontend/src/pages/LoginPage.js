@@ -16,6 +16,11 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // Check date for seasonal messages
+  const currentDate = new Date();
+  const isChristmas = currentDate <= new Date('2025-12-26');
+  const isNewYear = currentDate >= new Date('2025-12-27') && currentDate <= new Date('2026-01-10');
 
   const handleLogin = async (e) => {
     e.preventDefault();
