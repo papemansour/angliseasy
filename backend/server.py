@@ -1849,8 +1849,7 @@ async def kalamatheque_ai_assistant(data: dict, current_user: dict = Depends(get
         raise HTTPException(status_code=400, detail="Texte requis")
     
     try:
-        from emergentintegrations import OpenAI
-        client_openai = OpenAI(api_key=os.environ.get('EMERGENT_LLM_KEY'))
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
         
         prompts = {
             'summarize': f"Résumez ce texte en français de manière concise :\n\n{selected_text}",
@@ -1860,16 +1859,14 @@ async def kalamatheque_ai_assistant(data: dict, current_user: dict = Depends(get
         
         prompt = prompts.get(action, prompts['explain'])
         
-        response = client_openai.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": "Vous êtes un assistant pédagogique qui aide les étudiants à comprendre les textes."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=500
+        chat = LlmChat(
+            api_key=os.environ.get('EMERGENT_LLM_KEY'),
+            session_id=current_user['id'],
+            system_message="Vous êtes un assistant pédagogique qui aide les étudiants à comprendre les textes."
         )
         
-        result = response.choices[0].message.content
+        user_message = UserMessage(text=prompt)
+        result = await chat.send_message(user_message)
         
         logger.info(f"AI Assistant used by {current_user['id']} - action: {action}")
         return {"result": result}
