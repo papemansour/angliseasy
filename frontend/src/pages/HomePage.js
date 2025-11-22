@@ -136,9 +136,16 @@ const HomePage = () => {
       setSelectedTimeSlots({});
       setShowRegistrationModal(false);
       
+      // Show success message and payment info
+      toast.success('Vous allez être redirigé vers la page de paiement...', {
+        duration: 2000
+      });
+      
       // Redirect to Stripe payment if plan selected
       if (selectedPlan) {
-        handleStripePayment(selectedPlan);
+        setTimeout(() => {
+          handleStripePayment(selectedPlan);
+        }, 2000);
       }
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Erreur lors de l\'inscription');
