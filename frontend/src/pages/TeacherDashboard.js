@@ -900,7 +900,7 @@ const TeacherDashboard = () => {
                     </p>
                   </div>
                   <Button 
-                    onClick={() => window.open('/kalamatheque-access', '_blank')}
+                    onClick={() => navigate('/kalamatheque-access')}
                     className="bg-teal-600 hover:bg-teal-700"
                     size="lg"
                   >
