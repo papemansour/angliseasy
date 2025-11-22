@@ -135,6 +135,23 @@ class AttendanceCreate(BaseModel):
     date: str
     status: str
 
+class News(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    title: str
+    content: str
+    image_url: Optional[str] = None
+    event_date: Optional[datetime] = None  # For scheduled events
+    published_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    author_id: str
+    author_name: str
+
+class NewsCreate(BaseModel):
+    title: str
+    content: str
+    image_url: Optional[str] = None
+    event_date: Optional[str] = None  # ISO format string
+
 # ============ UTILITIES ============
 
 def hash_password(password: str) -> str:
