@@ -15,6 +15,7 @@ class EmailService:
             self.aws_secret_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
             self.aws_region = os.environ.get('AWS_REGION', 'us-east-1')
             self.sender_email = os.environ.get('AWS_SES_SENDER_EMAIL', 'papemansour01@gmail.com')
+            self.frontend_url = os.environ.get('FRONTEND_URL', 'https://englishlearn-4.preview.emergentagent.com')
             
             if not self.aws_access_key or not self.aws_secret_key:
                 logger.warning("AWS credentials not found. Email sending will be logged only.")
