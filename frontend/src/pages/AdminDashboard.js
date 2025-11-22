@@ -314,7 +314,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="attendance" data-testid="admin-tab-attendance">Assiduité</TabsTrigger>
             <TabsTrigger value="results" data-testid="admin-tab-results">Résultats</TabsTrigger>
             <TabsTrigger value="pricing" data-testid="admin-tab-pricing">Prix</TabsTrigger>
-            <TabsTrigger value="availability" data-testid="admin-tab-availability">Dispo profs</TabsTrigger>
+            <TabsTrigger value="availability" data-testid="admin-tab-availability">Horaire profs</TabsTrigger>
             <TabsTrigger value="kalamatheque" data-testid="admin-tab-kalamatheque">Kalamathèque</TabsTrigger>
             <TabsTrigger value="conversations" data-testid="admin-tab-conversations">Conversations</TabsTrigger>
           </TabsList>
