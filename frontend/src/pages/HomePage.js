@@ -762,12 +762,40 @@ const HomePage = () => {
             </div>
             
             {/* Contact */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4 text-teal-400">Contact</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>Email: mykalamaenglish@gmail.com</li>
-                <li>Localisation: PARIS / ONLINE</li>
-              </ul>
+            <div className="md:col-span-2">
+              <h4 className="text-lg font-semibold mb-4 text-teal-400">Contactez-nous</h4>
+              <p className="text-gray-400 mb-3">Email: mykalamaenglish@gmail.com</p>
+              <p className="text-gray-400 mb-4">Localisation: PARIS / ONLINE</p>
+              
+              <form onSubmit={handleContactSubmit} className="space-y-3">
+                <Input
+                  type="text"
+                  placeholder="Votre nom"
+                  value={contactForm.name}
+                  onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                  required
+                  className="bg-gray-800 border-gray-700 text-white placeholder-gray-500"
+                />
+                <Input
+                  type="email"
+                  placeholder="Votre email"
+                  value={contactForm.email}
+                  onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                  required
+                  className="bg-gray-800 border-gray-700 text-white placeholder-gray-500"
+                />
+                <Textarea
+                  placeholder="Votre message"
+                  value={contactForm.message}
+                  onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                  required
+                  className="bg-gray-800 border-gray-700 text-white placeholder-gray-500"
+                  rows={3}
+                />
+                <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700" disabled={sendingContact}>
+                  {sendingContact ? 'Envoi...' : 'Envoyer'}
+                </Button>
+              </form>
             </div>
             
             {/* Réseaux sociaux */}
