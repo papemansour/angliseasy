@@ -596,7 +596,7 @@ const AdminDashboard = () => {
                   <p className="text-gray-500">Aucune session enregistrée</p>
                 ) : (
                   <div className="space-y-4">
-                    {sessions.map((session) => (
+                    {teacherSessions.map((session) => (
                       <div key={session.id} className="p-4 border rounded-lg bg-white shadow-sm">
                         <div className="flex justify-between items-start mb-3">
                           <div>
