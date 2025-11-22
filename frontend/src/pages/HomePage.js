@@ -557,15 +557,42 @@ const HomePage = () => {
 
                 <div>
                   <Label htmlFor="phone">Téléphone *</Label>
-                  <Input
-                    id="phone"
-                    data-testid="register-phone"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="+33 6 12 34 56 78"
-                    className="border-gray-200 focus:border-teal-500 focus:ring-teal-500"
-                  />
+                  <div className="flex gap-2">
+                    <Select
+                      value={formData.country_code}
+                      onValueChange={(value) => setFormData({ ...formData, country_code: value })}
+                    >
+                      <SelectTrigger className="w-[140px] border-gray-200">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="+33">🇫🇷 +33 (France)</SelectItem>
+                        <SelectItem value="+221">🇸🇳 +221 (Sénégal)</SelectItem>
+                        <SelectItem value="+1">🇺🇸 +1 (USA)</SelectItem>
+                        <SelectItem value="+44">🇬🇧 +44 (UK)</SelectItem>
+                        <SelectItem value="+49">🇩🇪 +49 (Allemagne)</SelectItem>
+                        <SelectItem value="+34">🇪🇸 +34 (Espagne)</SelectItem>
+                        <SelectItem value="+39">🇮🇹 +39 (Italie)</SelectItem>
+                        <SelectItem value="+32">🇧🇪 +32 (Belgique)</SelectItem>
+                        <SelectItem value="+41">🇨🇭 +41 (Suisse)</SelectItem>
+                        <SelectItem value="+212">🇲🇦 +212 (Maroc)</SelectItem>
+                        <SelectItem value="+213">🇩🇿 +213 (Algérie)</SelectItem>
+                        <SelectItem value="+216">🇹🇳 +216 (Tunisie)</SelectItem>
+                        <SelectItem value="+225">🇨🇮 +225 (Côte d'Ivoire)</SelectItem>
+                        <SelectItem value="+237">🇨🇲 +237 (Cameroun)</SelectItem>
+                        <SelectItem value="+243">🇨🇩 +243 (RD Congo)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="phone"
+                      data-testid="register-phone"
+                      required
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="6 12 34 56 78"
+                      className="flex-1 border-gray-200 focus:border-teal-500 focus:ring-teal-500"
+                    />
+                  </div>
                 </div>
 
                 <div>
