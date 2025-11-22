@@ -145,7 +145,7 @@ const KalamathequeAdmin = () => {
                   <SelectContent>
                     <SelectItem value="beginner">Beginner (Débutant)</SelectItem>
                     <SelectItem value="intermediate">Intermediate (Intermédiaire)</SelectItem>
-                    <SelectItem value="advanced">Advanced (Avancé)</SelectItem>
+                    <SelectItem value="advanced">Packs professionnels</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
