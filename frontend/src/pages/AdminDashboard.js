@@ -62,6 +62,8 @@ const AdminDashboard = () => {
     file_url: '',
     recipient_id: ''
   });
+  const [activeConversation, setActiveConversation] = useState(null);
+  const [conversationMode, setConversationMode] = useState('individual'); // 'individual' ou 'group'
 
   useEffect(() => {
     fetchData();
