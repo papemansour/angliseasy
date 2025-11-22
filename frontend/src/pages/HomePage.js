@@ -715,7 +715,7 @@ const HomePage = () => {
           
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-gray-500">© 2025 KALAMAENGLISH. Tous droits réservés.</p>
+              <p className="text-gray-500">© 2025 MyKalamaenglish. Tous droits réservés.</p>
               <div className="flex gap-6">
                 <Link to="/cgu" className="text-gray-400 hover:text-teal-400 transition">CGU</Link>
                 <Link to="/privacy" className="text-gray-400 hover:text-teal-400 transition">Politique de confidentialité</Link>
