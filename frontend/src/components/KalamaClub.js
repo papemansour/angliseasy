@@ -40,7 +40,9 @@ const KalamaClub = ({ userRole }) => {
   const [newPost, setNewPost] = useState({
     title: '',
     content: '',
-    category: 'discussion'
+    category: 'discussion',
+    media_url: '',
+    media_type: ''
   });
   
   const [newEvent, setNewEvent] = useState({
