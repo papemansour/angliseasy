@@ -151,18 +151,34 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleToggleRecipient = (recipient) => {
+    const isSelected = selectedRecipients.find(r => r.id === recipient.id);
+    if (isSelected) {
+      setSelectedRecipients(selectedRecipients.filter(r => r.id !== recipient.id));
+    } else {
+      setSelectedRecipients([...selectedRecipients, recipient]);
+    }
+  };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!selectedRecipient || !messageContent.trim()) return;
+    if (selectedRecipients.length === 0 || !messageContent.trim()) {
+      toast.error('Sélectionnez au moins un destinataire');
+      return;
+    }
     
     try {
-      await apiClient.post('/messages/send', {
-        to_user_id: selectedRecipient.id,
-        content: messageContent
-      });
+      // Send message to all selected recipients
+      await Promise.all(
+        selectedRecipients.map(recipient => 
+          apiClient.post('/messages/send', {
+            to_user_id: recipient.id,
+            content: messageContent
+          })
+        )
+      );
       setMessageContent('');
-      handleSelectRecipient(selectedRecipient);
-      toast.success('Message envoyé!');
+      toast.success(`Message envoyé à ${selectedRecipients.length} personne(s)!`);
     } catch (error) {
       toast.error('Erreur lors de l\'envoi');
     }
