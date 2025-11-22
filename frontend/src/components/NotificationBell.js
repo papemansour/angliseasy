@@ -134,9 +134,13 @@ const NotificationBell = () => {
           className="relative hover:bg-teal-50 transition-all group"
         >
           <Bell className={`w-6 h-6 text-teal-600 transition-all ${unreadCount > 0 ? 'animate-wiggle' : 'group-hover:scale-110'}`} />
-          {unreadCount > 0 && (
+          {unreadCount > 0 ? (
             <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse shadow-lg">
               {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          ) : (
+            <span className="absolute -top-1 -right-1 bg-gray-400 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
+              0
             </span>
           )}
         </Button>
