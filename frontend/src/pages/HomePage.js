@@ -147,11 +147,29 @@ const HomePage = () => {
     }
   };
 
-  const handleStripePayment = (plan) => {
-    toast.info('Redirection vers le paiement Stripe...');
-    // TODO: Integrate with Stripe Checkout
-    // For now, just show a message
-    toast.success(`Paiement pour ${plan.name} - ${formatPrice(plan.price)}`);
+  const handleDirectPayment = async (plan) => {
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      const API = `${BACKEND_URL}/api`;
+      
+      toast.info('Redirection vers le paiement Stripe...');
+      
+      // Call backend to create Stripe checkout session
+      const response = await axios.post(`${API}/payments/create-checkout`, {
+        plan_name: plan.name,
+        plan_level: plan.level,
+        amount: plan.price,
+        currency: currency
+      });
+      
+      // Redirect to Stripe Checkout
+      if (response.data.checkout_url) {
+        window.location.href = response.data.checkout_url;
+      }
+    } catch (error) {
+      toast.error('Erreur lors de la création de la session de paiement');
+      console.error(error);
+    }
   };
 
   const openRegistrationModal = (plan = null) => {
