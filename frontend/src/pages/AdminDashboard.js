@@ -37,6 +37,25 @@ const AdminDashboard = () => {
   });
   const [selectedStudent, setSelectedStudent] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState('');
+  const [sessions, setSessions] = useState([]);
+  const [prices, setPrices] = useState({
+    beginner_eur: 76,
+    intermediate_eur: 90,
+    advanced_eur: 102,
+    beginner_fcfa: 50000,
+    intermediate_fcfa: 59000,
+    advanced_fcfa: 67000
+  });
+  const [messages, setMessages] = useState([]);
+  const [conversations, setConversations] = useState([]);
+  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [messageContent, setMessageContent] = useState('');
+  const [documentToSend, setDocumentToSend] = useState({
+    title: '',
+    description: '',
+    file_url: '',
+    recipient_id: ''
+  });
 
   useEffect(() => {
     fetchData();
