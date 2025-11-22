@@ -8,7 +8,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import StudentDashboard from './pages/StudentDashboard';
 import TeacherDashboard from './pages/TeacherDashboard';
-import AdminDashboard from './pages/AdminDashboard';
+import AdminDashboard from './pages/NewAdminDashboard';
 import TestPage from './pages/TestPage';
 import LegalPage from './pages/LegalPage';
 import CGUPage from './pages/CGUPage';
