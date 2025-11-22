@@ -256,7 +256,7 @@ const AdminDashboard = () => {
       {/* Navigation */}
       <nav className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-blue-900">KALAMAENGLISH - Admin</h1>
+          <h1 className="text-2xl font-bold text-green-600">KALAMAENGLISH - Admin</h1>
           <div className="flex items-center gap-4">
             <NotificationBell />
             <span className="text-gray-700">{user?.first_name} {user?.last_name}</span>
