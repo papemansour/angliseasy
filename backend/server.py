@@ -1656,6 +1656,26 @@ async def get_conversation(user_id: str, current_user: dict = Depends(get_curren
     
     return messages
 
+@api_router.delete("/messages/{message_id}/attachment")
+async def delete_message_attachment(message_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete attachment from a message (only by sender)"""
+    message = await db.messages.find_one({"id": message_id, "from_user_id": current_user['id']}, {"_id": 0})
+    
+    if not message:
+        raise HTTPException(status_code=404, detail="Message non trouvé ou non autorisé")
+    
+    if not message.get('attachment'):
+        raise HTTPException(status_code=404, detail="Aucune pièce jointe à supprimer")
+    
+    # Remove attachment
+    await db.messages.update_one(
+        {"id": message_id},
+        {"$unset": {"attachment": ""}}
+    )
+    
+    logger.info(f"Attachment removed from message {message_id} by {current_user['id']}")
+    return {"message": "Pièce jointe supprimée"}
+
 # LIBRARY ROUTES
 @api_router.get("/library/books")
 async def get_library_books():
