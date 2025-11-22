@@ -711,6 +711,141 @@ async def upload_file(file: UploadFile = File(...), current_user: dict = Depends
         "message": "File uploaded successfully",
         "file_url": file_url,
         "filename": file.filename
+
+# Student routes for links, documents and homeworks
+@api_router.get("/student/my-links")
+async def get_student_links(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    # Get links sent by teacher to this student
+    links = await db.student_links.find(
+        {"student_id": current_user['id']},
+        {"_id": 0}
+    ).to_list(1000)
+    return links
+
+@api_router.get("/student/my-documents")
+async def get_student_documents(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    # Get documents from teacher
+    teacher_docs = await db.documents.find(
+        {"recipient_id": current_user['id'], "recipient_type": "student"},
+        {"_id": 0}
+    ).to_list(1000)
+    
+    # Get documents from admin
+    admin_docs = await db.admin_documents.find(
+        {"to_user_id": current_user['id']},
+        {"_id": 0}
+    ).to_list(1000)
+    
+    return teacher_docs + admin_docs
+
+@api_router.get("/student/my-homeworks")
+async def get_student_homeworks(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    homeworks = await db.student_homeworks.find(
+        {"student_id": current_user['id']},
+        {"_id": 0}
+    ).to_list(1000)
+    return homeworks
+
+@api_router.get("/student/my-teacher/{teacher_id}")
+async def get_student_teacher(teacher_id: str, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    teacher = await db.users.find_one(
+        {"id": teacher_id, "role": "teacher"},
+        {"_id": 0, "password_hash": 0}
+    )
+    
+    if not teacher:
+        raise HTTPException(status_code=404, detail="Teacher not found")
+    
+    return teacher
+
+@api_router.post("/student/upload-homework")
+async def upload_homework(file: UploadFile = File(...), current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    file_url = f"/uploads/homeworks/{current_user['id']}/{file.filename}"
+    logger.info(f"Homework file uploaded by student {current_user['id']}: {file.filename}")
+    
+    return {
+        "message": "File uploaded successfully",
+        "file_url": file_url,
+        "filename": file.filename
+    }
+
+@api_router.post("/student/submit-homework")
+async def submit_homework(homework_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    # Get student info
+    student = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+    
+    homework = {
+        "id": str(uuid.uuid4()),
+        "student_id": current_user['id'],
+        "student_name": f"{student['first_name']} {student['last_name']}",
+        "teacher_id": student.get('assigned_teacher'),
+        "title": homework_data['title'],
+        "description": homework_data.get('description', ''),
+        "file_url": homework_data['file_url'],
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "status": "submitted"
+    }
+    
+    await db.student_homeworks.insert_one(homework)
+    logger.info(f"Homework submitted by student {current_user['id']}: {homework_data['title']}")
+    
+    return {"message": "Homework submitted successfully"}
+
+# Route for teacher to send links to specific student
+@api_router.post("/teacher/send-link")
+async def teacher_send_link(link_data: dict, current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    teacher = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+    
+    link = {
+        "id": str(uuid.uuid4()),
+        "teacher_id": current_user['id'],
+        "from_teacher_name": f"{teacher['first_name']} {teacher['last_name']}",
+        "student_id": link_data['student_id'],
+        "title": link_data['title'],
+        "description": link_data.get('description', ''),
+        "url": link_data['url'],
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.student_links.insert_one(link)
+    logger.info(f"Link sent by teacher {current_user['id']} to student {link_data['student_id']}")
+    
+    return {"message": "Link sent successfully"}
+
+# Route for teacher to get homeworks from their students
+@api_router.get("/teacher/student-homeworks")
+async def get_teacher_student_homeworks(current_user: dict = Depends(get_current_user)):
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    homeworks = await db.student_homeworks.find(
+        {"teacher_id": current_user['id']},
+        {"_id": 0}
+    ).to_list(1000)
+    
+    return homeworks
+
     }
 
     
