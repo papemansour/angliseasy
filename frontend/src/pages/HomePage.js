@@ -920,6 +920,222 @@ const HomePage = () => {
         </DialogContent>
       </Dialog>
 
+      {/* Payment Method Modal */}
+      <Dialog open={showWavePaymentModal} onOpenChange={setShowWavePaymentModal}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl text-teal-800">
+              ✅ Inscription réussie ! Choisissez votre mode de paiement
+            </DialogTitle>
+            <DialogDescription>
+              Sélectionnez la méthode de paiement qui vous convient
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6 mt-4">
+            {/* Option 1: Stripe (Carte bancaire) */}
+            <div 
+              className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
+                paymentMethod === 'stripe' ? 'border-teal-600 bg-teal-50' : 'border-gray-200 hover:border-teal-300'
+              }`}
+              onClick={() => setPaymentMethod('stripe')}
+            >
+              <div className="flex items-start gap-4">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="stripe"
+                  checked={paymentMethod === 'stripe'}
+                  onChange={() => setPaymentMethod('stripe')}
+                  className="mt-1 w-5 h-5 text-teal-600 cursor-pointer"
+                />
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-teal-800 mb-2">
+                    💳 Paiement par carte bancaire (Stripe)
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Paiement sécurisé en ligne avec votre carte bancaire (Visa, Mastercard, etc.)
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                      ✓ Instantané
+                    </span>
+                    <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                      ✓ Sécurisé PCI Niveau 1
+                    </span>
+                    <span className="px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                      ✓ International
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Option 2: Wave FCFA */}
+            <div 
+              className={`border-2 rounded-lg p-6 cursor-pointer transition-all ${
+                paymentMethod === 'wave' ? 'border-teal-600 bg-teal-50' : 'border-gray-200 hover:border-teal-300'
+              }`}
+              onClick={() => setPaymentMethod('wave')}
+            >
+              <div className="flex items-start gap-4">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="wave"
+                  checked={paymentMethod === 'wave'}
+                  onChange={() => setPaymentMethod('wave')}
+                  className="mt-1 w-5 h-5 text-teal-600 cursor-pointer"
+                />
+                <div className="flex-1">
+                  <h3 className="text-lg font-bold text-teal-800 mb-2">
+                    📱 Paiement Wave (FCFA - Sénégal)
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    Paiement mobile avec Wave pour le Sénégal et l'Afrique de l'Ouest
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+                      🇸🇳 Sénégal
+                    </span>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+                      💰 FCFA
+                    </span>
+                    <span className="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
+                      📱 Mobile Money
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Instructions pour Wave si sélectionné */}
+            {paymentMethod === 'wave' && (
+              <div className="bg-gradient-to-br from-blue-50 to-teal-50 border-2 border-teal-300 rounded-lg p-6 animate-in slide-in-from-top duration-300">
+                <h4 className="text-lg font-bold text-teal-800 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">📋</span>
+                  Instructions de paiement Wave
+                </h4>
+                
+                <div className="space-y-4">
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <p className="text-sm font-semibold text-gray-700 mb-2">
+                      Montant à payer : 
+                      <span className="text-2xl text-teal-600 font-bold ml-2">
+                        {selectedPlan ? formatPrice(selectedPlan.price) : ''}
+                      </span>
+                    </p>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <p className="text-sm font-semibold text-gray-700 mb-2">
+                      📱 Numéro Wave à contacter :
+                    </p>
+                    <div className="flex items-center gap-3 bg-teal-50 p-3 rounded-md">
+                      <span className="text-xl font-bold text-teal-800">
+                        +221 77 123 45 67
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-teal-600 text-teal-600 hover:bg-teal-600 hover:text-white"
+                        onClick={() => {
+                          navigator.clipboard.writeText('+221771234567');
+                          toast.success('Numéro copié !');
+                        }}
+                      >
+                        Copier
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="bg-white rounded-lg p-4 shadow-sm">
+                    <p className="text-sm font-semibold text-gray-700 mb-3">
+                      📝 Étapes à suivre :
+                    </p>
+                    <ol className="space-y-3 text-sm text-gray-700">
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">1</span>
+                        <span>Ouvrez votre application <strong>Wave</strong> sur votre téléphone</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">2</span>
+                        <span>Sélectionnez <strong>"Envoyer de l'argent"</strong></span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">3</span>
+                        <span>Entrez le numéro : <strong>+221 77 123 45 67</strong></span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">4</span>
+                        <span>Entrez le montant : <strong>{selectedPlan ? formatPrice(selectedPlan.price) : ''}</strong></span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">5</span>
+                        <span>Dans le message, indiquez votre <strong>nom complet et email</strong> utilisés lors de l'inscription</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 bg-teal-600 text-white rounded-full flex items-center justify-center text-xs font-bold">6</span>
+                        <span>Confirmez le paiement</span>
+                      </li>
+                    </ol>
+                  </div>
+
+                  <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                    <p className="text-sm text-yellow-800">
+                      <strong>⚠️ Important :</strong> Votre compte sera activé dans les <strong>24 heures</strong> après vérification de votre paiement. Vous recevrez un email de confirmation.
+                    </p>
+                  </div>
+
+                  <div className="bg-teal-50 border-l-4 border-teal-400 p-4 rounded-lg">
+                    <p className="text-sm text-teal-800">
+                      <strong>💡 Astuce :</strong> Prenez une capture d'écran de cette page ou notez ces informations pour faciliter votre paiement.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Boutons d'action */}
+            <div className="flex gap-3 pt-4">
+              {paymentMethod === 'stripe' ? (
+                <Button
+                  className="flex-1 bg-teal-600 hover:bg-teal-700 text-lg py-6"
+                  onClick={() => {
+                    setShowWavePaymentModal(false);
+                    if (selectedPlan) {
+                      toast.info('Redirection vers Stripe...');
+                      setTimeout(() => handleStripePayment(selectedPlan), 500);
+                    }
+                  }}
+                >
+                  Procéder au paiement Stripe
+                </Button>
+              ) : (
+                <Button
+                  className="flex-1 bg-teal-600 hover:bg-teal-700 text-lg py-6"
+                  onClick={() => {
+                    setShowWavePaymentModal(false);
+                    toast.success('Instructions enregistrées ! Procédez au paiement Wave.', {
+                      duration: 5000
+                    });
+                  }}
+                >
+                  J'ai compris, je vais payer via Wave
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                className="border-gray-300 text-gray-600"
+                onClick={() => setShowWavePaymentModal(false)}
+              >
+                Annuler
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 md:py-16 px-4">
         <div className="container mx-auto max-w-7xl">
