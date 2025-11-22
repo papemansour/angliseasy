@@ -76,8 +76,8 @@ const AdminDashboard = () => {
       setPendingRegistrations(pendingRes.data);
       setAllUsers(usersRes.data);
       setTestResults(resultsRes.data);
-      setSessions(sessionsRes.data);
-      setConversations(conversationsRes.data);
+      setSessions(sessionsRes.data || []);
+      setConversations(conversationsRes.data || []);
       setLoading(false);
     } catch (error) {
       toast.error('Erreur de chargement');
