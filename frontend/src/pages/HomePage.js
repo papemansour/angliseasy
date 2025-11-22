@@ -67,6 +67,12 @@ const HomePage = () => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState(null);
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [sendingContact, setSendingContact] = useState(false);
 
   const handleDateSelect = (date) => {
     const dateStr = format(date, 'yyyy-MM-dd');
