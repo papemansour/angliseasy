@@ -677,8 +677,33 @@ async def create_teacher(teacher_data: TeacherCreate, current_user: dict = Depen
     doc['created_at'] = doc['created_at'].isoformat()
     await db.users.insert_one(doc)
     
+    # Create welcome letter for teacher
+    letter_content = generate_welcome_letter_content(
+        teacher_data.first_name,
+        'teacher',  # level parameter, but not used for teachers
+        'teacher',
+        email,
+        temp_password
+    )
+    
+    welcome_letter = WelcomeLetter(
+        user_id=teacher.id,
+        user_email=email,
+        user_name=f"{teacher_data.first_name} {teacher_data.last_name}",
+        user_level='teacher',
+        user_role='teacher',
+        temp_password=temp_password,
+        content=letter_content
+    )
+    
+    letter_doc = welcome_letter.model_dump()
+    letter_doc['created_at'] = letter_doc['created_at'].isoformat()
+    await db.welcome_letters.insert_one(letter_doc)
+    
+    logger.info(f"Teacher {teacher.id} created with welcome letter")
+    
     return {
-        "message": "Teacher created",
+        "message": "Teacher created with welcome letter",
         "email": email,
         "temporary_password": temp_password
     }
