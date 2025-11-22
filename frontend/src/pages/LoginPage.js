@@ -88,6 +88,21 @@ const LoginPage = () => {
           Retour à l'accueil
         </Link>
         
+        {/* Seasonal message banner */}
+        {isChristmas && (
+          <div className="mb-6 p-4 bg-red-600 text-white rounded-lg shadow-lg text-center animate-pulse">
+            <p className="text-lg font-bold">🎄 Joyeux Noël ! 🎅</p>
+            <p className="text-sm mt-1">Offre valable jusqu'au 26 décembre 2025</p>
+          </div>
+        )}
+        
+        {isNewYear && (
+          <div className="mb-6 p-4 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg shadow-lg text-center animate-pulse">
+            <p className="text-xl font-bold">🎉 MyKalamaEnglish vous souhaite une bonne année 2026 ! 🎊</p>
+            <p className="text-sm mt-1">Que cette nouvelle année vous apporte succès et réussite</p>
+          </div>
+        )}
+        
         <Card className="shadow-2xl">
           <CardHeader className="text-center">
             <CardTitle className="text-3xl">Connexion</CardTitle>
