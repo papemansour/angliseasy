@@ -26,6 +26,7 @@ import apiClient from '../utils/api';
 import { LogOut, Users, BookOpen, Calendar, MessageCircle, Send, Video, FileText, Upload, Play, Pause, Square, Clock } from 'lucide-react';
 import AvailabilityScheduler from '../components/AvailabilityScheduler';
 import ConversationChat from '../components/ConversationChat';
+import NewsDisplay from '../components/NewsDisplay';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
