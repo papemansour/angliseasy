@@ -1,0 +1,18 @@
+This is a test book content for English learning. 
+
+Chapter 1: Introduction to English Grammar
+
+English grammar is the foundation of effective communication. Understanding the basic rules helps students express their ideas clearly and confidently.
+
+Key concepts include:
+- Nouns and pronouns
+- Verbs and tenses  
+- Adjectives and adverbs
+- Sentence structure
+
+Practice exercises:
+1. Identify the nouns in this sentence
+2. Find the main verb
+3. Determine the sentence type
+
+This content will be used to test the AI assistant features like summarization, explanation, and pronunciation.
