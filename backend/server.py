@@ -1681,6 +1681,38 @@ async def create_admin():
         await db.users.insert_one(doc)
         logger.info("Admin user created")
 
+# ============ FILE UPLOAD ROUTE ============
+
+@api_router.post("/uploadfile/")
+async def upload_file(file: UploadFile = File(...)):
+    """Generic file upload endpoint"""
+    try:
+        # Create uploads directory if not exists
+        upload_dir = "/app/frontend/public/uploads"
+        os.makedirs(upload_dir, exist_ok=True)
+        
+        # Generate unique filename
+        file_extension = os.path.splitext(file.filename)[1]
+        unique_filename = f"{uuid.uuid4()}{file_extension}"
+        file_path = os.path.join(upload_dir, unique_filename)
+        
+        # Save file
+        with open(file_path, "wb") as buffer:
+            content = await file.read()
+            buffer.write(content)
+        
+        file_url = f"/uploads/{unique_filename}"
+        logger.info(f"File uploaded: {file.filename} -> {file_url}")
+        
+        return {
+            "message": "File uploaded successfully",
+            "file_url": file_url,
+            "filename": file.filename
+        }
+    except Exception as e:
+        logger.error(f"File upload error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Error uploading file")
+
 # ============ KALAMATHÈQUE ROUTES ============
 
 @api_router.post("/kalamatheque/verify-access")
