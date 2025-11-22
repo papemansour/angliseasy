@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Backend Security Testing for My KALAMA ENGLISH
-Tests for password security fixes and contact form functionality
+Backend Testing for My KALAMA ENGLISH
+Tests for Kalamathèque endpoints and security functionality
 """
 
 import asyncio
@@ -11,6 +11,8 @@ import logging
 from typing import Dict, Any, Optional
 import sys
 import os
+import base64
+import tempfile
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -22,6 +24,7 @@ BACKEND_URL = "https://esolplatform.preview.emergentagent.com/api"
 # Test credentials
 ADMIN_EMAIL = "admin@mykalamaenglish.com"
 ADMIN_PASSWORD = "adminco"
+KALAMATHEQUE_ACCESS_CODE = "Digika"
 
 class SecurityTester:
     def __init__(self):
