@@ -103,18 +103,25 @@ class TestSubmission(BaseModel):
     level: str
     answers: List[dict]
 
+class MessageAttachment(BaseModel):
+    file_url: str
+    filename: str
+    file_type: str  # pdf, doc, docx, image, etc.
+
 class Message(BaseModel):
     model_config = ConfigDict(extra="ignore")
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     from_user_id: str
     to_user_id: str
     content: str
+    attachment: Optional[MessageAttachment] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     is_read: bool = False
 
 class MessageCreate(BaseModel):
     to_user_id: str
     content: str
+    attachment: Optional[MessageAttachment] = None
 
 class Attendance(BaseModel):
     model_config = ConfigDict(extra="ignore")
