@@ -720,98 +720,142 @@ const AdminDashboard = () => {
           <TabsContent value="pricing">
             <Card>
               <CardHeader>
-                <CardTitle>Gestion des prix des packs</CardTitle>
-                <CardDescription>Modifier les prix en EUR et FCFA</CardDescription>
+                <CardTitle>💰 Gestion des prix des packs</CardTitle>
+                <CardDescription>Modifier les prix et remises - Changements automatiques sur le site</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleUpdatePrices} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-8">
+                  <div className="grid md:grid-cols-3 gap-6">
                     {/* Pack Débutant */}
-                    <div className="space-y-4 p-4 bg-teal-50 rounded-lg">
-                      <h3 className="text-lg font-semibold text-teal-800">Pack Débutant</h3>
+                    <div className="space-y-4 p-6 bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl border-2 border-teal-200 shadow-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">🌱</span>
+                        <h3 className="text-lg font-bold text-teal-800">Pack Débutant</h3>
+                      </div>
                       <div>
-                        <Label htmlFor="beginner_eur">Prix en EUR (€)</Label>
+                        <Label htmlFor="beginner_eur" className="text-teal-700">Prix de base (€)</Label>
                         <Input
                           id="beginner_eur"
                           type="number"
                           value={prices.beginner_eur}
                           onChange={(e) => setPrices({ ...prices, beginner_eur: parseInt(e.target.value) })}
-                          className="mt-1"
+                          className="mt-1 border-teal-300 focus:border-teal-500"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="beginner_fcfa">Prix en FCFA (FCFA)</Label>
+                        <Label htmlFor="beginner_discount" className="text-teal-700">Remise (€)</Label>
                         <Input
-                          id="beginner_fcfa"
+                          id="beginner_discount"
                           type="number"
-                          value={prices.beginner_fcfa}
-                          onChange={(e) => setPrices({ ...prices, beginner_fcfa: parseInt(e.target.value) })}
-                          className="mt-1"
+                          value={prices.beginner_discount || 0}
+                          onChange={(e) => setPrices({ ...prices, beginner_discount: parseInt(e.target.value) || 0 })}
+                          className="mt-1 border-teal-300 focus:border-teal-500"
+                          placeholder="0"
                         />
+                      </div>
+                      <div className="pt-3 border-t border-teal-300">
+                        <p className="text-sm font-semibold text-teal-700">Prix final :</p>
+                        <p className="text-3xl font-bold text-teal-800">
+                          {(prices.beginner_eur - (prices.beginner_discount || 0))}€
+                        </p>
+                        {prices.beginner_discount > 0 && (
+                          <p className="text-xs text-teal-600 mt-1">
+                            <span className="line-through">{prices.beginner_eur}€</span> → Économie de {prices.beginner_discount}€
+                          </p>
+                        )}
                       </div>
                     </div>
 
                     {/* Pack Intermédiaire */}
-                    <div className="space-y-4 p-4 bg-blue-50 rounded-lg">
-                      <h3 className="text-lg font-semibold text-blue-800">Pack Intermédiaire</h3>
+                    <div className="space-y-4 p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border-2 border-blue-200 shadow-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">🚀</span>
+                        <h3 className="text-lg font-bold text-blue-800">Pack Intermédiaire</h3>
+                      </div>
                       <div>
-                        <Label htmlFor="intermediate_eur">Prix en EUR (€)</Label>
+                        <Label htmlFor="intermediate_eur" className="text-blue-700">Prix de base (€)</Label>
                         <Input
                           id="intermediate_eur"
                           type="number"
                           value={prices.intermediate_eur}
                           onChange={(e) => setPrices({ ...prices, intermediate_eur: parseInt(e.target.value) })}
-                          className="mt-1"
+                          className="mt-1 border-blue-300 focus:border-blue-500"
                         />
                       </div>
                       <div>
-                        <Label htmlFor="intermediate_fcfa">Prix en FCFA (FCFA)</Label>
+                        <Label htmlFor="intermediate_discount" className="text-blue-700">Remise (€)</Label>
                         <Input
-                          id="intermediate_fcfa"
+                          id="intermediate_discount"
                           type="number"
-                          value={prices.intermediate_fcfa}
-                          onChange={(e) => setPrices({ ...prices, intermediate_fcfa: parseInt(e.target.value) })}
-                          className="mt-1"
+                          value={prices.intermediate_discount || 0}
+                          onChange={(e) => setPrices({ ...prices, intermediate_discount: parseInt(e.target.value) || 0 })}
+                          className="mt-1 border-blue-300 focus:border-blue-500"
+                          placeholder="0"
                         />
+                      </div>
+                      <div className="pt-3 border-t border-blue-300">
+                        <p className="text-sm font-semibold text-blue-700">Prix final :</p>
+                        <p className="text-3xl font-bold text-blue-800">
+                          {(prices.intermediate_eur - (prices.intermediate_discount || 0))}€
+                        </p>
+                        {prices.intermediate_discount > 0 && (
+                          <p className="text-xs text-blue-600 mt-1">
+                            <span className="line-through">{prices.intermediate_eur}€</span> → Économie de {prices.intermediate_discount}€
+                          </p>
+                        )}
                       </div>
                     </div>
 
-                    {/* Pack professionnel */}
-                    <div className="space-y-4 p-4 bg-purple-50 rounded-lg md:col-span-2">
-                      <h3 className="text-lg font-semibold text-purple-800">Pack professionnel</h3>
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="advanced_eur">Prix en EUR (€)</Label>
-                          <Input
-                            id="advanced_eur"
-                            type="number"
-                            value={prices.advanced_eur}
-                            onChange={(e) => setPrices({ ...prices, advanced_eur: parseInt(e.target.value) })}
-                            className="mt-1"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="advanced_fcfa">Prix en FCFA (FCFA)</Label>
-                          <Input
-                            id="advanced_fcfa"
-                            type="number"
-                            value={prices.advanced_fcfa}
-                            onChange={(e) => setPrices({ ...prices, advanced_fcfa: parseInt(e.target.value) })}
-                            className="mt-1"
-                          />
-                        </div>
+                    {/* Pack Professionnel */}
+                    <div className="space-y-4 p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border-2 border-purple-200 shadow-sm">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-2xl">👔</span>
+                        <h3 className="text-lg font-bold text-purple-800">Pack Professionnel</h3>
+                      </div>
+                      <div>
+                        <Label htmlFor="advanced_eur" className="text-purple-700">Prix de base (€)</Label>
+                        <Input
+                          id="advanced_eur"
+                          type="number"
+                          value={prices.advanced_eur}
+                          onChange={(e) => setPrices({ ...prices, advanced_eur: parseInt(e.target.value) })}
+                          className="mt-1 border-purple-300 focus:border-purple-500"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="advanced_discount" className="text-purple-700">Remise (€)</Label>
+                        <Input
+                          id="advanced_discount"
+                          type="number"
+                          value={prices.advanced_discount || 0}
+                          onChange={(e) => setPrices({ ...prices, advanced_discount: parseInt(e.target.value) || 0 })}
+                          className="mt-1 border-purple-300 focus:border-purple-500"
+                          placeholder="0"
+                        />
+                      </div>
+                      <div className="pt-3 border-t border-purple-300">
+                        <p className="text-sm font-semibold text-purple-700">Prix final :</p>
+                        <p className="text-3xl font-bold text-purple-800">
+                          {(prices.advanced_eur - (prices.advanced_discount || 0))}€
+                        </p>
+                        {prices.advanced_discount > 0 && (
+                          <p className="text-xs text-purple-600 mt-1">
+                            <span className="line-through">{prices.advanced_eur}€</span> → Économie de {prices.advanced_discount}€
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                    Enregistrer les modifications
+                  <Button type="submit" className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-lg py-6 shadow-lg">
+                    💾 Enregistrer et mettre à jour le site
                   </Button>
                 </form>
 
-                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <p className="text-sm text-yellow-800">
-                    <strong>Note :</strong> Les prix seront automatiquement mis à jour sur le site après enregistrement.
+                <div className="mt-6 p-4 bg-gradient-to-r from-green-50 to-teal-50 border-2 border-green-200 rounded-lg">
+                  <p className="text-sm text-green-800 flex items-center gap-2">
+                    <span className="text-xl">✨</span>
+                    <strong>Mise à jour automatique :</strong> Les prix et remises seront immédiatement visibles sur la page d'accueil après enregistrement.
                   </p>
                 </div>
               </CardContent>
