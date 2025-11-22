@@ -822,6 +822,11 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
+          {/* Kalamathèque Tab */}
+          <TabsContent value="kalamatheque">
+            <KalamathequeAdmin />
+          </TabsContent>
+
           {/* Conversations Tab */}
           <TabsContent value="conversations">
             <div className="grid md:grid-cols-3 gap-6">
