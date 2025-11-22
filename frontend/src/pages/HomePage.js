@@ -543,14 +543,24 @@ const HomePage = () => {
 
             <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all sm:col-span-2 lg:col-span-1">
               <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-4 md:p-6">
-                <h3 className="text-xl md:text-2xl font-bold text-teal-800">Pack professionnel</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-teal-800">👔 Pack professionnel</h3>
                 <p className="text-sm md:text-base text-teal-600">Formation d'anglais professionnel, intense ou accélérée</p>
               </div>
               <div className="p-4 md:p-6">
                 <div className="text-center mb-4 md:mb-6">
-                  <div className="text-gray-400 line-through text-lg md:text-xl">{formatPrice(120)}</div>
-                  <div className="text-4xl md:text-5xl font-bold text-teal-600">{formatPrice(102)}</div>
-                  <div className="text-green-600 font-semibold mt-1 md:mt-2 text-sm md:text-base">-15% de réduction</div>
+                  {pricingData.advanced_discount > 0 && (
+                    <div className="text-gray-400 line-through text-lg md:text-xl">
+                      {formatPrice(pricingData.advanced_eur)}
+                    </div>
+                  )}
+                  <div className="text-4xl md:text-5xl font-bold text-teal-600">
+                    {formatPrice(pricingData.advanced_eur - pricingData.advanced_discount)}
+                  </div>
+                  {pricingData.advanced_discount > 0 && (
+                    <div className="text-green-600 font-semibold mt-1 md:mt-2 text-sm md:text-base">
+                      💰 Économisez {formatPrice(pricingData.advanced_discount)}
+                    </div>
+                  )}
                 </div>
                 <ul className="space-y-2 md:space-y-3 text-sm md:text-base">
                   <li className="flex items-center gap-2">
@@ -569,7 +579,11 @@ const HomePage = () => {
                 <Button 
                   className="w-full mt-4 md:mt-6 bg-teal-600 hover:bg-teal-700 text-sm md:text-base py-2 md:py-3" 
                   data-testid="pay-advanced"
-                  onClick={() => openRegistrationModal({ name: 'Pack professionnel', level: 'advanced', price: 102 })}
+                  onClick={() => openRegistrationModal({ 
+                    name: 'Pack professionnel', 
+                    level: 'advanced', 
+                    price: pricingData.advanced_eur - pricingData.advanced_discount 
+                  })}
                 >
                   Payer maintenant
                 </Button>
