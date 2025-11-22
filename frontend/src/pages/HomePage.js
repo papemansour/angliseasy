@@ -728,7 +728,7 @@ const HomePage = () => {
             <div>
               <h4 className="text-lg font-semibold mb-4 text-teal-400">Contact</h4>
               <ul className="space-y-2 text-gray-400">
-                <li>Email: info.kalamaenglish@gmail.com</li>
+                <li>Email: mykalamaenglish@gmail.com</li>
                 <li>Localisation: PARIS / ONLINE</li>
               </ul>
             </div>
