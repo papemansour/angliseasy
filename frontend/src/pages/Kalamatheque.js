@@ -265,7 +265,7 @@ const Kalamatheque = () => {
                 onClick={() => handleLevelSelect('advanced')}
               >
                 <CardHeader className="bg-red-50">
-                  <CardTitle className="text-red-700">Packs professionnels</CardTitle>
+                  <CardTitle className="text-red-700">Pack professionnel</CardTitle>
                   <CardDescription>Niveau professionnel</CardDescription>
                 </CardHeader>
               </Card>
