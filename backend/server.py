@@ -2363,6 +2363,45 @@ async def delete_news(news_id: str, current_user: dict = Depends(get_current_use
     logger.info(f"News deleted by {current_user['id']}: {news_id}")
     return {"message": "Actualité supprimée"}
 
+@api_router.post("/news/{news_id}/like")
+async def like_news(news_id: str, current_user: dict = Depends(get_current_user)):
+    """Like a news post"""
+    await db.news.update_one(
+        {"id": news_id},
+        {"$inc": {"likes": 1}}
+    )
+    return {"message": "News likée"}
+
+@api_router.get("/news/{news_id}/comments")
+async def get_news_comments(news_id: str):
+    """Get comments for a news post"""
+    comments = await db.news_comments.find({"news_id": news_id}, {"_id": 0}).sort("created_at", 1).to_list(1000)
+    return comments
+
+@api_router.post("/news/{news_id}/comments")
+async def create_news_comment(news_id: str, comment_data: dict, current_user: dict = Depends(get_current_user)):
+    """Add comment to a news post"""
+    comment = {
+        "id": str(uuid4()),
+        "news_id": news_id,
+        "author_id": current_user['id'],
+        "author_name": f"{current_user['first_name']} {current_user['last_name']}",
+        "author_role": current_user['role'],
+        "content": comment_data.get('content'),
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.news_comments.insert_one(comment)
+    
+    # Increment comment count
+    await db.news.update_one(
+        {"id": news_id},
+        {"$inc": {"comments": 1}}
+    )
+    
+    logger.info(f"Comment added to news {news_id} by {current_user['id']}")
+    return {"message": "Commentaire ajouté", "id": comment["id"]}
+
 # ============ WELCOME LETTER ROUTES ============
 
 @api_router.get("/welcome-letter")
