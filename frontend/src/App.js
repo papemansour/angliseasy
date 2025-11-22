@@ -14,6 +14,8 @@ import LegalPage from './pages/LegalPage';
 import CGUPage from './pages/CGUPage';
 import PrivacyPage from './pages/PrivacyPage';
 import Kalamatheque from './pages/Kalamatheque';
+import KalamathequeAccess from './pages/KalamathequeAccess';
+import BookReader from './pages/BookReader';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -29,6 +31,9 @@ function App() {
           <Route path="/cgu" element={<CGUPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/library" element={<Kalamatheque />} />
+          <Route path="/kalamatheque-access" element={<KalamathequeAccess />} />
+          <Route path="/kalamatheque" element={<Kalamatheque />} />
+          <Route path="/kalamatheque/reader/:id" element={<BookReader />} />
           
           <Route path="/student/*" element={
             <ProtectedRoute allowedRoles={['student']}>
