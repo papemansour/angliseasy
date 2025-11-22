@@ -269,20 +269,20 @@ Nous sommes ravis de vous accueillir sur MYKALMAENGLISH ! Vous avez franchi une 
 
 Notre programme de formation intensive et accélérée en anglais est conçu spécialement pour des professionnels comme vous. Voici ce que vous pouvez attendre :
 
-**Apprentissage complet :** Engagez-vous avec un contenu adapté qui se concentre sur des applications concrètes.
+Apprentissage complet : Engagez-vous avec un contenu adapté qui se concentre sur des applications concrètes.
 
-**Accès flexible :** Apprenez à votre rythme grâce à notre plateforme en ligne, disponible à tout moment et de n'importe où.
+Accès flexible : Apprenez à votre rythme grâce à notre plateforme en ligne, disponible à tout moment et de n'importe où.
 
-**Communauté de soutien :** Connectez-vous avec d'autres apprenants et des instructeurs qui sont là pour vous soutenir.
+Communauté de soutien : Connectez-vous avec d'autres apprenants et des instructeurs qui sont là pour vous soutenir.
 
-**Vos identifiants de connexion :**
+Vos identifiants de connexion :
 📧 Email: {email}
 🔑 Mot de passe provisoire: {temp_password}
 
-**Vos accès :**
-- **Kalamathèque** : Bibliothèque en ligne avec accès illimité pour lire des livres
-- **News** : Section actualités et événements pour rester informé
-- **Profil** : Changez votre mot de passe provisoire dans votre espace, partie Profil
+Vos accès :
+- Kalamathèque : Bibliothèque en ligne avec accès illimité pour lire des livres
+- News : Section actualités et événements pour rester informé
+- Profil : Changez votre mot de passe provisoire dans votre espace, partie Profil
 
 Pour commencer, veuillez vous connecter à votre compte et explorer les matériaux de cours. Si vous avez des questions ou avez besoin d'assistance, n'hésitez pas à contacter notre équipe de support.
 
