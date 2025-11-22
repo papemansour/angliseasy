@@ -243,6 +243,7 @@ const KalamaClub = ({ userRole }) => {
               </form>
             </DialogContent>
           </Dialog>
+          )}
         </div>
       </div>
 
