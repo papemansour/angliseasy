@@ -142,7 +142,6 @@ const StudentDashboard = () => {
             <span className="text-sm text-gray-600 font-semibold uppercase tracking-wide">English</span>
           </div>
           <div className="flex items-center gap-4">
-            <ActivityFeed />
             <span className="text-gray-700">{user?.first_name} {user?.last_name}</span>
             <Button variant="outline" onClick={handleLogout} className="border-teal-600 text-teal-600 hover:bg-teal-50">
               <LogOut className="w-4 h-4 mr-2" />
