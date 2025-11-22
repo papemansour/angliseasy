@@ -866,12 +866,25 @@ async def get_session_notifications(current_user: dict = Depends(get_current_use
     ).sort("created_at", -1).to_list(100)
     
 
+@api_router.get("/pricing")
+async def get_pricing():
+    """Get current pricing - Public endpoint"""
+    pricing = await db.pricing.find_one({"id": "pricing"}, {"_id": 0})
+    if not pricing:
+        # Default pricing
+        return {
+            "beginner": {"price": 60, "discount": 0},
+            "intermediate": {"price": 90, "discount": 0},
+            "advanced": {"price": 120, "discount": 0}
+        }
+    return pricing
+
 @api_router.post("/admin/update-prices")
 async def update_prices(prices: dict, current_user: dict = Depends(get_current_user)):
     if current_user['role'] != 'admin':
         raise HTTPException(status_code=403, detail="Admin access required")
     
-    # Store prices in database
+    # Store prices in database with discount support
     prices_doc = {
         "id": "pricing",
         **prices,
