@@ -844,6 +844,108 @@ const TeacherDashboard = () => {
               </Card>
             </div>
           </TabsContent>
+
+          {/* Profile Tab - Changement de mot de passe */}
+          <TabsContent value="profile">
+            <Card className="border-teal-100">
+              <CardHeader className="bg-teal-50">
+                <CardTitle className="text-teal-800">Mon Profil</CardTitle>
+                <CardDescription>Gérez vos informations personnelles et votre mot de passe</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="space-y-6">
+                  {/* Informations personnelles */}
+                  <div className="border-b pb-6">
+                    <h3 className="font-semibold text-lg mb-4 text-teal-700">Informations personnelles</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Nom complet:</span>
+                        <span className="font-semibold">{user?.first_name} {user?.last_name}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Email:</span>
+                        <span className="font-semibold">{user?.email}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Rôle:</span>
+                        <span className="font-semibold">Professeur</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Changement de mot de passe */}
+                  <div>
+                    <h3 className="font-semibold text-lg mb-4 text-teal-700">Changer mon mot de passe</h3>
+                    <form onSubmit={async (e) => {
+                      e.preventDefault();
+                      const formData = new FormData(e.target);
+                      const oldPassword = formData.get('old_password');
+                      const newPassword = formData.get('new_password');
+                      const confirmPassword = formData.get('confirm_password');
+
+                      if (newPassword !== confirmPassword) {
+                        toast.error('Les mots de passe ne correspondent pas');
+                        return;
+                      }
+
+                      if (newPassword.length < 6) {
+                        toast.error('Le mot de passe doit contenir au moins 6 caractères');
+                        return;
+                      }
+
+                      try {
+                        await apiClient.post('/auth/change-password', {
+                          old_password: oldPassword,
+                          new_password: newPassword
+                        });
+                        toast.success('Mot de passe modifié avec succès!');
+                        e.target.reset();
+                      } catch (error) {
+                        toast.error(error.response?.data?.detail || 'Erreur lors du changement de mot de passe');
+                      }
+                    }} className="space-y-4">
+                      <div>
+                        <Label htmlFor="old_password">Ancien mot de passe</Label>
+                        <Input
+                          id="old_password"
+                          name="old_password"
+                          type="password"
+                          required
+                          className="border-teal-200 focus:border-teal-500"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="new_password">Nouveau mot de passe</Label>
+                        <Input
+                          id="new_password"
+                          name="new_password"
+                          type="password"
+                          required
+                          minLength={6}
+                          className="border-teal-200 focus:border-teal-500"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Minimum 6 caractères</p>
+                      </div>
+                      <div>
+                        <Label htmlFor="confirm_password">Confirmer le nouveau mot de passe</Label>
+                        <Input
+                          id="confirm_password"
+                          name="confirm_password"
+                          type="password"
+                          required
+                          minLength={6}
+                          className="border-teal-200 focus:border-teal-500"
+                        />
+                      </div>
+                      <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700">
+                        🔐 Changer mon mot de passe
+                      </Button>
+                    </form>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
