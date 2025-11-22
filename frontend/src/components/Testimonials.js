@@ -7,8 +7,8 @@ const testimonials = [
     name: "Sophie Wane",
     role: "Étudiante en commerce",
     image: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=200",
-    content: "Grâce à KALAMAENGLISH, j'ai pu améliorer mon anglais professionnel en seulement 3 mois. Les professeurs sont excellents et très à l'écoute.",
-    rating: 5
+    content: "Grâce à KALAMAENGLISH, j'ai pu améliorer mon anglais professionnel en seulement 6 mois. Les professeurs sont excellents et très à l'écoute.",
+    rating: 4
   },
   {
     name: "Gabriel Da SILVA",
