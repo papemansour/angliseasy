@@ -1243,6 +1243,9 @@ async def get_my_attendance(current_user: dict = Depends(get_current_user)):
 # MESSAGING
 @api_router.post("/messages/send")
 async def send_message(message_data: MessageCreate, current_user: dict = Depends(get_current_user)):
+    # Get sender info
+    sender = await db.users.find_one({"id": current_user['id']}, {"_id": 0})
+    
     message = Message(
         from_user_id=current_user['id'],
         to_user_id=message_data.to_user_id,
@@ -1252,6 +1255,12 @@ async def send_message(message_data: MessageCreate, current_user: dict = Depends
     doc = message.model_dump()
     doc['created_at'] = doc['created_at'].isoformat()
     await db.messages.insert_one(doc)
+    
+    # Create notification for recipient
+    await create_notification(message_data.to_user_id, 'new_message', {
+        "from_name": f"{sender['first_name']} {sender['last_name']}",
+        "message": f"Nouveau message de {sender['first_name']} {sender['last_name']}"
+    })
     
     return {"message": "Message sent"}
 
