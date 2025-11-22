@@ -258,8 +258,11 @@ const HomePage = () => {
             <CurrencyToggle />
           </div>
           
-          <p className="text-center text-xl text-red-600 font-semibold mb-12">
+          <p className="text-center text-xl text-red-600 font-semibold mb-4">
             🎄 Promo Noël & Nouvel An - Valable jusqu'au 14 janvier 2025
+          </p>
+          <p className="text-center text-lg text-gray-700 mb-12">
+            👥 Cours individuels ou en groupe (max 3 personnes)
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
