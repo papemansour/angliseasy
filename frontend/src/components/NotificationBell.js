@@ -49,10 +49,16 @@ const NotificationBell = () => {
     setLoading(true);
     try {
       await apiClient.put('/notifications/mark-all-read');
-      setNotifications(notifications.map(n => ({ ...n, is_read: true })));
+      // Mettre à jour immédiatement l'état local
+      const updatedNotifications = notifications.map(n => ({ ...n, is_read: true }));
+      setNotifications(updatedNotifications);
       setUnreadCount(0);
       toast.success('✅ Toutes les notifications sont lues');
-      setIsOpen(false); // Fermer le popover
+      // Fermer le popover et rafraîchir après un court délai
+      setTimeout(() => {
+        setIsOpen(false);
+        fetchNotifications(); // Rafraîchir depuis le serveur
+      }, 500);
     } catch (error) {
       toast.error('Erreur lors du marquage');
     } finally {
