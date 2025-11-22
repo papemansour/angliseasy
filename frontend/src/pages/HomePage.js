@@ -63,6 +63,8 @@ const HomePage = () => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [selectedTimeSlots, setSelectedTimeSlots] = useState({});
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   const handleDateSelect = (date) => {
     const dateStr = format(date, 'yyyy-MM-dd');
