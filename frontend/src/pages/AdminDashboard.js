@@ -322,7 +322,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="availability" data-testid="admin-tab-availability">Horaire profs</TabsTrigger>
             <TabsTrigger value="news" data-testid="admin-tab-news">📰 News</TabsTrigger>
             <TabsTrigger value="kalamatheque" data-testid="admin-tab-kalamatheque">Kalamathèque</TabsTrigger>
-            <TabsTrigger value="conversations" data-testid="admin-tab-conversations">Conversations</TabsTrigger>
+            <TabsTrigger value="conversations" data-testid="admin-tab-conversations">💬 Discussion</TabsTrigger>
           </TabsList>
 
           <TabsContent value="pending">
