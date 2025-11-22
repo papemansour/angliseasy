@@ -466,8 +466,9 @@ const KalamaClub = ({ userRole }) => {
                   <p className="text-sm text-gray-400 mt-2">Continuez à participer activement au club</p>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {leaderboard.map((member, index) => {
+                <div className="space-y-4">
+                  {/* TOP 3 PODIUM */}
+                  {leaderboard.filter(m => m.rank <= 3).map((member, index) => {
                     const getMedal = (rank) => {
                       if (rank === 1) return '🥇';
                       if (rank === 2) return '🥈';
