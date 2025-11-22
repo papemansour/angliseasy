@@ -329,7 +329,11 @@ const HomePage = () => {
                     <span>Exercices avancés</span>
                   </li>
                 </ul>
-                <Button className="w-full mt-6 bg-teal-600 hover:bg-teal-700" data-testid="pay-intermediate">
+                <Button 
+                  className="w-full mt-6 bg-teal-600 hover:bg-teal-700" 
+                  data-testid="pay-intermediate"
+                  onClick={() => openRegistrationModal({ name: 'Pack Intermédiaire', level: 'intermediate', price: 90 })}
+                >
                   Payer maintenant
                 </Button>
                 <p className="text-xs text-center text-gray-500 mt-3">
