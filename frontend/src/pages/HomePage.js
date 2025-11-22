@@ -51,6 +51,10 @@ const timeSlots = [
 const HomePage = () => {
   const navigate = useNavigate();
   const { currency, formatPrice, EUR_TO_FCFA } = useCurrency();
+  const [courseType, setCourseType] = useState('individual'); // 'individual' ou 'group'
+  const [groupMembers, setGroupMembers] = useState([
+    { first_name: '', last_name: '', email: '', phone: '', country_code: '+33', level: '' }
+  ]);
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
