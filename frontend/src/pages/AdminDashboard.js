@@ -747,33 +747,16 @@ const AdminDashboard = () => {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {/* Messages */}
-                      <div className="border rounded-lg p-4 max-h-[400px] overflow-y-auto space-y-3 bg-gray-50">
-                        {messages.length === 0 ? (
-                          <p className="text-gray-500 text-center py-8">Aucun message</p>
-                        ) : (
-                          messages.map((msg) => (
-                            <div
-                              key={msg.id}
-                              className={`flex ${
-                                msg.from_user_id === user.id ? 'justify-end' : 'justify-start'
-                              }`}
-                            >
-                              <div
-                                className={`max-w-[70%] p-3 rounded-lg ${
-                                  msg.from_user_id === user.id
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-white border'
-                                }`}
-                              >
-                                <p className="text-sm">{msg.content}</p>
-                                <p className="text-xs mt-1 opacity-70">
-                                  {new Date(msg.created_at).toLocaleString('fr-FR')}
-                                </p>
-                              </div>
-                            </div>
-                          ))
-                        )}
+                      {/* Info sélection */}
+                      <div className="border rounded-lg p-4 bg-blue-50">
+                        <p className="font-semibold mb-2">Destinataires:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedRecipients.map(r => (
+                            <span key={r.id} className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm">
+                              {r.first_name} {r.last_name}
+                            </span>
+                          ))}
+                        </div>
                       </div>
 
                       {/* Formulaire message */}
