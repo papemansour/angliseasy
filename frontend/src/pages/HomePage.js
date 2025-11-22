@@ -670,7 +670,7 @@ const HomePage = () => {
                 </div>
 
                 <div>
-                  <Label htmlFor="referral_source">Comment avez-vous connu MyKalamaenglish ?</Label>
+                  <Label htmlFor="referral_source">Comment avez-vous connu My KALAMA English ?</Label>
                   <Select
                     value={formData.referral_source}
                     onValueChange={(value) => setFormData({ ...formData, referral_source: value })}
