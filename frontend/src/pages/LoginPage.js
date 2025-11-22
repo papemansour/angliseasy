@@ -149,7 +149,7 @@ const LoginPage = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Pas encore de compte ?{' '}
-                <Link to="/#register" className="text-blue-600 hover:text-blue-700 font-semibold">
+                <Link to="/?openRegister=true#pricing" className="text-green-600 hover:text-green-700 font-bold">
                   Inscrivez-vous
                 </Link>
               </p>
