@@ -575,10 +575,24 @@ const AdminDashboard = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Assiduité des professeurs</CardTitle>
-                <CardDescription>Pointages des cours terminés</CardDescription>
+                <CardDescription>Pointages des cours terminés avec statistiques complètes</CardDescription>
               </CardHeader>
               <CardContent>
-                {sessions.length === 0 ? (
+                <Button 
+                  onClick={async () => {
+                    try {
+                      const res = await apiClient.get('/admin/teacher-sessions');
+                      setTeacherSessions(res.data);
+                      toast.success('Statistiques actualisées');
+                    } catch (error) {
+                      toast.error('Erreur de chargement');
+                    }
+                  }}
+                  className="mb-4"
+                >
+                  🔄 Actualiser les statistiques
+                </Button>
+                {teacherSessions.length === 0 ? (
                   <p className="text-gray-500">Aucune session enregistrée</p>
                 ) : (
                   <div className="space-y-4">
