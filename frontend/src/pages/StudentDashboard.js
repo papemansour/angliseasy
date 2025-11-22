@@ -214,6 +214,17 @@ const StudentDashboard = () => {
               <div className="text-2xl font-bold text-teal-600">{homeworks.length}</div>
             </CardContent>
           </Card>
+
+          <Card className="border-pink-200 bg-gradient-to-br from-pink-50 to-red-50">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Soutenez-nous</CardTitle>
+              <Heart className="h-4 w-4 text-pink-500 fill-current" />
+            </CardHeader>
+            <CardContent>
+              <DonationButton size="sm" />
+              <p className="text-xs text-gray-600 mt-2">Aidez notre communauté</p>
+            </CardContent>
+          </Card>
         </div>
 
         <Tabs defaultValue="welcome" className="space-y-6">
