@@ -290,22 +290,22 @@ const HomePage = () => {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
+      <section className="py-12 md:py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
         <div className="container mx-auto max-w-7xl">
-          <h2 className="text-4xl font-bold text-center mb-4">Tarifs & Niveaux</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 md:mb-4">Tarifs & Niveaux</h2>
           
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-4 md:mb-6">
             <CurrencyToggle />
           </div>
           
-          <p className="text-center text-xl text-red-600 font-semibold mb-4">
+          <p className="text-center text-base sm:text-lg md:text-xl text-red-600 font-semibold mb-3 md:mb-4 px-4">
             🎄 Promo Noël & Nouvel An - Valable jusqu'au 14 janvier 2025
           </p>
-          <p className="text-center text-lg text-gray-700 mb-12">
+          <p className="text-center text-sm sm:text-base md:text-lg text-gray-700 mb-8 md:mb-12 px-4">
             👥 Cours individuels ou en groupe (max 3 personnes)
           </p>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all">
               <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-6">
                 <h3 className="text-2xl font-bold text-teal-800">Pack Débutant</h3>
