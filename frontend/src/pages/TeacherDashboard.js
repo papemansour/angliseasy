@@ -27,6 +27,7 @@ import { LogOut, Users, BookOpen, Calendar, MessageCircle, Send, Video, FileText
 import AvailabilityScheduler from '../components/AvailabilityScheduler';
 import ConversationChat from '../components/ConversationChat';
 import NewsDisplay from '../components/NewsDisplay';
+import WelcomeLetter from '../components/WelcomeLetter';
 
 const TeacherDashboard = () => {
   const navigate = useNavigate();
