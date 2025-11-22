@@ -2625,6 +2625,64 @@ async def remove_from_leaderboard(
     
     return {"message": "Removed from leaderboard"}
 
+@api_router.get("/club/student-of-month")
+async def get_student_of_month():
+    """Get current Student of the Month"""
+    badge = await db.student_of_month.find_one({"active": True}, {"_id": 0})
+    if not badge:
+        return None
+    
+    # Check if expired
+    if badge.get('expires_at'):
+        expires_date = datetime.fromisoformat(badge['expires_at'])
+        if datetime.now(timezone.utc) > expires_date:
+            await db.student_of_month.update_one(
+                {"user_id": badge['user_id']},
+                {"$set": {"active": False}}
+            )
+            return None
+    
+    return badge
+
+@api_router.post("/club/student-of-month")
+async def set_student_of_month(
+    user_id: str,
+    duration_days: int,
+    current_user: dict = Depends(get_current_user)
+):
+    """Set Student of the Month - Admin only"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Get user details
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Deactivate previous badge
+    await db.student_of_month.update_many(
+        {"active": True},
+        {"$set": {"active": False}}
+    )
+    
+    # Create new badge
+    expires_at = datetime.now(timezone.utc) + timedelta(days=duration_days)
+    badge = {
+        "id": str(uuid4()),
+        "user_id": user_id,
+        "user_name": f"{user['first_name']} {user['last_name']}",
+        "user_role": user['role'],
+        "active": True,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "expires_at": expires_at.isoformat(),
+        "created_by": current_user['id']
+    }
+    
+    await db.student_of_month.insert_one(badge)
+    logger.info(f"Student of the Month set: {user['first_name']} {user['last_name']} for {duration_days} days")
+    
+    return {"message": "Badge Étudiant du Mois attribué", "expires_at": expires_at.isoformat()}
+
 @api_router.get("/club/events")
 async def get_club_events():
     """Get all upcoming club events"""
