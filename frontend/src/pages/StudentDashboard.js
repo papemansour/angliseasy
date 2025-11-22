@@ -350,8 +350,8 @@ const StudentDashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* Devoirs Tab */}
-          <TabsContent value="homeworks">
+          {/* Conversations Tab */}
+          <TabsContent value="conversations">
             <div className="grid md:grid-cols-2 gap-6">
               {/* Formulaire de soumission */}
               <Card className="border-teal-100">
