@@ -237,20 +237,20 @@ L'équipe MYKALMAENGLISH"""
 
 Nous sommes ravis de vous accueillir sur MYKALMAENGLISH ! Vous vous êtes inscrit avec succès à notre cours en ligne de niveau intermédiaire, et nous sommes impatients de vous accompagner dans votre apprentissage de la langue.
 
-**Leçons interactives :** un contenu engageant adapté à votre niveau pour vous aider à approfondir vos connaissances en anglais.
+Leçons interactives : un contenu engageant adapté à votre niveau pour vous aider à approfondir vos connaissances en anglais.
 
-**Apprentissage flexible :** accédez à vos cours à tout moment, partout, à votre propre rythme.
+Apprentissage flexible : accédez à vos cours à tout moment, partout, à votre propre rythme.
 
-**Communauté de soutien :** rejoignez notre communauté dynamique d'apprenants et d'instructeurs qui sont là pour vous aider à réussir.
+Communauté de soutien : rejoignez notre communauté dynamique d'apprenants et d'instructeurs qui sont là pour vous aider à réussir.
 
-**Vos identifiants de connexion :**
+Vos identifiants de connexion :
 📧 Email: {email}
 🔑 Mot de passe provisoire: {temp_password}
 
-**Vos accès :**
-- **Kalamathèque** : Bibliothèque en ligne avec accès illimité pour lire des livres
-- **News** : Section actualités et événements pour rester informé
-- **Profil** : Changez votre mot de passe provisoire dans votre espace, partie Profil
+Vos accès :
+- Kalamathèque : Bibliothèque en ligne avec accès illimité pour lire des livres
+- News : Section actualités et événements pour rester informé
+- Profil : Changez votre mot de passe provisoire dans votre espace, partie Profil
 
 Pour commencer, connectez-vous simplement à votre compte et explorez les cours disponibles. Si vous avez des questions ou avez besoin d'aide, n'hésitez pas à contacter notre équipe de support.
 
