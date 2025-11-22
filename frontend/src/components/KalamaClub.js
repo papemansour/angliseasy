@@ -27,6 +27,7 @@ import {
   SelectValue,
 } from './ui/select';
 import LeaderboardManager from './LeaderboardManager';
+import StudentOfMonthBadge from './StudentOfMonthBadge';
 
 const KalamaClub = ({ userRole }) => {
   const [posts, setPosts] = useState([]);
