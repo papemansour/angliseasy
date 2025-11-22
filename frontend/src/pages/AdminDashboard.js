@@ -186,18 +186,23 @@ const AdminDashboard = () => {
 
   const handleSendDocument = async (e) => {
     e.preventDefault();
-    if (!selectedRecipient) {
-      toast.error('Sélectionnez un destinataire');
+    if (selectedRecipients.length === 0) {
+      toast.error('Sélectionnez au moins un destinataire');
       return;
     }
     
     try {
-      await apiClient.post('/admin/send-document', {
-        ...documentToSend,
-        recipient_id: selectedRecipient.id,
-        recipient_type: selectedRecipient.role
-      });
-      toast.success('Document envoyé avec succès!');
+      // Send document to all selected recipients
+      await Promise.all(
+        selectedRecipients.map(recipient =>
+          apiClient.post('/admin/send-document', {
+            ...documentToSend,
+            recipient_id: recipient.id,
+            recipient_type: recipient.role
+          })
+        )
+      );
+      toast.success(`Document envoyé à ${selectedRecipients.length} personne(s)!`);
       setDocumentToSend({ title: '', description: '', file_url: '', recipient_id: '' });
     } catch (error) {
       toast.error('Erreur lors de l\'envoi du document');
