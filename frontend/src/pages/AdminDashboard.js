@@ -460,6 +460,11 @@ const AdminDashboard = () => {
                                   Mot de passe provisoire: {teacher.temporary_password}
                                 </p>
                               )}
+                              {teacher.current_password_plain && (
+                                <p className="text-xs text-blue-600 font-semibold mt-1">
+                                  Mot de passe actuel: {teacher.current_password_plain}
+                                </p>
+                              )}
                             </div>
                             <Button 
                               size="sm" 
