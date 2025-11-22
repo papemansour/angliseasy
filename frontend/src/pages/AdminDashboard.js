@@ -22,7 +22,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
-import { LogOut, Users, UserCheck, UserPlus, Award, BookOpen, Clock, Send, FileText, DollarSign } from 'lucide-react';
+import { LogOut, Users, UserCheck, UserPlus, Award, BookOpen, Clock, Send, FileText, DollarSign, Lock, Trash2 } from 'lucide-react';
+import KalamathequeAdmin from '../components/KalamathequeAdmin';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
