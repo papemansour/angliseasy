@@ -559,12 +559,12 @@ const HomePage = () => {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-300 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all sm:col-span-2 lg:col-span-1 lg:transform lg:hover:scale-105">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-300 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all min-w-[280px] sm:min-w-[320px] flex-shrink-0 snap-center lg:transform lg:hover:scale-105">
               <div className="absolute top-3 md:top-4 right-3 md:right-4">
                 <span className="bg-teal-600 text-white px-2 md:px-3 py-1 rounded-full text-xs md:text-sm font-semibold">Populaire</span>
               </div>
               <div className="bg-gradient-to-br from-teal-100 to-teal-200 p-4 md:p-6">
-                <h3 className="text-xl md:text-2xl font-bold text-teal-800">🚀 Pack K-Intermédiaire</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-teal-800">Pack K-Intermédiaire</h3>
                 <p className="text-sm md:text-base text-teal-700">Le plus choisi</p>
               </div>
               <div className="p-4 md:p-6">
