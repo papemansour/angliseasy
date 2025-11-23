@@ -42,8 +42,8 @@ const Testimonials = () => {
         
         <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="hover:shadow-xl transition-shadow border-teal-100 min-w-[280px] sm:min-w-0 flex-shrink-0 snap-center">
-              <CardContent className="p-4 sm:p-6">
+            <Card key={index} className="hover:shadow-xl transition-shadow border-teal-100 min-w-[260px] w-[260px] sm:min-w-0 sm:w-auto flex-shrink-0 snap-center">
+              <CardContent className="p-3 sm:p-6">
                 <div className="mb-4">
                   <h3 className="font-bold text-gray-900 text-lg">{testimonial.name}</h3>
                   <p className="text-sm text-gray-600">{testimonial.role}</p>
