@@ -35,12 +35,12 @@ const testimonials = [
 
 const Testimonials = () => {
   return (
-    <section className="py-20 px-4 bg-white">
+    <section className="py-12 sm:py-20 px-4 bg-white">
       <div className="container mx-auto max-w-7xl">
-        <h2 className="text-4xl font-bold text-center mb-4">Ce que disent nos étudiants</h2>
-        <p className="text-center text-gray-600 mb-12">Découvrez les témoignages de ceux qui ont réussi avec nous</p>
+        <h2 className="text-2xl sm:text-4xl font-bold text-center mb-2 sm:mb-4">Ce que disent nos étudiants</h2>
+        <p className="text-center text-sm sm:text-base text-gray-600 mb-6 sm:mb-12">Découvrez les témoignages de ceux qui ont réussi avec nous</p>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4">
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="hover:shadow-xl transition-shadow border-teal-100">
               <CardContent className="p-6">
