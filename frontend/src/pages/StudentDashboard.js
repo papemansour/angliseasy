@@ -203,39 +203,6 @@ const StudentDashboard = () => {
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Card className="border-teal-100">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Liens reçus</CardTitle>
-              <LinkIcon className="h-4 w-4 text-teal-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-teal-600">{links.length}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-teal-100">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Documents reçus</CardTitle>
-              <FileText className="h-4 w-4 text-teal-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-teal-600">{documents.length}</div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-teal-100">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Devoirs rendus</CardTitle>
-              <BookOpen className="h-4 w-4 text-teal-600" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-teal-600">{homeworks.length}</div>
-            </CardContent>
-          </Card>
-        </div>
-
         <Tabs defaultValue="welcome" className="space-y-6">
           {/* Grid Navigation Cards */}
           <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-3 h-auto bg-transparent p-0">
