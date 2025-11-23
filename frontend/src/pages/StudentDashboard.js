@@ -258,100 +258,136 @@ const StudentDashboard = () => {
             <KalamaClub userRole="student" />
           </TabsContent>
 
-          {/* Payment Tab */}
-          <TabsContent value="payment">
-            <Card className="border-green-100">
-              <CardHeader className="bg-gradient-to-r from-green-50 to-teal-50">
-                <CardTitle className="text-green-800 flex items-center gap-2">
-                  💳 Paiement Mensuel
-                </CardTitle>
-                <CardDescription>
-                  Payez votre mensualité directement en ligne de manière sécurisée
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6">
-                {!user || !user.level ? (
-                  <div className="text-center py-8">
-                    <p className="text-gray-600 mb-4">Chargement de vos informations...</p>
-                    <p className="text-sm text-gray-500">Si ce message persiste, veuillez contacter l'administration.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    {/* Pack Info */}
-                    <div className="bg-gradient-to-r from-teal-50 to-blue-50 p-6 rounded-lg border-2 border-teal-200">
-                      <h3 className="text-lg font-bold text-teal-900 mb-2">📦 Votre Pack Actuel</h3>
-                      <p className="text-2xl font-bold text-teal-600 mb-2">
-                        {user.level === 'beginner' ? 'Pack K-Débutant' : 
-                         user.level === 'intermediate' ? 'Pack K-Intermédiaire' : 
-                         user.level === 'advanced' ? 'Pack K-Professionnel' : 
-                         user.level === 'kkid' ? 'Pack K-Kid' : 'Pack Standard'}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {user.join_kalama_club ? '✨ Avec KALAMA CLUB inclus (-9,50€)' : 'Sans KALAMA CLUB'}
-                      </p>
+          {/* Mon Pack Tab - Shows student's pack with payment */}
+          <TabsContent value="mypack">
+            {!user || !user.level ? (
+              <Card>
+                <CardContent className="text-center py-12">
+                  <p className="text-gray-600">Chargement de votre pack...</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="relative overflow-hidden rounded-2xl border-2 bg-white shadow-xl max-w-md mx-auto">
+                {/* Pack Header with gradient */}
+                <div className={`bg-gradient-to-br p-6 ${
+                  user.level === 'kkid' ? 'from-pink-100 to-pink-200' :
+                  user.level === 'beginner' ? 'from-teal-100 to-teal-200' :
+                  user.level === 'intermediate' ? 'from-teal-100 to-cyan-200' :
+                  'from-teal-100 to-blue-200'
+                }`}>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-2 text-gray-900">
+                    {user.level === 'kkid' ? 'Pack K-Kid' :
+                     user.level === 'beginner' ? 'Pack K-Débutant' :
+                     user.level === 'intermediate' ? 'Pack K-Intermédiaire' :
+                     user.level === 'advanced' ? 'Pack K-Professionnel' : 'Votre Pack'}
+                  </h3>
+                  <p className="text-sm md:text-base text-gray-700">
+                    {user.level === 'kkid' ? 'Enfants 3-9 ans' :
+                     user.level === 'beginner' ? 'Parfait pour commencer' :
+                     user.level === 'intermediate' ? 'Le plus choisi' :
+                     'Formation professionnelle'}
+                  </p>
+                </div>
+
+                {/* Pack Content */}
+                <div className="p-6 space-y-6">
+                  {/* Price */}
+                  <div className="text-center">
+                    <div className="text-4xl md:text-5xl font-bold text-teal-600 mb-2">
+                      {user.level === 'kkid' ? '18€' :
+                       user.level === 'beginner' && user.join_kalama_club ? '66,50€' :
+                       user.level === 'beginner' ? '76€' :
+                       user.level === 'intermediate' && user.join_kalama_club ? '85,50€' :
+                       user.level === 'intermediate' ? '90€' :
+                       user.level === 'advanced' && user.join_kalama_club ? '96,90€' :
+                       user.level === 'advanced' ? '102€' : '76€'}
                     </div>
-
-                    {/* Payment Amount */}
-                    <div className="bg-white p-6 rounded-lg border-2 border-gray-200">
-                      <div className="flex justify-between items-center mb-4">
-                        <span className="text-gray-700">Montant mensuel :</span>
-                        <span className="text-3xl font-bold text-green-600">
-                          {user.level === 'kkid' ? '18€' :
-                           user.level === 'beginner' && user.join_kalama_club ? '66,50€' :
-                           user.level === 'beginner' ? '76€' :
-                           user.level === 'intermediate' && user.join_kalama_club ? '85,50€' :
-                           user.level === 'intermediate' ? '90€' :
-                           user.level === 'advanced' && user.join_kalama_club ? '96,90€' :
-                           user.level === 'advanced' ? '102€' : '76€'}
-                        </span>
-                      </div>
-                      {user.join_kalama_club && user.level !== 'kkid' && (
-                        <p className="text-sm text-green-600 text-right">
-                          ✓ Économie de 9,50€ grâce au KALAMA CLUB
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Payment Button */}
-                    <Button
-                      className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-lg py-6"
-                      onClick={() => {
-                        const stripeLinks = {
-                          'kkid': 'https://buy.stripe.com/9B64gz8rFaJD7RB4q0',
-                          'beginner_with_club': 'https://buy.stripe.com/8x26oH37lcRL2xhbSs',
-                          'beginner_without_club': 'https://buy.stripe.com/fZufZheQ304Z5Jtg8I',
-                          'intermediate_with_club': 'https://buy.stripe.com/4gMbJ10Zd6tn2xh3lW',
-                          'intermediate_without_club': 'https://buy.stripe.com/dRmdR96jx5pjdbVf4E',
-                          'advanced_with_club': 'https://buy.stripe.com/28E3cv4bp1938VFf4E',
-                          'advanced_without_club': 'https://buy.stripe.com/00w14nazNg3XefZ2hS'
-                        };
-                        
-                        let link;
-                        if (user.level === 'kkid') {
-                          link = stripeLinks.kkid;
-                        } else {
-                          const key = `${user.level}_${user.join_kalama_club ? 'with' : 'without'}_club`;
-                          link = stripeLinks[key];
-                        }
-                        
-                        if (link) {
-                          window.location.href = link;
-                        } else {
-                          toast.error('Erreur : impossible de charger le lien de paiement. Veuillez contacter l\'administration.');
-                          console.error('Payment link error:', { level: user.level, join_kalama_club: user.join_kalama_club });
-                        }
-                      }}
-                    >
-                      🔒 Payer ma mensualité maintenant
-                    </Button>
-
-                    <p className="text-xs text-gray-500 text-center">
-                      Paiement sécurisé par Stripe. Vos données bancaires ne sont jamais stockées.
-                    </p>
+                    <p className="text-sm text-gray-600">par mois</p>
+                    {user.join_kalama_club && (
+                      <p className="text-sm text-green-600 mt-2">
+                        ✨ KALAMA CLUB inclus
+                      </p>
+                    )}
                   </div>
-                )}
-              </CardContent>
-            </Card>
+
+                  {/* Features list based on level */}
+                  <ul className="space-y-3 text-sm">
+                    {user.level === 'kkid' && (
+                      <>
+                        <li className="flex items-center gap-2">
+                          <span className="w-2 h-2 bg-pink-600 rounded-full"></span>
+                          <span>Vidéos et jeux interactifs</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className="w-2 h-2 bg-pink-600 rounded-full"></span>
+                          <span>Limite le temps d'écran</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className="w-2 h-2 bg-pink-600 rounded-full"></span>
+                          <span>Favorise les interactions réelles</span>
+                        </li>
+                      </>
+                    )}
+                    {user.level !== 'kkid' && (
+                      <>
+                        <li className="flex items-center gap-2">
+                          <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+                          <span>Cours particuliers en ligne</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+                          <span>Professeurs qualifiés</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+                          <span>Horaires flexibles</span>
+                        </li>
+                        <li className="flex items-center gap-2">
+                          <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+                          <span>Suivi personnalisé</span>
+                        </li>
+                      </>
+                    )}
+                  </ul>
+
+                  {/* Payment Button */}
+                  <Button
+                    className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white py-6 text-lg"
+                    onClick={() => {
+                      const stripeLinks = {
+                        'kkid': 'https://buy.stripe.com/9B64gz8rFaJD7RB4q0',
+                        'beginner_with_club': 'https://buy.stripe.com/8x26oH37lcRL2xhbSs',
+                        'beginner_without_club': 'https://buy.stripe.com/fZufZheQ304Z5Jtg8I',
+                        'intermediate_with_club': 'https://buy.stripe.com/4gMbJ10Zd6tn2xh3lW',
+                        'intermediate_without_club': 'https://buy.stripe.com/dRmdR96jx5pjdbVf4E',
+                        'advanced_with_club': 'https://buy.stripe.com/28E3cv4bp1938VFf4E',
+                        'advanced_without_club': 'https://buy.stripe.com/00w14nazNg3XefZ2hS'
+                      };
+                      
+                      let link;
+                      if (user.level === 'kkid') {
+                        link = stripeLinks.kkid;
+                      } else {
+                        const key = `${user.level}_${user.join_kalama_club ? 'with' : 'without'}_club`;
+                        link = stripeLinks[key];
+                      }
+                      
+                      if (link) {
+                        window.location.href = link;
+                      } else {
+                        toast.error('Erreur de paiement. Contactez l\'administration.');
+                      }
+                    }}
+                  >
+                    💳 Payer ma mensualité
+                  </Button>
+
+                  <p className="text-xs text-gray-500 text-center">
+                    Paiement sécurisé par Stripe
+                  </p>
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           {/* Liens Tab */}
