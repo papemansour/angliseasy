@@ -251,7 +251,10 @@ const StudentDashboard = () => {
 
           {/* Welcome Letter Tab */}
           <TabsContent value="welcome">
-            <WelcomeLetter />
+            <div className="space-y-6">
+              <WelcomeLetter />
+              <ProgressTracker user={user} />
+            </div>
           </TabsContent>
 
           {/* KALAMA CLUB Tab */}
