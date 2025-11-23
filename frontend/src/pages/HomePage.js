@@ -74,7 +74,8 @@ const HomePage = () => {
     country_code: '+33',
     level: '',
     preferred_slots: '',
-    referral_source: ''
+    referral_source: '',
+    join_kalama_club: false
   });
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
