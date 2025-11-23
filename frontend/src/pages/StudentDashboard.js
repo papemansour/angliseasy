@@ -361,11 +361,11 @@ const StudentDashboard = () => {
                       const stripeLinks = {
                         'kkid': 'https://buy.stripe.com/9B64gz8rFaJD7RB4q0',
                         'beginner_with_club': 'https://buy.stripe.com/8x26oH37lcRL2xhbSs',
-                        'beginner_without_club': 'https://buy.stripe.com/fZufZheQ304Z5Jtg8I',
+                        'beginner_without_club': 'https://buy.stripe.com/fZufZheQ304Z5Jtg8IenS00',
                         'intermediate_with_club': 'https://buy.stripe.com/4gMbJ10Zd6tn2xh3lW',
-                        'intermediate_without_club': 'https://buy.stripe.com/dRmdR96jx5pjdbVf4E',
+                        'intermediate_without_club': 'https://buy.stripe.com/dRmdR96jx5pjdbVf4EenS01',
                         'advanced_with_club': 'https://buy.stripe.com/28E3cv4bp1938VFf4E',
-                        'advanced_without_club': 'https://buy.stripe.com/00w14nazNg3XefZ2hS'
+                        'advanced_without_club': 'https://buy.stripe.com/00w14nazNg3XefZ2hSenS02'
                       };
                       
                       let link;
