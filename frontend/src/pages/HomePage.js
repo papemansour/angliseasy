@@ -1076,7 +1076,7 @@ const HomePage = () => {
                     />
                     <div className="flex-1">
                       <span className="font-semibold text-cyan-900 block">
-                        ✨ Rejoindre le KALAMA CLUB (-9,50€/mois)
+                        ✨ Rejoindre le KALAMA CLUB
                       </span>
                       <span className="text-sm text-cyan-700 block mt-1">
                         Accès au forum communautaire, événements exclusifs, classement et badge d'excellence !
