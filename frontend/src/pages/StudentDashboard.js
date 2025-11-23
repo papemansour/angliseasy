@@ -238,7 +238,7 @@ const StudentDashboard = () => {
 
         <Tabs defaultValue="welcome" className="space-y-6">
           {/* Grid Navigation Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-3 h-auto bg-transparent p-0">
             <TabsTrigger 
               value="welcome" 
               className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-teal-50 border-2 border-teal-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
@@ -310,7 +310,7 @@ const StudentDashboard = () => {
               <span className="text-3xl">👤</span>
               <span className="text-xs font-semibold">Profil</span>
             </TabsTrigger>
-          </div>
+          </TabsList>
           
           {/* Content Area */}
           <div className="flex-1">
