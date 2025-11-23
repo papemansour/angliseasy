@@ -352,11 +352,19 @@ const HomePage = () => {
   };
 
   const handleStripePayment = (plan) => {
-    const link = getStripeLink(plan.level || formData.level, formData.join_kalama_club);
+    // Use the level and join_kalama_club from formData
+    const level = plan?.level || formData.level;
+    const joinKalamaClub = formData.join_kalama_club;
+    
+    console.log('Stripe payment:', { level, joinKalamaClub });
+    
+    const link = getStripeLink(level, joinKalamaClub);
     if (link) {
+      console.log('Redirecting to:', link);
       window.location.href = link;
     } else {
       toast.error('Erreur lors de la redirection vers le paiement');
+      console.error('No link found for:', { level, joinKalamaClub });
     }
   };
 
