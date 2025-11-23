@@ -352,13 +352,7 @@ const HomePage = () => {
   };
 
   const handleStripePayment = (plan) => {
-    const stripeLinks = {
-      'beginner': 'https://buy.stripe.com/fZufZheQ304Z5Jtg8IenS00',
-      'intermediate': 'https://buy.stripe.com/dRmdR96jx5pjdbVf4EenS01',
-      'advanced': 'https://buy.stripe.com/00w14nazNg3XefZ2hSenS02'
-    };
-    
-    const link = stripeLinks[plan.level];
+    const link = getStripeLink(plan.level || formData.level, formData.join_kalama_club);
     if (link) {
       window.location.href = link;
     } else {
