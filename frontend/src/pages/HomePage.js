@@ -486,10 +486,6 @@ const HomePage = () => {
                     <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
                     <span>Favorise les interactions réelles</span>
                   </li>
-                  <li className="flex items-center gap-2">
-                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-pink-600 flex-shrink-0" />
-                    <span className="text-xs">Option déplacement à domicile (frais en sus)</span>
-                  </li>
                 </ul>
                 <Button 
                   className="w-full mt-4 md:mt-6 bg-pink-600 hover:bg-pink-700 text-sm md:text-base py-2 md:py-3" 
@@ -502,6 +498,9 @@ const HomePage = () => {
                 >
                   Inscrire mon enfant
                 </Button>
+                <p className="text-xs text-center mt-2">
+                  <span className="text-red-600 font-bold">*</span> Option déplacement à domicile (frais en sus)
+                </p>
                 <p className="text-xs text-center text-gray-500 mt-2 md:mt-3">
                   🎈 Cours spécialement conçus pour les enfants
                 </p>
