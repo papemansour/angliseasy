@@ -234,9 +234,10 @@ const StudentDashboard = () => {
         </div>
 
         <Tabs defaultValue="welcome" className="space-y-4 sm:space-y-6">
-          <TabsList className="w-full bg-teal-50 flex sm:grid sm:grid-cols-8 overflow-x-auto scrollbar-hide">
+          <TabsList className="w-full bg-teal-50 flex sm:grid sm:grid-cols-9 overflow-x-auto scrollbar-hide">
             <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">💌 Bienvenue</TabsTrigger>
             <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">✨ CLUB</TabsTrigger>
+            <TabsTrigger value="payment" className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">💳 Paiement</TabsTrigger>
             <TabsTrigger value="links" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Liens</TabsTrigger>
             <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Documents</TabsTrigger>
             <TabsTrigger value="conversations" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Messages</TabsTrigger>
