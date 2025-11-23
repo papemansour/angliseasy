@@ -1042,6 +1042,26 @@ const HomePage = () => {
                   </Select>
                 </div>
 
+                {/* KALAMA CLUB Option */}
+                <div className="bg-gradient-to-r from-cyan-50 to-teal-50 p-4 rounded-lg border-2 border-cyan-200">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.join_kalama_club}
+                      onChange={(e) => setFormData({ ...formData, join_kalama_club: e.target.checked })}
+                      className="w-5 h-5 text-cyan-600 mt-1 flex-shrink-0"
+                    />
+                    <div className="flex-1">
+                      <span className="font-semibold text-cyan-900 block">
+                        ✨ Rejoindre le KALAMA CLUB (-9,50€/mois)
+                      </span>
+                      <span className="text-sm text-cyan-700 block mt-1">
+                        Accès au forum communautaire, événements exclusifs, classement et badge d'excellence !
+                      </span>
+                    </div>
+                  </label>
+                </div>
+
                 <Button
                   type="submit"
                   className="w-full bg-teal-600 hover:bg-teal-700"
