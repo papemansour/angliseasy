@@ -23,6 +23,7 @@ import KalamaClub from '../components/KalamaClub';
 // ActivityFeed removed
 import StudentOfMonthBadge from '../components/StudentOfMonthBadge';
 import ProgressTracker from '../components/ProgressTracker';
+import LiveNotifications from '../components/LiveNotifications';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
