@@ -326,19 +326,115 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="pending" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-12 gap-2 p-2">
-            <TabsTrigger value="pending" data-testid="admin-tab-pending">En attente</TabsTrigger>
-            <TabsTrigger value="students" data-testid="admin-tab-students">Étudiants</TabsTrigger>
-            <TabsTrigger value="teachers" data-testid="admin-tab-teachers">Professeurs</TabsTrigger>
-            <TabsTrigger value="assign" data-testid="admin-tab-assign">Assigner</TabsTrigger>
-            <TabsTrigger value="attendance" data-testid="admin-tab-attendance">Assiduité</TabsTrigger>
-            <TabsTrigger value="results" data-testid="admin-tab-results">Résultats</TabsTrigger>
-            <TabsTrigger value="pricing" data-testid="admin-tab-pricing">Prix</TabsTrigger>
-            <TabsTrigger value="availability" data-testid="admin-tab-availability">Horaire profs</TabsTrigger>
-            <TabsTrigger value="news" data-testid="admin-tab-news">📰 News</TabsTrigger>
-            <TabsTrigger value="kalamatheque" data-testid="admin-tab-kalamatheque">Kalamathèque</TabsTrigger>
-            <TabsTrigger value="club" data-testid="admin-tab-club">🏆 KALAMA CLUB</TabsTrigger>
-            <TabsTrigger value="conversations" data-testid="admin-tab-conversations">💬 Discussion</TabsTrigger>
+          {/* Grid Navigation Cards */}
+          <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 h-auto bg-transparent p-0">
+            <TabsTrigger 
+              value="pending" 
+              data-testid="admin-tab-pending"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-red-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-red-50 border-2 border-red-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <UserCheck className="w-6 h-6" />
+              <span className="text-xs font-semibold">En attente</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="students" 
+              data-testid="admin-tab-students"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-teal-50 border-2 border-teal-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <Users className="w-6 h-6" />
+              <span className="text-xs font-semibold">Étudiants</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="teachers" 
+              data-testid="admin-tab-teachers"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-blue-50 border-2 border-blue-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <BookOpen className="w-6 h-6" />
+              <span className="text-xs font-semibold">Professeurs</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="assign" 
+              data-testid="admin-tab-assign"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-purple-50 border-2 border-purple-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <UserPlus className="w-6 h-6" />
+              <span className="text-xs font-semibold">Assigner</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="attendance" 
+              data-testid="admin-tab-attendance"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-orange-50 border-2 border-orange-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <Clock className="w-6 h-6" />
+              <span className="text-xs font-semibold">Assiduité</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="results" 
+              data-testid="admin-tab-results"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-yellow-50 border-2 border-yellow-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <Award className="w-6 h-6" />
+              <span className="text-xs font-semibold">Résultats</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="pricing" 
+              data-testid="admin-tab-pricing"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-green-50 border-2 border-green-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <DollarSign className="w-6 h-6" />
+              <span className="text-xs font-semibold">Prix</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="availability" 
+              data-testid="admin-tab-availability"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-pink-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-pink-50 border-2 border-pink-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <Clock className="w-6 h-6" />
+              <span className="text-xs font-semibold">Horaires</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="news" 
+              data-testid="admin-tab-news"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-indigo-50 border-2 border-indigo-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <FileText className="w-6 h-6" />
+              <span className="text-xs font-semibold">📰 News</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="kalamatheque" 
+              data-testid="admin-tab-kalamatheque"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-cyan-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-cyan-50 border-2 border-cyan-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <BookOpen className="w-6 h-6" />
+              <span className="text-xs font-semibold">Kalamathèque</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="club" 
+              data-testid="admin-tab-club"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-amber-50 border-2 border-amber-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <Award className="w-6 h-6" />
+              <span className="text-xs font-semibold">🏆 CLUB</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="conversations" 
+              data-testid="admin-tab-conversations"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-rose-500 data-[state=active]:to-rose-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-rose-50 border-2 border-rose-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <Send className="w-6 h-6" />
+              <span className="text-xs font-semibold">💬 Messages</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="pending">
