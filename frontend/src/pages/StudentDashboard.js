@@ -152,15 +152,15 @@ const StudentDashboard = () => {
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-12 max-w-7xl">
         {/* Student of the Month Badge - Affichage ÉNORME pour célébrer */}
-        <div className="mb-8 flex justify-center">
+        <div className="mb-4 sm:mb-8 flex justify-center">
           <StudentOfMonthBadge showInProfile={true} />
         </div>
 
         {/* Header avec info prof */}
-        <div className="mb-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Espace Étudiant</h2>
+        <div className="mb-4 sm:mb-8">
+          <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2 sm:mb-4">Espace Étudiant</h2>
           <div className="grid md:grid-cols-2 gap-4">
             <Card className="border-teal-100 bg-gradient-to-r from-teal-50 to-blue-50">
               <CardContent className="p-6">
