@@ -29,7 +29,7 @@ const HowItWorks = () => {
         
         <div className="flex md:grid md:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4">
           {steps.map((step, index) => (
-            <div key={index} className="relative">
+            <div key={index} className="relative min-w-[200px] sm:min-w-0 flex-shrink-0 snap-center">
               {index < steps.length - 1 && (
                 <div className="hidden md:block absolute top-12 left-1/2 w-full h-0.5 bg-teal-200 -z-10" />
               )}
