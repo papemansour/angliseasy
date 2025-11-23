@@ -233,18 +233,20 @@ const StudentDashboard = () => {
           </Card>
         </div>
 
-        <Tabs defaultValue="welcome" className="space-y-4 sm:space-y-6">
-          <TabsList className="w-full bg-teal-50 flex sm:grid sm:grid-cols-9 overflow-x-auto scrollbar-hide">
-            <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">💌 Bienvenue</TabsTrigger>
-            <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">✨ CLUB</TabsTrigger>
-            <TabsTrigger value="payment" className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">💳 Paiement</TabsTrigger>
-            <TabsTrigger value="links" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Liens</TabsTrigger>
-            <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Documents</TabsTrigger>
-            <TabsTrigger value="conversations" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Messages</TabsTrigger>
-            <TabsTrigger value="news" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">📰 News</TabsTrigger>
-            <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Bibliothèque</TabsTrigger>
-            <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Profil</TabsTrigger>
+        <Tabs defaultValue="welcome" className="space-y-4 sm:space-y-6 flex flex-col md:flex-row md:space-x-4">
+          <TabsList className="md:w-auto w-full bg-teal-50 flex flex-col md:grid md:grid-cols-1 md:gap-2 space-y-1 md:space-y-0 p-2">
+            <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">💌 Bienvenue</TabsTrigger>
+            <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">✨ KALAMA CLUB</TabsTrigger>
+            <TabsTrigger value="payment" className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">💳 Paiement</TabsTrigger>
+            <TabsTrigger value="links" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">🔗 Liens</TabsTrigger>
+            <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">📄 Documents</TabsTrigger>
+            <TabsTrigger value="conversations" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">💬 Messages</TabsTrigger>
+            <TabsTrigger value="news" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">📰 News</TabsTrigger>
+            <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">📚 Bibliothèque</TabsTrigger>
+            <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">👤 Profil</TabsTrigger>
           </TabsList>
+          
+          <div className="flex-1">
 
           {/* Welcome Letter Tab */}
           <TabsContent value="welcome">
