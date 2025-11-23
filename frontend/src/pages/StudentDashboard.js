@@ -233,16 +233,16 @@ const StudentDashboard = () => {
           </Card>
         </div>
 
-        <Tabs defaultValue="welcome" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-8 bg-teal-50">
-            <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">💌 Bienvenue</TabsTrigger>
-            <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">✨ KALAMA CLUB</TabsTrigger>
-            <TabsTrigger value="links" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Liens</TabsTrigger>
-            <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Documents</TabsTrigger>
-            <TabsTrigger value="conversations" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Conversations</TabsTrigger>
-            <TabsTrigger value="news" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">📰 News</TabsTrigger>
-            <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Kalamathèque</TabsTrigger>
-            <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Profil</TabsTrigger>
+        <Tabs defaultValue="welcome" className="space-y-4 sm:space-y-6">
+          <TabsList className="w-full bg-teal-50 flex sm:grid sm:grid-cols-8 overflow-x-auto scrollbar-hide">
+            <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">💌 Bienvenue</TabsTrigger>
+            <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">✨ CLUB</TabsTrigger>
+            <TabsTrigger value="links" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Liens</TabsTrigger>
+            <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Documents</TabsTrigger>
+            <TabsTrigger value="conversations" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Messages</TabsTrigger>
+            <TabsTrigger value="news" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">📰 News</TabsTrigger>
+            <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Bibliothèque</TabsTrigger>
+            <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-3 sm:px-4">Profil</TabsTrigger>
           </TabsList>
 
           {/* Welcome Letter Tab */}
