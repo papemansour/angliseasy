@@ -94,11 +94,16 @@ code {
 }
 
 /* Hide Made with Emergent badge */
-a[href*="emergentagent.com"] {
-    display: none !important;
-}
-div[class*="emergent"] {
-    display: none !important;
+a[href*="emergentagent.com"],
+div:has(> a[href*="emergentagent.com"]),
+[class*="emergent-badge"],
+[id*="emergent-badge"] {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
 }
 
 @layer base {
