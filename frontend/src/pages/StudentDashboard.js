@@ -22,6 +22,7 @@ import DonationButton from '../components/DonationButton';
 import KalamaClub from '../components/KalamaClub';
 // ActivityFeed removed
 import StudentOfMonthBadge from '../components/StudentOfMonthBadge';
+import ProgressTracker from '../components/ProgressTracker';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
