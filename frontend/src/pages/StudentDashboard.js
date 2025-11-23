@@ -237,7 +237,7 @@ const StudentDashboard = () => {
           <TabsList className="md:w-auto w-full bg-teal-50 flex flex-col md:grid md:grid-cols-1 md:gap-2 space-y-1 md:space-y-0 p-2">
             <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">💌 Bienvenue</TabsTrigger>
             <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">✨ KALAMA CLUB</TabsTrigger>
-            <TabsTrigger value="payment" className="data-[state=active]:bg-green-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">💳 Paiement</TabsTrigger>
+            <TabsTrigger value="mypack" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-teal-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">🎓 Mon Pack</TabsTrigger>
             <TabsTrigger value="links" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">🔗 Liens</TabsTrigger>
             <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">📄 Documents</TabsTrigger>
             <TabsTrigger value="conversations" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-sm w-full justify-start px-4 py-3">💬 Messages</TabsTrigger>
