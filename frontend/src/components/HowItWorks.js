@@ -22,12 +22,12 @@ const steps = [
 
 const HowItWorks = () => {
   return (
-    <section className="py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
+    <section className="py-12 sm:py-20 px-4 bg-gradient-to-b from-teal-50 to-white">
       <div className="container mx-auto max-w-7xl">
-        <h2 className="text-4xl font-bold text-center mb-4">Comment ça marche ?</h2>
-        <p className="text-center text-gray-600 mb-16">Commencez votre apprentissage en 4 étapes simples</p>
+        <h2 className="text-2xl sm:text-4xl font-bold text-center mb-2 sm:mb-4">Comment ça marche ?</h2>
+        <p className="text-center text-sm sm:text-base text-gray-600 mb-8 sm:mb-16">Commencez votre apprentissage en 4 étapes simples</p>
         
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="flex md:grid md:grid-cols-4 gap-6 sm:gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4">
           {steps.map((step, index) => (
             <div key={index} className="relative">
               {index < steps.length - 1 && (
