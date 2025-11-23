@@ -290,24 +290,25 @@ const TeacherDashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50">
       {/* Navigation */}
       <nav className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4 flex justify-between items-center">
           <div className="flex flex-col">
-            <h1 className="text-2xl font-bold text-teal-600">My KALAMA</h1>
-            <span className="text-sm text-gray-600 font-semibold uppercase tracking-wide">English</span>
+            <h1 className="text-lg sm:text-2xl font-bold text-teal-600">My KALAMA</h1>
+            <span className="text-xs sm:text-sm text-gray-600 font-semibold uppercase tracking-wide">English</span>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-gray-700">{user?.first_name} {user?.last_name}</span>
-            <Button variant="outline" onClick={handleLogout} className="border-teal-600 text-teal-600 hover:bg-teal-50">
-              <LogOut className="w-4 h-4 mr-2" />
-              Déconnexion
+          <div className="flex items-center gap-2 sm:gap-4">
+            <span className="text-xs sm:text-base text-gray-700 hidden sm:inline">{user?.first_name} {user?.last_name}</span>
+            <span className="text-xs text-gray-700 sm:hidden">{user?.first_name}</span>
+            <Button variant="outline" size="sm" onClick={handleLogout} className="border-teal-600 text-teal-600 hover:bg-teal-50 text-xs sm:text-sm px-2 sm:px-4">
+              <LogOut className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Déconnexion</span>
             </Button>
           </div>
         </div>
       </nav>
 
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
-        <div className="mb-8">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">Espace Professeur</h2>
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-12 max-w-7xl">
+        <div className="mb-4 sm:mb-8">
+          <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-2">Espace Professeur</h2>
           <p className="text-gray-600">Bienvenue {user?.first_name}!</p>
         </div>
 
