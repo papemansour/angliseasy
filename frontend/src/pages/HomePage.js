@@ -1441,9 +1441,6 @@ const HomePage = () => {
           </div>
         </div>
       </footer>
-
-      {/* Floating Chat Assistant */}
-      <FloatingChat />
     </div>
   );
 };
