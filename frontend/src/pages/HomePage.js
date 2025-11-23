@@ -267,7 +267,8 @@ const HomePage = () => {
         country_code: '+33',
         level: '',
         preferred_slots: '',
-        referral_source: ''
+        referral_source: '',
+        join_kalama_club: false
       });
       setGroupMembers([
         { first_name: '', last_name: '', email: '', phone: '', country_code: '+33', level: '' }
