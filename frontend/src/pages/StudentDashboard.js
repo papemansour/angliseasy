@@ -657,6 +657,7 @@ const StudentDashboard = () => {
               </CardContent>
             </Card>
           </TabsContent>
+          </div>
         </Tabs>
       </div>
 
