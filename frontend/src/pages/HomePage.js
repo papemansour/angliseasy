@@ -450,11 +450,11 @@ const HomePage = () => {
             👥 Cours individuels ou en groupe (max 3 personnes)
           </p>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="flex overflow-x-auto gap-4 md:gap-6 pb-4 snap-x snap-mandatory scrollbar-hide">
             {/* Pack K-Kid - Enfants */}
-            <div className="relative overflow-hidden rounded-2xl border-2 border-pink-300 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-pink-300 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all min-w-[280px] sm:min-w-[320px] flex-shrink-0 snap-center">
               <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-4 md:p-6">
-                <h3 className="text-xl md:text-2xl font-bold text-pink-800">👶 Pack K-Kid</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-pink-800">Pack K-Kid</h3>
                 <p className="text-sm md:text-base text-pink-600">Enfants 3-9 ans</p>
               </div>
               <div className="p-4 md:p-6">
