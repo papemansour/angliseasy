@@ -1296,39 +1296,47 @@ const HomePage = () => {
             )}
 
             {/* Boutons d'action */}
-            <div className="flex gap-3 pt-4">
-              {paymentMethod === 'stripe' ? (
-                <Button
-                  className="flex-1 bg-teal-600 hover:bg-teal-700 text-lg py-6"
-                  onClick={() => {
-                    setShowWavePaymentModal(false);
-                    if (selectedPlan) {
-                      toast.info('Redirection vers Stripe...');
-                      setTimeout(() => handleStripePayment(selectedPlan), 500);
-                    }
-                  }}
-                >
-                  Procéder au paiement Stripe
-                </Button>
-              ) : (
-                <Button
-                  className="flex-1 bg-teal-600 hover:bg-teal-700 text-lg py-6"
-                  onClick={() => {
-                    setShowWavePaymentModal(false);
-                    toast.success('Instructions enregistrées ! Procédez au paiement Wave.', {
-                      duration: 5000
-                    });
-                  }}
-                >
-                  J'ai compris, je vais payer via Wave
-                </Button>
-              )}
+            <div className="space-y-3 pt-4">
+              <div className="flex gap-3">
+                {paymentMethod === 'stripe' ? (
+                  <Button
+                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-lg py-6"
+                    onClick={() => {
+                      setShowWavePaymentModal(false);
+                      if (selectedPlan) {
+                        toast.info('Redirection vers Stripe...');
+                        setTimeout(() => handleStripePayment(selectedPlan), 500);
+                      }
+                    }}
+                  >
+                    💳 Procéder au paiement Stripe
+                  </Button>
+                ) : (
+                  <Button
+                    className="flex-1 bg-teal-600 hover:bg-teal-700 text-lg py-6"
+                    onClick={() => {
+                      setShowWavePaymentModal(false);
+                      toast.success('Instructions enregistrées ! Procédez au paiement Wave.', {
+                        duration: 5000
+                      });
+                    }}
+                  >
+                    📱 J'ai compris, je vais payer via Wave
+                  </Button>
+                )}
+              </div>
+              
               <Button
                 variant="outline"
-                className="border-gray-300 text-gray-600"
-                onClick={() => setShowWavePaymentModal(false)}
+                className="w-full border-2 border-gray-300 hover:border-teal-500 hover:bg-teal-50 text-gray-700 py-6 text-lg"
+                onClick={() => {
+                  setShowWavePaymentModal(false);
+                  toast.info('Vous pourrez payer plus tard depuis votre espace étudiant.', {
+                    duration: 5000
+                  });
+                }}
               >
-                Annuler
+                ⏰ Payer plus tard
               </Button>
             </div>
           </div>
