@@ -354,19 +354,52 @@ const TeacherDashboard = () => {
           </Card>
         </div>
 
-        <Tabs defaultValue="welcome" className="space-y-4 sm:space-y-6">
-          <TabsList className="w-full bg-teal-50 flex sm:grid sm:grid-cols-11 overflow-x-auto scrollbar-hide">
-            <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">💌 Bienvenue</TabsTrigger>
-            <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">✨ CLUB</TabsTrigger>
-            <TabsTrigger value="students" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Étudiants</TabsTrigger>
-            <TabsTrigger value="courses" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Cours</TabsTrigger>
-            <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Documents</TabsTrigger>
-            <TabsTrigger value="timer" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Pointage</TabsTrigger>
-            <TabsTrigger value="messages" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Messages</TabsTrigger>
-            <TabsTrigger value="schedule" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Horaires</TabsTrigger>
-            <TabsTrigger value="news" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">📰 News</TabsTrigger>
-            <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Bibliothèque</TabsTrigger>
-            <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Profil</TabsTrigger>
+        <Tabs defaultValue="welcome" className="space-y-6">
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-3 h-auto bg-transparent p-0">
+            <TabsTrigger value="welcome" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-teal-500 data-[state=active]:to-teal-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-teal-50 border-2 border-teal-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">💌</span>
+              <span className="text-xs font-semibold">Bienvenue</span>
+            </TabsTrigger>
+            <TabsTrigger value="club" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-cyan-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-cyan-50 border-2 border-cyan-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">✨</span>
+              <span className="text-xs font-semibold">CLUB</span>
+            </TabsTrigger>
+            <TabsTrigger value="students" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-blue-50 border-2 border-blue-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">👥</span>
+              <span className="text-xs font-semibold">Étudiants</span>
+            </TabsTrigger>
+            <TabsTrigger value="courses" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-purple-50 border-2 border-purple-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">📖</span>
+              <span className="text-xs font-semibold">Cours</span>
+            </TabsTrigger>
+            <TabsTrigger value="documents" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-orange-50 border-2 border-orange-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">📄</span>
+              <span className="text-xs font-semibold">Documents</span>
+            </TabsTrigger>
+            <TabsTrigger value="timer" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-green-50 border-2 border-green-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">⏰</span>
+              <span className="text-xs font-semibold">Pointage</span>
+            </TabsTrigger>
+            <TabsTrigger value="messages" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-pink-500 data-[state=active]:to-pink-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-pink-50 border-2 border-pink-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">💬</span>
+              <span className="text-xs font-semibold">Messages</span>
+            </TabsTrigger>
+            <TabsTrigger value="schedule" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-indigo-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-indigo-50 border-2 border-indigo-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">📅</span>
+              <span className="text-xs font-semibold">Horaires</span>
+            </TabsTrigger>
+            <TabsTrigger value="news" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-red-500 data-[state=active]:to-red-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-red-50 border-2 border-red-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">📰</span>
+              <span className="text-xs font-semibold">News</span>
+            </TabsTrigger>
+            <TabsTrigger value="kalamatheque" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-amber-50 border-2 border-amber-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">📚</span>
+              <span className="text-xs font-semibold">Bibliothèque</span>
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-gray-700 data-[state=active]:to-gray-800 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-gray-50 border-2 border-gray-300 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">👤</span>
+              <span className="text-xs font-semibold">Profil</span>
+            </TabsTrigger>
           </TabsList>
 
           {/* Welcome Letter Tab */}
