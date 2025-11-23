@@ -1373,7 +1373,7 @@ const HomePage = () => {
                 <li><a href="#" className="text-gray-400 hover:text-teal-400 transition">Accueil</a></li>
                 <li><a href="#kalamatheque" className="text-gray-400 hover:text-teal-400 transition">Kalamathèque</a></li>
                 <li><Link to="/login" className="text-gray-400 hover:text-teal-400 transition">Connexion</Link></li>
-                <li><a href="#register" className="text-gray-400 hover:text-teal-400 transition">Inscription</a></li>
+                <li><a href="#" onClick={(e) => { e.preventDefault(); openRegistrationModal(); }} className="text-gray-400 hover:text-teal-400 transition cursor-pointer">Inscription</a></li>
               </ul>
             </div>
             
