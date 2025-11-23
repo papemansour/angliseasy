@@ -256,6 +256,84 @@ const StudentDashboard = () => {
             <KalamaClub userRole="student" />
           </TabsContent>
 
+          {/* Payment Tab */}
+          <TabsContent value="payment">
+            <Card className="border-green-100">
+              <CardHeader className="bg-gradient-to-r from-green-50 to-teal-50">
+                <CardTitle className="text-green-800 flex items-center gap-2">
+                  💳 Paiement Mensuel
+                </CardTitle>
+                <CardDescription>
+                  Payez votre mensualité directement en ligne de manière sécurisée
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="space-y-6">
+                  {/* Pack Info */}
+                  <div className="bg-gradient-to-r from-teal-50 to-blue-50 p-6 rounded-lg border-2 border-teal-200">
+                    <h3 className="text-lg font-bold text-teal-900 mb-2">📦 Votre Pack Actuel</h3>
+                    <p className="text-2xl font-bold text-teal-600 mb-2">
+                      {user?.level === 'beginner' ? 'Pack K-Débutant' : 
+                       user?.level === 'intermediate' ? 'Pack K-Intermédiaire' : 
+                       user?.level === 'advanced' ? 'Pack K-Professionnel' : 'Pack non défini'}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      {user?.join_kalama_club ? '✨ Avec KALAMA CLUB inclus' : 'Sans KALAMA CLUB'}
+                    </p>
+                  </div>
+
+                  {/* Payment Amount */}
+                  <div className="bg-white p-6 rounded-lg border-2 border-gray-200">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-gray-700">Montant mensuel :</span>
+                      <span className="text-3xl font-bold text-green-600">
+                        {user?.level === 'beginner' && user?.join_kalama_club ? '66,50€' :
+                         user?.level === 'beginner' && !user?.join_kalama_club ? '76€' :
+                         user?.level === 'intermediate' && user?.join_kalama_club ? '85,50€' :
+                         user?.level === 'intermediate' && !user?.join_kalama_club ? '90€' :
+                         user?.level === 'advanced' && user?.join_kalama_club ? '96,90€' :
+                         user?.level === 'advanced' && !user?.join_kalama_club ? '102€' : 'N/A'}
+                      </span>
+                    </div>
+                    {user?.join_kalama_club && (
+                      <p className="text-sm text-green-600 text-right">
+                        ✓ Économie de 9,50€ avec KALAMA CLUB
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Payment Button */}
+                  <Button
+                    className="w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-lg py-6"
+                    onClick={() => {
+                      const stripeLinks = {
+                        'beginner_with_club': 'https://buy.stripe.com/8x26oH37lcRL2xhbSs',
+                        'beginner_without_club': 'https://buy.stripe.com/fZufZheQ304Z5Jtg8I',
+                        'intermediate_with_club': 'https://buy.stripe.com/4gMbJ10Zd6tn2xh3lW',
+                        'intermediate_without_club': 'https://buy.stripe.com/dRmdR96jx5pjdbVf4E',
+                        'advanced_with_club': 'https://buy.stripe.com/28E3cv4bp1938VFf4E',
+                        'advanced_without_club': 'https://buy.stripe.com/00w14nazNg3XefZ2hS'
+                      };
+                      const key = `${user?.level}_${user?.join_kalama_club ? 'with' : 'without'}_club`;
+                      const link = stripeLinks[key];
+                      if (link) {
+                        window.location.href = link;
+                      } else {
+                        toast.error('Erreur : pack non défini');
+                      }
+                    }}
+                  >
+                    🔒 Payer ma mensualité maintenant
+                  </Button>
+
+                  <p className="text-xs text-gray-500 text-center">
+                    Paiement sécurisé par Stripe. Vos données bancaires ne sont jamais stockées.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Liens Tab */}
           <TabsContent value="links">
             <Card className="border-teal-100">
