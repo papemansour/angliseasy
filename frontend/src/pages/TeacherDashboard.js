@@ -354,19 +354,19 @@ const TeacherDashboard = () => {
           </Card>
         </div>
 
-        <Tabs defaultValue="welcome" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-11 bg-teal-50">
-            <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">💌 Bienvenue</TabsTrigger>
-            <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white">✨ CLUB</TabsTrigger>
-            <TabsTrigger value="students" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Étudiants</TabsTrigger>
-            <TabsTrigger value="courses" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Cours</TabsTrigger>
-            <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Documents</TabsTrigger>
-            <TabsTrigger value="timer" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Pointage</TabsTrigger>
-            <TabsTrigger value="messages" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Messages</TabsTrigger>
-            <TabsTrigger value="schedule" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Mes horaires</TabsTrigger>
-            <TabsTrigger value="news" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">📰 News</TabsTrigger>
-            <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Kalamathèque</TabsTrigger>
-            <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">Profil</TabsTrigger>
+        <Tabs defaultValue="welcome" className="space-y-4 sm:space-y-6">
+          <TabsList className="w-full bg-teal-50 flex sm:grid sm:grid-cols-11 overflow-x-auto scrollbar-hide">
+            <TabsTrigger value="welcome" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">💌 Bienvenue</TabsTrigger>
+            <TabsTrigger value="club" className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">✨ CLUB</TabsTrigger>
+            <TabsTrigger value="students" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Étudiants</TabsTrigger>
+            <TabsTrigger value="courses" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Cours</TabsTrigger>
+            <TabsTrigger value="documents" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Documents</TabsTrigger>
+            <TabsTrigger value="timer" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Pointage</TabsTrigger>
+            <TabsTrigger value="messages" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Messages</TabsTrigger>
+            <TabsTrigger value="schedule" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Horaires</TabsTrigger>
+            <TabsTrigger value="news" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">📰 News</TabsTrigger>
+            <TabsTrigger value="kalamatheque" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Bibliothèque</TabsTrigger>
+            <TabsTrigger value="profile" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white text-xs sm:text-sm whitespace-nowrap flex-shrink-0 px-2 sm:px-4">Profil</TabsTrigger>
           </TabsList>
 
           {/* Welcome Letter Tab */}
