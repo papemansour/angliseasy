@@ -614,9 +614,9 @@ const HomePage = () => {
               </div>
             </div>
 
-            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all sm:col-span-2 lg:col-span-1">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-teal-200 bg-white/60 backdrop-blur-lg hover:shadow-xl transition-all min-w-[280px] sm:min-w-[320px] flex-shrink-0 snap-center">
               <div className="bg-gradient-to-br from-teal-50 to-teal-100 p-4 md:p-6">
-                <h3 className="text-xl md:text-2xl font-bold text-teal-800">👔 Pack K-Professionnel</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-teal-800">Pack K-Professionnel</h3>
                 <p className="text-sm md:text-base text-teal-600">Formation d'anglais professionnel, intense ou accélérée</p>
               </div>
               <div className="p-4 md:p-6">
