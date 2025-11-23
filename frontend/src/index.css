@@ -93,6 +93,14 @@ code {
     }
 }
 
+/* Hide Made with Emergent badge */
+a[href*="emergentagent.com"] {
+    display: none !important;
+}
+div[class*="emergent"] {
+    display: none !important;
+}
+
 @layer base {
     [data-debug-wrapper="true"] {
         display: contents !important;
