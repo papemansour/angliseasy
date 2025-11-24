@@ -780,6 +780,10 @@ const TeacherDashboard = () => {
             </div>
           </TabsContent>
 
+          <TabsContent value="games">
+            <TeacherGames students={students} />
+          </TabsContent>
+
           <TabsContent value="timer">
             <Card className="border-teal-100">
               <CardHeader>
