@@ -88,51 +88,133 @@ class MyKalamaEnglishBackendTester:
             logger.error(f"❌ Admin login error: {str(e)}")
             return False
     
-    async def get_test_user(self) -> Optional[str]:
-        """Get an existing non-admin user for password reset testing"""
+    async def create_test_teacher(self) -> Optional[Dict[str, str]]:
+        """Create a test teacher for testing"""
         try:
             headers = {"Authorization": f"Bearer {self.admin_token}"}
             
-            # Get all users and find a non-admin user
-            async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response:
-                if users_response.status == 200:
-                    users = await users_response.json()
-                    for user in users:
-                        if user.get('role') != 'admin':
-                            logger.info(f"✅ Using existing user for test: {user.get('email')}")
-                            return user.get('id')
+            teacher_data = {
+                "first_name": "ProfTest",
+                "last_name": "Flashcards"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/admin/create-teacher", 
+                                       json=teacher_data, headers=headers) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    logger.info(f"✅ Test teacher created: {data.get('email')}")
                     
-                    # If no non-admin users exist, create a test teacher
-                    teacher_data = {
-                        "first_name": "TestTeacher",
-                        "last_name": f"Security{len(users)}"  # Make unique
-                    }
-                    
-                    async with self.session.post(f"{BACKEND_URL}/admin/create-teacher", 
-                                               json=teacher_data, headers=headers) as response:
-                        if response.status == 200:
-                            data = await response.json()
-                            logger.info(f"✅ Test teacher created: {data.get('email')}")
-                            
-                            # Get the user ID by finding the user
-                            async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response2:
-                                if users_response2.status == 200:
-                                    users2 = await users_response2.json()
-                                    for user in users2:
-                                        if user.get('email') == data.get('email'):
-                                            return user.get('id')
-                            return None
-                        else:
-                            error_text = await response.text()
-                            logger.error(f"❌ Failed to create test teacher: {response.status} - {error_text}")
-                            return None
+                    # Get the user ID by finding the user
+                    async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response:
+                        if users_response.status == 200:
+                            users = await users_response.json()
+                            for user in users:
+                                if user.get('email') == data.get('email'):
+                                    self.test_teacher_id = user.get('id')
+                                    return {
+                                        "id": user.get('id'),
+                                        "email": data.get('email'),
+                                        "password": data.get('temporary_password')
+                                    }
+                    return None
                 else:
-                    error_text = await users_response.text()
-                    logger.error(f"❌ Failed to get users: {users_response.status} - {error_text}")
+                    error_text = await response.text()
+                    logger.error(f"❌ Failed to create test teacher: {response.status} - {error_text}")
                     return None
         except Exception as e:
-            logger.error(f"❌ Error getting test user: {str(e)}")
+            logger.error(f"❌ Error creating test teacher: {str(e)}")
             return None
+
+    async def create_test_student(self) -> Optional[Dict[str, str]]:
+        """Create a test student for testing"""
+        try:
+            # First register a student
+            student_data = {
+                "email": "etudiant.test@example.com",
+                "first_name": "Étudiant",
+                "last_name": "Test",
+                "phone": "+33123456789",
+                "level": "kkid",
+                "preferred_slots": "Matin",
+                "referral_source": "Test"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/auth/register", json=student_data) as response:
+                if response.status == 200:
+                    logger.info("✅ Test student registered")
+                    
+                    # Get the student ID
+                    headers = {"Authorization": f"Bearer {self.admin_token}"}
+                    async with self.session.get(f"{BACKEND_URL}/admin/pending-registrations", headers=headers) as pending_response:
+                        if pending_response.status == 200:
+                            pending = await pending_response.json()
+                            for user in pending:
+                                if user.get('email') == student_data['email']:
+                                    student_id = user.get('id')
+                                    
+                                    # Approve the student
+                                    async with self.session.post(f"{BACKEND_URL}/admin/approve-registration/{student_id}", headers=headers) as approve_response:
+                                        if approve_response.status == 200:
+                                            approval_data = await approve_response.json()
+                                            logger.info(f"✅ Test student approved: {approval_data.get('email')}")
+                                            self.test_student_id = student_id
+                                            return {
+                                                "id": student_id,
+                                                "email": student_data['email'],
+                                                "password": approval_data.get('temporary_password')
+                                            }
+                    return None
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Failed to register test student: {response.status} - {error_text}")
+                    return None
+        except Exception as e:
+            logger.error(f"❌ Error creating test student: {str(e)}")
+            return None
+
+    async def login_teacher(self, teacher_email: str, teacher_password: str) -> bool:
+        """Login as teacher and get token"""
+        try:
+            login_data = {
+                "email": teacher_email,
+                "password": teacher_password
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/auth/login", json=login_data) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    self.teacher_token = data.get("access_token")
+                    logger.info("✅ Teacher login successful")
+                    return True
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Teacher login failed: {response.status} - {error_text}")
+                    return False
+        except Exception as e:
+            logger.error(f"❌ Teacher login error: {str(e)}")
+            return False
+
+    async def login_student(self, student_email: str, student_password: str) -> bool:
+        """Login as student and get token"""
+        try:
+            login_data = {
+                "email": student_email,
+                "password": student_password
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/auth/login", json=login_data) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    self.student_token = data.get("access_token")
+                    logger.info("✅ Student login successful")
+                    return True
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Student login failed: {response.status} - {error_text}")
+                    return False
+        except Exception as e:
+            logger.error(f"❌ Student login error: {str(e)}")
+            return False
     
     async def test_password_change_security(self) -> bool:
         """Test that password changes don't store plain text passwords"""
