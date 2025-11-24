@@ -37,7 +37,8 @@ const TeacherGames = ({ students }) => {
 
   const [newCard, setNewCard] = useState({
     question: '',
-    answer: ''
+    answer: '',
+    image_url: ''
   });
 
   const [assignData, setAssignData] = useState({
