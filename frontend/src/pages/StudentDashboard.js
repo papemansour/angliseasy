@@ -24,6 +24,7 @@ import KalamaClub from '../components/KalamaClub';
 import StudentOfMonthBadge from '../components/StudentOfMonthBadge';
 import ProgressTracker from '../components/ProgressTracker';
 import LiveNotifications from '../components/LiveNotifications';
+import StudentGames from '../components/StudentGames';
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
