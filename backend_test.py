@@ -93,6 +93,20 @@ class MyKalamaEnglishBackendTester:
         try:
             headers = {"Authorization": f"Bearer {self.admin_token}"}
             
+            # First check if test teacher already exists
+            async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response:
+                if users_response.status == 200:
+                    users = await users_response.json()
+                    for user in users:
+                        if user.get('email') == 'proftest.flashcards@mykalamaenglish.com':
+                            logger.info(f"✅ Using existing test teacher: {user.get('email')}")
+                            self.test_teacher_id = user.get('id')
+                            return {
+                                "id": user.get('id'),
+                                "email": user.get('email'),
+                                "password": user.get('temporary_password', 'TeacherPassword123')
+                            }
+            
             teacher_data = {
                 "first_name": "ProfTest",
                 "last_name": "Flashcards"
