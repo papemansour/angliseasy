@@ -62,7 +62,15 @@ const KidDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-pink-100 via-purple-100 via-blue-100 to-green-100 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-600 relative overflow-hidden">
+      {/* Floating clouds background */}
+      <div className="fixed inset-0 pointer-events-none opacity-30">
+        <div className="absolute top-10 left-10 w-32 h-16 bg-white rounded-full animate-float" style={{animationDelay: '0s'}}></div>
+        <div className="absolute top-20 right-20 w-40 h-20 bg-white rounded-full animate-float" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-40 left-1/3 w-24 h-12 bg-white rounded-full animate-float" style={{animationDelay: '4s'}}></div>
+        <div className="absolute top-60 right-1/4 w-36 h-18 bg-white rounded-full animate-float" style={{animationDelay: '1s'}}></div>
+      </div>
+
       {/* Confetti Effect */}
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50">
