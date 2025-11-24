@@ -286,6 +286,14 @@ const StudentDashboard = () => {
             </TabsTrigger>
             
             <TabsTrigger 
+              value="games" 
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-500 data-[state=active]:to-yellow-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-yellow-50 border-2 border-yellow-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <span className="text-3xl">🎮</span>
+              <span className="text-xs font-semibold">Jeu</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
               value="conversations" 
               className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-green-50 border-2 border-green-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
             >
