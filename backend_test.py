@@ -142,6 +142,22 @@ class MyKalamaEnglishBackendTester:
     async def create_test_student(self) -> Optional[Dict[str, str]]:
         """Create a test student for testing"""
         try:
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            # First check if test student already exists
+            async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response:
+                if users_response.status == 200:
+                    users = await users_response.json()
+                    for user in users:
+                        if user.get('email') == 'etudiant.test@example.com':
+                            logger.info(f"✅ Using existing test student: {user.get('email')}")
+                            self.test_student_id = user.get('id')
+                            return {
+                                "id": user.get('id'),
+                                "email": user.get('email'),
+                                "password": user.get('temporary_password', 'StudentPassword123')
+                            }
+            
             # First register a student
             student_data = {
                 "email": "etudiant.test@example.com",
