@@ -83,7 +83,7 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [userRes, pendingRes, usersRes, resultsRes, sessionsRes, conversationsRes, availabilityRes, teacherSessionsRes] = await Promise.all([
+      const [userRes, pendingRes, usersRes, resultsRes, sessionsRes, conversationsRes, availabilityRes, teacherSessionsRes, pricingRes] = await Promise.all([
         apiClient.get('/auth/me'),
         apiClient.get('/admin/pending-registrations'),
         apiClient.get('/admin/all-users'),
@@ -91,7 +91,8 @@ const AdminDashboard = () => {
         apiClient.get('/admin/session-notifications'),
         apiClient.get('/messages/my-conversations'),
         apiClient.get('/admin/all-teacher-availability'),
-        apiClient.get('/admin/teacher-sessions')
+        apiClient.get('/admin/teacher-sessions'),
+        apiClient.get('/pricing')
       ]);
       
       setUser(userRes.data);
@@ -102,6 +103,7 @@ const AdminDashboard = () => {
       setConversations(conversationsRes.data || []);
       setTeacherAvailability(availabilityRes.data || []);
       setTeacherSessions(teacherSessionsRes.data || []);
+      setPrices(pricingRes.data || prices);
       setLoading(false);
     } catch (error) {
       toast.error('Erreur de chargement');
