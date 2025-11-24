@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test complet de l'espace étudiant avec la nouvelle fonctionnalité de changement de mot de passe pour My KALAMA ENGLISH"
+user_problem_statement: "Tester l'application MyKalamaenglish complète avec focus sur les nouvelles fonctionnalités : système de jeux/flashcards, vidéos K-Kid, gestion des questions de test, prix EUR vs FCFA indépendants, suppression d'utilisateurs admin, et emails"
 
 backend:
   - task: "Password Security Fix - Remove Plain Text Storage"
