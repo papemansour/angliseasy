@@ -33,14 +33,21 @@ const LoginPage = () => {
       
       toast.success('Connexion réussie!');
       
-      // Redirect based on role
+      // Redirect based on role and level
       const role = response.data.user.role;
+      const level = response.data.user.level;
+      
       if (role === 'admin') {
         navigate('/admin');
       } else if (role === 'teacher') {
         navigate('/teacher');
       } else if (role === 'student') {
-        navigate('/student');
+        // K-Kid students get special kid dashboard
+        if (level === 'kkid') {
+          navigate('/kid-dashboard');
+        } else {
+          navigate('/student');
+        }
       }
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Erreur de connexion');
