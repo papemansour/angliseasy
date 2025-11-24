@@ -7,6 +7,7 @@ import '@/App.css';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import StudentDashboard from './pages/StudentDashboard';
+import KidDashboard from './pages/KidDashboard';
 import TeacherDashboard from './pages/TeacherDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import TestPage from './pages/TestPage';
