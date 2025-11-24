@@ -1045,9 +1045,8 @@ startxref
             tf_data = {
                 "level": "beginner",
                 "question_type": "true_false",
-                "question_text": "The word 'cat' has 3 letters.",
-                "correct_answer": True,
-                "explanation": "C-A-T has exactly 3 letters"
+                "question": "The word 'cat' has 3 letters.",
+                "correct_answer": True
             }
             
             async with self.session.post(f"{BACKEND_URL}/admin/create-test-question", json=tf_data, headers=headers) as response:
