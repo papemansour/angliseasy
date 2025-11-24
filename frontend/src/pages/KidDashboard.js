@@ -114,7 +114,7 @@ const KidDashboard = () => {
       <div className="container mx-auto p-4 md:p-8">
         <Tabs defaultValue="games" className="space-y-6">
           {/* Navigation Cards */}
-          <TabsList className="grid grid-cols-3 gap-4 h-auto bg-transparent p-0">
+          <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-4 h-auto bg-transparent p-0">
             <TabsTrigger 
               value="games" 
               className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-white hover:bg-yellow-50 border-4 border-yellow-300 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105"
@@ -129,6 +129,14 @@ const KidDashboard = () => {
             >
               <span className="text-5xl animate-wiggle">📹</span>
               <span className="text-base font-bold">Vidéos</span>
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="pack" 
+              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-400 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-white hover:bg-green-50 border-4 border-green-300 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105"
+            >
+              <span className="text-5xl animate-wiggle">🎁</span>
+              <span className="text-base font-bold">Mon Pack</span>
             </TabsTrigger>
             
             <TabsTrigger 
