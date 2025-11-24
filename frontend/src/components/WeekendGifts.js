@@ -203,10 +203,20 @@ const WeekendGifts = ({ onConfetti }) => {
                     👶 Écoute comme un enfant ! 🔊
                   </Button>
 
-                  <div className="mt-6 p-4 bg-yellow-100 rounded-xl border-4 border-yellow-400">
-                    <p className="text-lg font-bold text-yellow-700">
-                      🎉 +10 étoiles gagnées !
-                    </p>
+                  <div className="mt-6 space-y-3">
+                    <div className="p-4 bg-blue-100 rounded-xl border-4 border-blue-400">
+                      <p className="text-sm font-bold text-blue-700 text-center">
+                        👶 Prononcé par une voix d'enfant de 6 ans !
+                      </p>
+                      <p className="text-xs text-blue-600 text-center mt-1">
+                        🔊 Tu vas entendre le mot 2 fois pour mieux apprendre !
+                      </p>
+                    </div>
+                    <div className="p-4 bg-yellow-100 rounded-xl border-4 border-yellow-400">
+                      <p className="text-lg font-bold text-yellow-700 text-center">
+                        🎉 +10 étoiles gagnées !
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
