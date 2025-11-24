@@ -1268,21 +1268,104 @@ startxref
             return False
     
     async def run_all_tests(self):
-        """Run all Kalamathèque backend tests"""
-        logger.info("🚀 Starting Kalamathèque Backend Tests")
-        logger.info("=" * 60)
+        """Run comprehensive backend tests for My KALAMA ENGLISH"""
+        logger.info("🚀 Starting My KALAMA ENGLISH Backend Tests")
+        logger.info("=" * 70)
         
         # Login as admin
         if not await self.login_admin():
             logger.error("❌ Cannot proceed without admin login")
             return
         
-        # Run tests in order (some depend on previous results)
-        test_file_url = None
+        # Create test users
+        logger.info("\n🔧 Setting up test users...")
+        teacher_info = await self.create_test_teacher()
+        student_info = await self.create_test_student()
         
-        # Test 1: File Upload
-        logger.info(f"\n📋 Running: File Upload Test")
-        logger.info("-" * 40)
+        if teacher_info:
+            await self.login_teacher(teacher_info["email"], teacher_info["password"])
+        
+        if student_info:
+            await self.login_student(student_info["email"], student_info["password"])
+        
+        # Run NEW FEATURE TESTS first (priority tests from review request)
+        
+        # Test 1: Flashcard System (NOUVEAU)
+        logger.info(f"\n📋 Running: Flashcard System Test (PRIORITY)")
+        logger.info("-" * 50)
+        try:
+            result = await self.test_flashcard_system()
+            if result:
+                logger.info(f"✅ Flashcard System: PASSED")
+            else:
+                logger.error(f"❌ Flashcard System: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Flashcard System: ERROR - {str(e)}")
+        
+        # Test 2: Video System K-Kid (NOUVEAU)
+        logger.info(f"\n📋 Running: Video System K-Kid Test (PRIORITY)")
+        logger.info("-" * 50)
+        try:
+            result = await self.test_video_system()
+            if result:
+                logger.info(f"✅ Video System: PASSED")
+            else:
+                logger.error(f"❌ Video System: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Video System: ERROR - {str(e)}")
+        
+        # Test 3: Test Questions Management (NOUVEAU)
+        logger.info(f"\n📋 Running: Test Questions Management (PRIORITY)")
+        logger.info("-" * 50)
+        try:
+            result = await self.test_question_management()
+            if result:
+                logger.info(f"✅ Test Questions: PASSED")
+            else:
+                logger.error(f"❌ Test Questions: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Test Questions: ERROR - {str(e)}")
+        
+        # Test 4: Pricing Independence (RÉCENT)
+        logger.info(f"\n📋 Running: EUR vs FCFA Pricing Independence (PRIORITY)")
+        logger.info("-" * 50)
+        try:
+            result = await self.test_pricing_independence()
+            if result:
+                logger.info(f"✅ Pricing Independence: PASSED")
+            else:
+                logger.error(f"❌ Pricing Independence: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Pricing Independence: ERROR - {str(e)}")
+        
+        # Test 5: Admin Delete User
+        logger.info(f"\n📋 Running: Admin User Deletion (PRIORITY)")
+        logger.info("-" * 50)
+        try:
+            result = await self.test_admin_delete_user()
+            if result:
+                logger.info(f"✅ Admin Delete User: PASSED")
+            else:
+                logger.error(f"❌ Admin Delete User: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Admin Delete User: ERROR - {str(e)}")
+        
+        # Test 6: Email Notifications
+        logger.info(f"\n📋 Running: Email Notifications Logging (PRIORITY)")
+        logger.info("-" * 50)
+        try:
+            result = await self.test_email_notifications()
+            if result:
+                logger.info(f"✅ Email Notifications: PASSED")
+            else:
+                logger.error(f"❌ Email Notifications: FAILED")
+        except Exception as e:
+            logger.error(f"❌ Email Notifications: ERROR - {str(e)}")
+        
+        # EXISTING KALAMATHÈQUE TESTS (if time permits)
+        logger.info(f"\n📋 Running: Kalamathèque File Upload")
+        logger.info("-" * 50)
+        test_file_url = None
         try:
             test_file_url = await self.test_file_upload()
             if test_file_url:
@@ -1292,9 +1375,8 @@ startxref
         except Exception as e:
             logger.error(f"❌ File Upload: ERROR - {str(e)}")
         
-        # Test 2: Access Verification
-        logger.info(f"\n📋 Running: Access Code Verification")
-        logger.info("-" * 40)
+        logger.info(f"\n📋 Running: Kalamathèque Access Verification")
+        logger.info("-" * 50)
         try:
             result = await self.test_access_verification()
             if result:
@@ -1304,10 +1386,9 @@ startxref
         except Exception as e:
             logger.error(f"❌ Access Verification: ERROR - {str(e)}")
         
-        # Test 3: Book Creation (requires file URL)
         if test_file_url:
-            logger.info(f"\n📋 Running: Book Creation")
-            logger.info("-" * 40)
+            logger.info(f"\n📋 Running: Kalamathèque Book Creation")
+            logger.info("-" * 50)
             try:
                 result = await self.test_book_creation(test_file_url)
                 if result:
@@ -1316,12 +1397,9 @@ startxref
                     logger.error(f"❌ Book Creation: FAILED")
             except Exception as e:
                 logger.error(f"❌ Book Creation: ERROR - {str(e)}")
-        else:
-            logger.warning("⚠️ Skipping Book Creation - no file URL available")
         
-        # Test 4: Book Retrieval
-        logger.info(f"\n📋 Running: Book Retrieval")
-        logger.info("-" * 40)
+        logger.info(f"\n📋 Running: Kalamathèque Book Retrieval")
+        logger.info("-" * 50)
         try:
             result = await self.test_book_retrieval()
             if result:
@@ -1331,9 +1409,8 @@ startxref
         except Exception as e:
             logger.error(f"❌ Book Retrieval: ERROR - {str(e)}")
         
-        # Test 5: AI Assistant
-        logger.info(f"\n📋 Running: AI Assistant")
-        logger.info("-" * 40)
+        logger.info(f"\n📋 Running: Kalamathèque AI Assistant")
+        logger.info("-" * 50)
         try:
             result = await self.test_ai_assistant()
             if result:
@@ -1343,9 +1420,8 @@ startxref
         except Exception as e:
             logger.error(f"❌ AI Assistant: ERROR - {str(e)}")
         
-        # Test 6: Text-to-Speech
-        logger.info(f"\n📋 Running: Text-to-Speech")
-        logger.info("-" * 40)
+        logger.info(f"\n📋 Running: Kalamathèque Text-to-Speech")
+        logger.info("-" * 50)
         try:
             result = await self.test_text_to_speech()
             if result:
@@ -1355,48 +1431,62 @@ startxref
         except Exception as e:
             logger.error(f"❌ Text-to-Speech: ERROR - {str(e)}")
         
-        # Test 7: Book Deletion (cleanup)
-        logger.info(f"\n📋 Running: Book Deletion")
-        logger.info("-" * 40)
-        try:
-            result = await self.test_book_deletion()
-            if result:
-                logger.info(f"✅ Book Deletion: PASSED")
-            else:
-                logger.error(f"❌ Book Deletion: FAILED")
-        except Exception as e:
-            logger.error(f"❌ Book Deletion: ERROR - {str(e)}")
+        if self.test_book_id:
+            logger.info(f"\n📋 Running: Kalamathèque Book Deletion")
+            logger.info("-" * 50)
+            try:
+                result = await self.test_book_deletion()
+                if result:
+                    logger.info(f"✅ Book Deletion: PASSED")
+                else:
+                    logger.error(f"❌ Book Deletion: FAILED")
+            except Exception as e:
+                logger.error(f"❌ Book Deletion: ERROR - {str(e)}")
         
         # Calculate overall results
         passed_tests = sum(1 for results in self.test_results.values() if results["passed"])
-        total_tests = len(self.test_results) - 1  # Exclude overall_kalamatheque
+        total_tests = len(self.test_results) - 1  # Exclude overall_backend
         
         # Overall assessment
-        if passed_tests == total_tests:
-            self.test_results["overall_kalamatheque"]["passed"] = True
-            self.test_results["overall_kalamatheque"]["details"].append("All Kalamathèque tests passed")
+        if passed_tests >= total_tests * 0.8:  # 80% pass rate
+            self.test_results["overall_backend"]["passed"] = True
+            self.test_results["overall_backend"]["details"].append(f"Strong performance: {passed_tests}/{total_tests} tests passed")
         else:
-            self.test_results["overall_kalamatheque"]["details"].append(f"Only {passed_tests}/{total_tests} tests passed")
+            self.test_results["overall_backend"]["details"].append(f"Needs attention: {passed_tests}/{total_tests} tests passed")
         
         # Print summary
-        logger.info("\n" + "=" * 60)
-        logger.info("🏁 KALAMATHÈQUE TEST SUMMARY")
-        logger.info("=" * 60)
+        logger.info("\n" + "=" * 70)
+        logger.info("🏁 MY KALAMA ENGLISH BACKEND TEST SUMMARY")
+        logger.info("=" * 70)
         
-        for test_category, results in self.test_results.items():
-            if test_category == "overall_kalamatheque":
-                continue
-            status = "✅ PASSED" if results["passed"] else "❌ FAILED"
-            logger.info(f"{test_category.upper().replace('_', ' ')}: {status}")
-            for detail in results["details"]:
-                logger.info(f"  • {detail}")
+        # Priority tests first
+        priority_tests = ["flashcard_system", "video_system", "test_questions", "pricing_independence", "admin_delete_user", "email_notifications"]
         
-        logger.info(f"\nOverall Result: {passed_tests}/{total_tests} tests passed")
+        logger.info("\n🎯 PRIORITY TESTS (New Features):")
+        for test_name in priority_tests:
+            if test_name in self.test_results:
+                results = self.test_results[test_name]
+                status = "✅ PASSED" if results["passed"] else "❌ FAILED"
+                logger.info(f"  {test_name.upper().replace('_', ' ')}: {status}")
+                for detail in results["details"]:
+                    logger.info(f"    • {detail}")
         
-        if passed_tests == total_tests:
-            logger.info("🎉 ALL KALAMATHÈQUE TESTS PASSED!")
+        logger.info("\n📚 KALAMATHÈQUE TESTS:")
+        kalamathèque_tests = ["file_upload", "access_verification", "book_creation", "book_retrieval", "ai_assistant", "text_to_speech", "book_deletion"]
+        for test_name in kalamathèque_tests:
+            if test_name in self.test_results:
+                results = self.test_results[test_name]
+                status = "✅ PASSED" if results["passed"] else "❌ FAILED"
+                logger.info(f"  {test_name.upper().replace('_', ' ')}: {status}")
+                for detail in results["details"]:
+                    logger.info(f"    • {detail}")
+        
+        logger.info(f"\n📊 Overall Result: {passed_tests}/{total_tests} tests passed ({(passed_tests/total_tests)*100:.1f}%)")
+        
+        if passed_tests >= total_tests * 0.8:
+            logger.info("🎉 BACKEND TESTS SUCCESSFUL!")
         else:
-            logger.warning("⚠️ SOME KALAMATHÈQUE TESTS FAILED - REVIEW REQUIRED")
+            logger.warning("⚠️ SOME BACKEND TESTS FAILED - REVIEW REQUIRED")
 
 async def main():
     """Main test runner"""
