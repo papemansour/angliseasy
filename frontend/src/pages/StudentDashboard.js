@@ -51,17 +51,19 @@ const StudentDashboard = () => {
 
   const fetchData = async () => {
     try {
-      const [userRes, linksRes, documentsRes, homeworksRes] = await Promise.all([
+      const [userRes, linksRes, documentsRes, homeworksRes, pricingRes] = await Promise.all([
         apiClient.get('/auth/me'),
         apiClient.get('/student/my-links'),
         apiClient.get('/student/my-documents'),
-        apiClient.get('/student/my-homeworks')
+        apiClient.get('/student/my-homeworks'),
+        apiClient.get('/pricing')
       ]);
       
       setUser(userRes.data);
       setLinks(linksRes.data);
       setDocuments(documentsRes.data);
       setHomeworks(homeworksRes.data);
+      setPricing(pricingRes.data);
       
       // Get teacher info if assigned
       if (userRes.data.assigned_teacher) {
