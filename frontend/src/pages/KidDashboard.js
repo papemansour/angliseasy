@@ -6,7 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { toast } from 'sonner';
 import apiClient from '../utils/api';
 import StudentGamesAdvanced from '../components/StudentGamesAdvanced';
-import { LogOut, Star, Trophy, Sparkles, Play, Heart } from 'lucide-react';
+import WeekendGifts from '../components/WeekendGifts';
+import { LogOut, Star, Trophy, Sparkles, Play } from 'lucide-react';
 
 const KidDashboard = () => {
   const navigate = useNavigate();
