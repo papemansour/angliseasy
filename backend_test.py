@@ -1023,11 +1023,10 @@ startxref
             # 1. Create QCM question
             qcm_data = {
                 "level": "intermediate",
-                "question_type": "multiple_choice",
-                "question_text": "What is the past tense of 'go'?",
+                "question_type": "mcq",
+                "question": "What is the past tense of 'go'?",
                 "options": ["goed", "went", "gone", "going"],
-                "correct_answer": 1,
-                "explanation": "The past tense of 'go' is 'went'"
+                "correct_answer": 1
             }
             
             async with self.session.post(f"{BACKEND_URL}/admin/create-test-question", json=qcm_data, headers=headers) as response:
