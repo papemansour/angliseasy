@@ -43,6 +43,7 @@ const StudentDashboard = () => {
   const [uploadingFile, setUploadingFile] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [pricing, setPricing] = useState(null);
 
   useEffect(() => {
     fetchData();
