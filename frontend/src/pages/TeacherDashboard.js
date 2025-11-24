@@ -382,6 +382,10 @@ const TeacherDashboard = () => {
               <span className="text-3xl">🎮</span>
               <span className="text-xs font-semibold">Jeu</span>
             </TabsTrigger>
+            <TabsTrigger value="videos" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-pink-50 border-2 border-pink-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
+              <span className="text-3xl">📹</span>
+              <span className="text-xs font-semibold">Vidéos K-Kid</span>
+            </TabsTrigger>
             <TabsTrigger value="timer" className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-green-50 border-2 border-green-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2">
               <span className="text-3xl">⏰</span>
               <span className="text-xs font-semibold">Pointage</span>
