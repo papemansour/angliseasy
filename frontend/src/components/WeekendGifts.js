@@ -66,42 +66,11 @@ const WeekendGifts = ({ onConfetti }) => {
       const audio = new Audio(weekendGift.audio_url);
       audio.play();
     } else if (weekendGift) {
-      // Utiliser Web Speech API avec voix d'enfant
+      // Utiliser Web Speech API comme fallback
       const utterance = new SpeechSynthesisUtterance(weekendGift.word_english);
       utterance.lang = 'en-US';
-      
-      // Paramètres pour voix d'enfant de 6 ans
-      utterance.pitch = 1.8; // Voix plus aiguë (enfant)
-      utterance.rate = 0.75; // Plus lent (comme un enfant qui apprend)
-      utterance.volume = 1.0;
-      
-      // Essayer de trouver une voix d'enfant ou féminine (plus proche)
-      const voices = window.speechSynthesis.getVoices();
-      const childVoice = voices.find(voice => 
-        voice.lang.includes('en') && 
-        (voice.name.includes('child') || 
-         voice.name.includes('kid') || 
-         voice.name.includes('junior') ||
-         voice.name.includes('Google US English') ||
-         voice.name.includes('female') ||
-         voice.name.includes('Female'))
-      );
-      
-      if (childVoice) {
-        utterance.voice = childVoice;
-      }
-      
-      // Répéter 2 fois pour mieux apprendre
+      utterance.rate = 0.8;
       window.speechSynthesis.speak(utterance);
-      setTimeout(() => {
-        const repeat = new SpeechSynthesisUtterance(weekendGift.word_english);
-        repeat.lang = 'en-US';
-        repeat.pitch = 1.8;
-        repeat.rate = 0.7; // Encore plus lent la 2ème fois
-        repeat.volume = 1.0;
-        if (childVoice) repeat.voice = childVoice;
-        window.speechSynthesis.speak(repeat);
-      }, 1500);
     }
   };
 
