@@ -601,15 +601,18 @@ const HomePage = () => {
                 <div className="text-center mb-4 md:mb-6">
                   {pricingData.intermediate_discount > 0 && (
                     <div className="text-gray-400 line-through text-lg md:text-xl">
-                      {formatPrice(pricingData.intermediate_eur)}
+                      {formatPrice(pricingData.intermediate_eur, pricingData.intermediate_fcfa)}
                     </div>
                   )}
                   <div className="text-2xl md:text-3xl font-bold text-teal-600">
-                    {formatPriceWithSmallFCFA(pricingData.intermediate_eur - pricingData.intermediate_discount)}
+                    {formatPriceWithSmallFCFA(
+                      pricingData.intermediate_eur - pricingData.intermediate_discount,
+                      (pricingData.intermediate_fcfa || 0) - (pricingData.intermediate_discount_fcfa || 0)
+                    )}
                   </div>
                   {pricingData.intermediate_discount > 0 && (
                     <div className="text-green-600 font-semibold mt-1 md:mt-2 text-sm md:text-base">
-                      💰 Économisez {formatPrice(pricingData.intermediate_discount)}
+                      💰 Économisez {formatPrice(pricingData.intermediate_discount, pricingData.intermediate_discount_fcfa)}
                     </div>
                   )}
                 </div>
