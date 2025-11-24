@@ -396,7 +396,7 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Frontend React Error Resolution"
+    - "Nouvelles fonctionnalités backend testées et validées"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
