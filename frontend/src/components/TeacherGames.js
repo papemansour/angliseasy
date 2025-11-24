@@ -318,21 +318,29 @@ const TeacherGames = ({ students }) => {
           </DialogHeader>
           <form onSubmit={handleAddCard} className="space-y-4">
             <div>
-              <Label>Question *</Label>
+              <Label>Mot en français (Recto) *</Label>
               <Input
                 value={newCard.question}
                 onChange={(e) => setNewCard({ ...newCard, question: e.target.value })}
                 required
-                placeholder="Ex: What is your name?"
+                placeholder="Ex: Pomme"
               />
             </div>
             <div>
-              <Label>Réponse *</Label>
+              <Label>Mot en anglais (Verso) *</Label>
               <Input
                 value={newCard.answer}
                 onChange={(e) => setNewCard({ ...newCard, answer: e.target.value })}
                 required
-                placeholder="Ex: My name is..."
+                placeholder="Ex: Apple"
+              />
+            </div>
+            <div>
+              <Label>URL de l'image</Label>
+              <Input
+                value={newCard.image_url}
+                onChange={(e) => setNewCard({ ...newCard, image_url: e.target.value })}
+                placeholder="https://example.com/image.jpg"
               />
             </div>
             <Button type="submit" className="w-full">Ajouter la carte</Button>
