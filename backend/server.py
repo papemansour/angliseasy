@@ -507,6 +507,13 @@ async def register(user_data: UserCreate):
         user_data.phone
     )
     
+    # Send confirmation email to student
+    await email_service.send_registration_confirmation_email(
+        user_data.email,
+        user_data.first_name,
+        user_data.last_name
+    )
+    
     return {"message": "Registration submitted. Please wait for admin approval."}
 
 @api_router.post("/auth/register-group")
