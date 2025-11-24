@@ -28,6 +28,7 @@ import NewsManager from '../components/NewsManager';
 import ConversationChat from '../components/ConversationChat';
 import KalamaClub from '../components/KalamaClub';
 import TestQuestionsManager from '../components/TestQuestionsManager';
+import AdminTrash from '../components/AdminTrash';
 // ActivityFeed removed
 
 const AdminDashboard = () => {
