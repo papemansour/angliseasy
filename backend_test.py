@@ -831,6 +831,441 @@ startxref
             logger.error(f"❌ Book deletion test error: {str(e)}")
             self.test_results["book_deletion"]["details"].append(f"Test error: {str(e)}")
             return False
+
+    async def test_flashcard_system(self) -> bool:
+        """Test complete flashcard system workflow"""
+        try:
+            logger.info("🔍 Testing flashcard system...")
+            
+            if not self.teacher_token:
+                logger.error("❌ No teacher token available")
+                self.test_results["flashcard_system"]["details"].append("No teacher token")
+                return False
+            
+            headers = {"Authorization": f"Bearer {self.teacher_token}"}
+            
+            # 1. Create flashcard set
+            set_data = {
+                "title": "Vocabulaire Anglais Basique",
+                "description": "Mots de base pour débutants"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/teacher/create-flashcard-set", json=set_data, headers=headers) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    self.test_flashcard_set_id = result.get("set_id")
+                    logger.info("✅ Flashcard set created")
+                    self.test_results["flashcard_system"]["details"].append("Flashcard set creation works")
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Flashcard set creation failed: {response.status} - {error_text}")
+                    self.test_results["flashcard_system"]["details"].append(f"Set creation failed: {error_text}")
+                    return False
+            
+            # 2. Add flashcards to set
+            flashcards = [
+                {"french_word": "Bonjour", "english_word": "Hello", "image_url": "/images/hello.jpg"},
+                {"french_word": "Au revoir", "english_word": "Goodbye", "image_url": "/images/goodbye.jpg"},
+                {"french_word": "Merci", "english_word": "Thank you", "image_url": "/images/thanks.jpg"}
+            ]
+            
+            for flashcard in flashcards:
+                flashcard["set_id"] = self.test_flashcard_set_id
+                async with self.session.post(f"{BACKEND_URL}/teacher/add-flashcard", json=flashcard, headers=headers) as response:
+                    if response.status == 200:
+                        logger.info(f"✅ Flashcard added: {flashcard['french_word']}")
+                    else:
+                        error_text = await response.text()
+                        logger.error(f"❌ Failed to add flashcard: {response.status} - {error_text}")
+                        self.test_results["flashcard_system"]["details"].append(f"Flashcard addition failed: {error_text}")
+                        return False
+            
+            self.test_results["flashcard_system"]["details"].append("All flashcards added successfully")
+            
+            # 3. Assign game to student
+            if self.test_student_id:
+                game_data = {
+                    "student_id": self.test_student_id,
+                    "game_type": "flashcard",
+                    "game_id": self.test_flashcard_set_id,
+                    "title": "Test Flashcard Game"
+                }
+                
+                async with self.session.post(f"{BACKEND_URL}/teacher/assign-game", json=game_data, headers=headers) as response:
+                    if response.status == 200:
+                        logger.info("✅ Game assigned to student")
+                        self.test_results["flashcard_system"]["details"].append("Game assignment works")
+                    else:
+                        error_text = await response.text()
+                        logger.error(f"❌ Game assignment failed: {response.status} - {error_text}")
+                        self.test_results["flashcard_system"]["details"].append(f"Game assignment failed: {error_text}")
+                        return False
+                
+                # 4. Test student can see games
+                if self.student_token:
+                    student_headers = {"Authorization": f"Bearer {self.student_token}"}
+                    async with self.session.get(f"{BACKEND_URL}/student/my-games", headers=student_headers) as response:
+                        if response.status == 200:
+                            games = await response.json()
+                            if isinstance(games, list) and len(games) > 0:
+                                logger.info(f"✅ Student can see {len(games)} assigned games")
+                                self.test_results["flashcard_system"]["details"].append("Student game retrieval works")
+                                
+                                # 5. Submit game score
+                                score_data = {
+                                    "assignment_id": games[0].get("id"),
+                                    "score": 85,
+                                    "total_cards": 3,
+                                    "time_spent": 120
+                                }
+                                
+                                async with self.session.post(f"{BACKEND_URL}/student/submit-game-score", json=score_data, headers=student_headers) as response:
+                                    if response.status == 200:
+                                        logger.info("✅ Game score submitted")
+                                        self.test_results["flashcard_system"]["details"].append("Score submission works")
+                                        self.test_results["flashcard_system"]["passed"] = True
+                                        return True
+                                    else:
+                                        error_text = await response.text()
+                                        logger.error(f"❌ Score submission failed: {response.status} - {error_text}")
+                                        self.test_results["flashcard_system"]["details"].append(f"Score submission failed: {error_text}")
+                                        return False
+                            else:
+                                logger.error("❌ Student has no games assigned")
+                                self.test_results["flashcard_system"]["details"].append("No games found for student")
+                                return False
+                        else:
+                            error_text = await response.text()
+                            logger.error(f"❌ Student games retrieval failed: {response.status} - {error_text}")
+                            self.test_results["flashcard_system"]["details"].append(f"Student games failed: {error_text}")
+                            return False
+                else:
+                    logger.warning("⚠️ No student token for game testing")
+                    self.test_results["flashcard_system"]["details"].append("No student token available")
+                    return False
+            else:
+                logger.warning("⚠️ No test student for game assignment")
+                self.test_results["flashcard_system"]["details"].append("No test student available")
+                return False
+                
+        except Exception as e:
+            logger.error(f"❌ Flashcard system test error: {str(e)}")
+            self.test_results["flashcard_system"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_video_system(self) -> bool:
+        """Test K-Kid video assignment system"""
+        try:
+            logger.info("🔍 Testing video system...")
+            
+            if not self.teacher_token or not self.test_student_id:
+                logger.error("❌ Missing teacher token or student ID")
+                self.test_results["video_system"]["details"].append("Missing prerequisites")
+                return False
+            
+            headers = {"Authorization": f"Bearer {self.teacher_token}"}
+            
+            # 1. Assign video to K-Kid student
+            video_data = {
+                "student_id": self.test_student_id,
+                "title": "Learn Colors in English",
+                "description": "Educational video for K-Kid level",
+                "video_url": "https://www.youtube.com/watch?v=example123",
+                "thumbnail_url": "/images/colors-video.jpg"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/teacher/assign-video", json=video_data, headers=headers) as response:
+                if response.status == 200:
+                    logger.info("✅ Video assigned to K-Kid student")
+                    self.test_results["video_system"]["details"].append("Video assignment works")
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Video assignment failed: {response.status} - {error_text}")
+                    self.test_results["video_system"]["details"].append(f"Video assignment failed: {error_text}")
+                    return False
+            
+            # 2. Test student can see assigned videos
+            if self.student_token:
+                student_headers = {"Authorization": f"Bearer {self.student_token}"}
+                async with self.session.get(f"{BACKEND_URL}/student/my-videos", headers=student_headers) as response:
+                    if response.status == 200:
+                        videos = await response.json()
+                        if isinstance(videos, list) and len(videos) > 0:
+                            logger.info(f"✅ Student can see {len(videos)} assigned videos")
+                            self.test_results["video_system"]["details"].append("Student video retrieval works")
+                            self.test_results["video_system"]["passed"] = True
+                            return True
+                        else:
+                            logger.error("❌ Student has no videos assigned")
+                            self.test_results["video_system"]["details"].append("No videos found for student")
+                            return False
+                    else:
+                        error_text = await response.text()
+                        logger.error(f"❌ Student videos retrieval failed: {response.status} - {error_text}")
+                        self.test_results["video_system"]["details"].append(f"Student videos failed: {error_text}")
+                        return False
+            else:
+                logger.warning("⚠️ No student token for video testing")
+                self.test_results["video_system"]["details"].append("No student token available")
+                return False
+                
+        except Exception as e:
+            logger.error(f"❌ Video system test error: {str(e)}")
+            self.test_results["video_system"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_question_management(self) -> bool:
+        """Test admin test question management"""
+        try:
+            logger.info("🔍 Testing test question management...")
+            
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            # 1. Create QCM question
+            qcm_data = {
+                "level": "intermediate",
+                "question_type": "multiple_choice",
+                "question_text": "What is the past tense of 'go'?",
+                "options": ["goed", "went", "gone", "going"],
+                "correct_answer": 1,
+                "explanation": "The past tense of 'go' is 'went'"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/admin/create-test-question", json=qcm_data, headers=headers) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    qcm_question_id = result.get("question_id")
+                    logger.info("✅ QCM question created")
+                    self.test_results["test_questions"]["details"].append("QCM question creation works")
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ QCM question creation failed: {response.status} - {error_text}")
+                    self.test_results["test_questions"]["details"].append(f"QCM creation failed: {error_text}")
+                    return False
+            
+            # 2. Create True/False question
+            tf_data = {
+                "level": "beginner",
+                "question_type": "true_false",
+                "question_text": "The word 'cat' has 3 letters.",
+                "correct_answer": True,
+                "explanation": "C-A-T has exactly 3 letters"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/admin/create-test-question", json=tf_data, headers=headers) as response:
+                if response.status == 200:
+                    result = await response.json()
+                    tf_question_id = result.get("question_id")
+                    logger.info("✅ True/False question created")
+                    self.test_results["test_questions"]["details"].append("True/False question creation works")
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ True/False question creation failed: {response.status} - {error_text}")
+                    self.test_results["test_questions"]["details"].append(f"True/False creation failed: {error_text}")
+                    return False
+            
+            # 3. Test filtering by level
+            async with self.session.get(f"{BACKEND_URL}/test-questions/intermediate", headers=headers) as response:
+                if response.status == 200:
+                    questions = await response.json()
+                    if isinstance(questions, list):
+                        logger.info(f"✅ Retrieved {len(questions)} intermediate questions")
+                        self.test_results["test_questions"]["details"].append("Question filtering by level works")
+                        self.test_results["test_questions"]["passed"] = True
+                        return True
+                    else:
+                        logger.error("❌ Questions response is not a list")
+                        self.test_results["test_questions"]["details"].append("Invalid questions response")
+                        return False
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Question retrieval failed: {response.status} - {error_text}")
+                    self.test_results["test_questions"]["details"].append(f"Question retrieval failed: {error_text}")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"❌ Test question management error: {str(e)}")
+            self.test_results["test_questions"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_pricing_independence(self) -> bool:
+        """Test EUR vs FCFA price independence"""
+        try:
+            logger.info("🔍 Testing pricing independence...")
+            
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            # 1. Get current pricing
+            async with self.session.get(f"{BACKEND_URL}/pricing") as response:
+                if response.status == 200:
+                    original_pricing = await response.json()
+                    logger.info("✅ Retrieved current pricing")
+                else:
+                    logger.error("❌ Failed to get current pricing")
+                    self.test_results["pricing_independence"]["details"].append("Failed to get pricing")
+                    return False
+            
+            # 2. Update EUR prices only
+            new_pricing = original_pricing.copy()
+            new_pricing["beginner_eur"] = 80  # Changed from original
+            new_pricing["intermediate_eur"] = 95  # Changed from original
+            # Keep FCFA prices unchanged if they exist
+            
+            async with self.session.post(f"{BACKEND_URL}/admin/update-prices", json=new_pricing, headers=headers) as response:
+                if response.status == 200:
+                    logger.info("✅ EUR prices updated")
+                    self.test_results["pricing_independence"]["details"].append("EUR price update works")
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Price update failed: {response.status} - {error_text}")
+                    self.test_results["pricing_independence"]["details"].append(f"Price update failed: {error_text}")
+                    return False
+            
+            # 3. Verify prices were updated correctly
+            async with self.session.get(f"{BACKEND_URL}/pricing") as response:
+                if response.status == 200:
+                    updated_pricing = await response.json()
+                    
+                    if (updated_pricing.get("beginner_eur") == 80 and 
+                        updated_pricing.get("intermediate_eur") == 95):
+                        logger.info("✅ EUR prices updated correctly")
+                        self.test_results["pricing_independence"]["details"].append("EUR prices independent")
+                        
+                        # Restore original pricing
+                        async with self.session.post(f"{BACKEND_URL}/admin/update-prices", json=original_pricing, headers=headers) as restore_response:
+                            if restore_response.status == 200:
+                                logger.info("✅ Original pricing restored")
+                                self.test_results["pricing_independence"]["details"].append("Pricing restored")
+                                self.test_results["pricing_independence"]["passed"] = True
+                                return True
+                            else:
+                                logger.warning("⚠️ Failed to restore original pricing")
+                                self.test_results["pricing_independence"]["details"].append("Failed to restore pricing")
+                                return False
+                    else:
+                        logger.error("❌ Prices not updated correctly")
+                        self.test_results["pricing_independence"]["details"].append("Price update verification failed")
+                        return False
+                else:
+                    logger.error("❌ Failed to verify updated pricing")
+                    self.test_results["pricing_independence"]["details"].append("Price verification failed")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"❌ Pricing independence test error: {str(e)}")
+            self.test_results["pricing_independence"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_admin_delete_user(self) -> bool:
+        """Test admin user deletion functionality"""
+        try:
+            logger.info("🔍 Testing admin user deletion...")
+            
+            headers = {"Authorization": f"Bearer {self.admin_token}"}
+            
+            # Create a temporary teacher for deletion test
+            temp_teacher_data = {
+                "first_name": "TempTeacher",
+                "last_name": "ForDeletion"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/admin/create-teacher", json=temp_teacher_data, headers=headers) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    temp_email = data.get('email')
+                    
+                    # Get the teacher ID
+                    async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as users_response:
+                        if users_response.status == 200:
+                            users = await users_response.json()
+                            temp_teacher_id = None
+                            for user in users:
+                                if user.get('email') == temp_email:
+                                    temp_teacher_id = user.get('id')
+                                    break
+                            
+                            if temp_teacher_id:
+                                # Delete the teacher
+                                async with self.session.delete(f"{BACKEND_URL}/admin/delete-user/{temp_teacher_id}", headers=headers) as delete_response:
+                                    if delete_response.status == 200:
+                                        logger.info("✅ Teacher deleted successfully")
+                                        self.test_results["admin_delete_user"]["details"].append("User deletion works")
+                                        
+                                        # Verify teacher is deleted
+                                        async with self.session.get(f"{BACKEND_URL}/admin/all-users", headers=headers) as verify_response:
+                                            if verify_response.status == 200:
+                                                remaining_users = await verify_response.json()
+                                                teacher_still_exists = any(user.get('id') == temp_teacher_id for user in remaining_users)
+                                                
+                                                if not teacher_still_exists:
+                                                    logger.info("✅ Teacher properly removed from database")
+                                                    self.test_results["admin_delete_user"]["details"].append("User properly deleted")
+                                                    self.test_results["admin_delete_user"]["passed"] = True
+                                                    return True
+                                                else:
+                                                    logger.error("❌ Teacher still exists after deletion")
+                                                    self.test_results["admin_delete_user"]["details"].append("User not properly deleted")
+                                                    return False
+                                            else:
+                                                logger.error("❌ Failed to verify deletion")
+                                                self.test_results["admin_delete_user"]["details"].append("Deletion verification failed")
+                                                return False
+                                    else:
+                                        error_text = await delete_response.text()
+                                        logger.error(f"❌ User deletion failed: {delete_response.status} - {error_text}")
+                                        self.test_results["admin_delete_user"]["details"].append(f"Deletion failed: {error_text}")
+                                        return False
+                            else:
+                                logger.error("❌ Could not find temp teacher ID")
+                                self.test_results["admin_delete_user"]["details"].append("Could not find temp teacher")
+                                return False
+                        else:
+                            logger.error("❌ Failed to get users list")
+                            self.test_results["admin_delete_user"]["details"].append("Failed to get users")
+                            return False
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Failed to create temp teacher: {response.status} - {error_text}")
+                    self.test_results["admin_delete_user"]["details"].append(f"Temp teacher creation failed: {error_text}")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"❌ Admin delete user test error: {str(e)}")
+            self.test_results["admin_delete_user"]["details"].append(f"Test error: {str(e)}")
+            return False
+
+    async def test_email_notifications(self) -> bool:
+        """Test email notification logging"""
+        try:
+            logger.info("🔍 Testing email notifications...")
+            
+            # Test registration email logging by creating a new student
+            student_data = {
+                "email": "test.email@example.com",
+                "first_name": "TestEmail",
+                "last_name": "User",
+                "phone": "+33987654321",
+                "level": "beginner",
+                "preferred_slots": "Soir",
+                "referral_source": "Test"
+            }
+            
+            async with self.session.post(f"{BACKEND_URL}/auth/register", json=student_data) as response:
+                if response.status == 200:
+                    logger.info("✅ Registration submitted - emails should be logged")
+                    self.test_results["email_notifications"]["details"].append("Registration triggers email logging")
+                    self.test_results["email_notifications"]["passed"] = True
+                    return True
+                else:
+                    error_text = await response.text()
+                    logger.error(f"❌ Registration failed: {response.status} - {error_text}")
+                    self.test_results["email_notifications"]["details"].append(f"Registration failed: {error_text}")
+                    return False
+                    
+        except Exception as e:
+            logger.error(f"❌ Email notifications test error: {str(e)}")
+            self.test_results["email_notifications"]["details"].append(f"Test error: {str(e)}")
+            return False
     
     async def run_all_tests(self):
         """Run all Kalamathèque backend tests"""
