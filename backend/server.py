@@ -875,11 +875,16 @@ async def get_pricing():
     """Get current pricing - Public endpoint"""
     pricing = await db.pricing.find_one({"id": "pricing"}, {"_id": 0})
     if not pricing:
-        # Default pricing
+        # Default pricing structure matching frontend expectations
         return {
-            "beginner": {"price": 60, "discount": 0},
-            "intermediate": {"price": 90, "discount": 0},
-            "advanced": {"price": 120, "discount": 0}
+            "kkid_eur": 30,
+            "kkid_discount": 0,
+            "beginner_eur": 76,
+            "beginner_discount": 0,
+            "intermediate_eur": 90,
+            "intermediate_discount": 0,
+            "advanced_eur": 102,
+            "advanced_discount": 0
         }
     return pricing
 
