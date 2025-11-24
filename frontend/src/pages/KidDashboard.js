@@ -233,8 +233,8 @@ const KidDashboard = () => {
 
           {/* Mon Pack Tab */}
           <TabsContent value="pack">
-            <Card className="border-4 border-green-400 bg-gradient-to-br from-green-50 to-emerald-50 shadow-xl">
-              <CardHeader className="bg-gradient-to-r from-green-400 to-emerald-400 rounded-t-xl">
+            <Card className="border-4 border-teal-400 bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-green-400 via-teal-500 to-cyan-600 rounded-t-xl">
                 <CardTitle className="text-3xl text-white flex items-center gap-2">
                   <span className="text-4xl">🎁</span>
                   Mon Super Pack !
