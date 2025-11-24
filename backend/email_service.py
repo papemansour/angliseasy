@@ -142,6 +142,108 @@ class EmailService:
         
         return await self._send_email(to_email, subject, html_body, text_body)
     
+    async def send_registration_confirmation_email(
+        self,
+        to_email: str,
+        first_name: str,
+        last_name: str
+    ) -> bool:
+        """
+        Send confirmation email to student right after registration
+        """
+        subject = "📝 Demande d'inscription reçue - My KALAMA ENGLISH"
+        
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {{ font-family: Arial, sans-serif; line-height: 1.6; color: #333; }}
+                .container {{ max-width: 600px; margin: 0 auto; padding: 20px; }}
+                .header {{ background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); 
+                          color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }}
+                .content {{ background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }}
+                .info-box {{ background: white; padding: 20px; border-left: 4px solid #14b8a6; 
+                            margin: 20px 0; border-radius: 5px; }}
+                .footer {{ text-align: center; margin-top: 30px; color: #666; font-size: 12px; }}
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>✅ Demande d'inscription reçue !</h1>
+                </div>
+                <div class="content">
+                    <p>Bonjour <strong>{first_name} {last_name}</strong>,</p>
+                    
+                    <p>Merci d'avoir choisi <strong>My KALAMA ENGLISH</strong> pour votre apprentissage de l'anglais ! 🎓</p>
+                    
+                    <div class="info-box">
+                        <h3>📬 Votre demande a bien été reçue</h3>
+                        <p>Nous avons bien reçu votre demande d'inscription et nous vous remercions de votre intérêt pour notre plateforme.</p>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h3>⏳ Prochaines étapes</h3>
+                        <p>Notre équipe administrative est en train d'examiner votre demande. Vous recevrez <strong>un email de bienvenue avec vos identifiants de connexion</strong> dans les plus brefs délais.</p>
+                        <p>L'email contiendra :</p>
+                        <ul>
+                            <li>✉️ Votre adresse email de connexion</li>
+                            <li>🔐 Votre mot de passe provisoire</li>
+                            <li>📚 Les instructions pour accéder à la plateforme</li>
+                        </ul>
+                    </div>
+                    
+                    <p><strong>💡 Conseil :</strong> Surveillez votre boîte de réception (et vos spams) pour ne pas manquer notre email de bienvenue !</p>
+                    
+                    <p>Si vous avez des questions en attendant, n'hésitez pas à nous contacter à <strong>info.kalamaenglish@gmail.com</strong>.</p>
+                    
+                    <p>À très bientôt sur My KALAMA ENGLISH ! 🚀</p>
+                    
+                    <p>Cordialement,<br>
+                    <strong>L'équipe My KALAMA ENGLISH</strong></p>
+                </div>
+                <div class="footer">
+                    <p>My KALAMA ENGLISH - Plateforme d'apprentissage de l'anglais</p>
+                    <p>📧 info.kalamaenglish@gmail.com</p>
+                    <p>© 2025 MyKalamaenglish. Tous droits réservés.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        text_body = f"""
+        Bonjour {first_name} {last_name},
+        
+        DEMANDE D'INSCRIPTION REÇUE - My KALAMA ENGLISH
+        
+        Merci d'avoir choisi My KALAMA ENGLISH pour votre apprentissage de l'anglais !
+        
+        VOTRE DEMANDE A BIEN ÉTÉ REÇUE:
+        Nous avons bien reçu votre demande d'inscription et nous vous remercions de votre intérêt pour notre plateforme.
+        
+        PROCHAINES ÉTAPES:
+        Notre équipe administrative est en train d'examiner votre demande. Vous recevrez un email de bienvenue avec vos identifiants de connexion dans les plus brefs délais.
+        
+        L'email contiendra:
+        - Votre adresse email de connexion
+        - Votre mot de passe provisoire
+        - Les instructions pour accéder à la plateforme
+        
+        Conseil: Surveillez votre boîte de réception (et vos spams) pour ne pas manquer notre email de bienvenue !
+        
+        Si vous avez des questions, contactez-nous à info.kalamaenglish@gmail.com
+        
+        À très bientôt sur My KALAMA ENGLISH !
+        
+        Cordialement,
+        L'équipe My KALAMA ENGLISH
+        info.kalamaenglish@gmail.com
+        """
+        
+        return await self._send_email(to_email, subject, html_body, text_body)
+
     async def send_admin_notification(
         self, 
         user_email: str, 
