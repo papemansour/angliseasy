@@ -61,7 +61,7 @@ const KidDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 via-pink-100 via-purple-100 via-blue-100 to-green-100 relative overflow-hidden">
       {/* Confetti Effect */}
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50">
