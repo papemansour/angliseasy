@@ -215,7 +215,7 @@ const KidDashboard = () => {
                                   window.open(video.video_url, '_blank');
                                   triggerConfetti();
                                 }}
-                                className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-bold"
+                                className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-600 hover:from-pink-600 hover:via-purple-600 hover:to-indigo-700 text-white font-bold shadow-lg"
                               >
                                 <Play className="w-4 h-4 mr-2" />
                                 Regarder !
