@@ -31,6 +31,7 @@ import WelcomeLetter from '../components/WelcomeLetter';
 import DonationButton from '../components/DonationButton';
 import KalamaClub from '../components/KalamaClub';
 import TeacherGames from '../components/TeacherGames';
+import TeacherVideos from '../components/TeacherVideos';
 // ActivityFeed removed
 
 const TeacherDashboard = () => {
