@@ -1490,7 +1490,7 @@ startxref
 
 async def main():
     """Main test runner"""
-    async with KalamathequeBackendTester() as tester:
+    async with MyKalamaEnglishBackendTester() as tester:
         await tester.run_all_tests()
 
 if __name__ == "__main__":
