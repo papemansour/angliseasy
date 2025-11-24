@@ -192,12 +192,15 @@ const WeekendGifts = ({ onConfetti }) => {
                   <Button
                     onClick={() => {
                       playPronunciation();
-                      toast.success('🔊 Écoute bien !');
+                      toast.success('🔊 Écoute bien ! Je vais le dire 2 fois !', {
+                        duration: 4000,
+                        icon: '👶'
+                      });
                     }}
-                    className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 hover:from-green-600 hover:via-blue-600 hover:to-purple-600 text-white text-xl py-6 px-8 rounded-2xl font-bold shadow-lg transform hover:scale-110 transition-all"
+                    className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 hover:from-green-600 hover:via-blue-600 hover:to-purple-600 text-white text-xl py-6 px-8 rounded-2xl font-bold shadow-lg transform hover:scale-110 transition-all animate-pulse"
                   >
-                    <Volume2 className="w-6 h-6 mr-2" />
-                    Écouter la prononciation ! 🔊
+                    <Volume2 className="w-6 h-6 mr-2 animate-bounce" />
+                    👶 Écoute comme un enfant ! 🔊
                   </Button>
 
                   <div className="mt-6 p-4 bg-yellow-100 rounded-xl border-4 border-yellow-400">
