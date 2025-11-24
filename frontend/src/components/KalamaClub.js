@@ -155,7 +155,7 @@ const KalamaClub = ({ userRole }) => {
       await apiClient.post('/club/events', newEvent);
       toast.success('Événement créé !');
       setShowEventDialog(false);
-      setNewEvent({ title: '', description: '', event_date: '', duration_minutes: 60, max_participants: 20 });
+      setNewEvent({ title: '', description: '', event_date: '', duration_minutes: 60, max_participants: 20, event_link: '' });
       loadEvents();
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Erreur lors de la création');
