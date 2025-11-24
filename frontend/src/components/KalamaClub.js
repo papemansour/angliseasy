@@ -423,18 +423,52 @@ const KalamaClub = ({ userRole }) => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-700 mb-4">{event.description}</p>
+                {event.event_link && (
+                  <div className="mb-4 p-3 bg-blue-50 border-2 border-blue-200 rounded-lg">
+                    <p className="text-sm font-semibold text-blue-700 mb-1">🔗 Lien de l'événement :</p>
+                    <a 
+                      href={event.event_link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline text-sm break-all"
+                    >
+                      {event.event_link}
+                    </a>
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <UserPlus className="w-4 h-4" />
                     <span>{event.participants.length}/{event.max_participants} inscrits</span>
                   </div>
-                  <Button
-                    size="sm"
-                    onClick={() => handleJoinEvent(event.id)}
-                    className="bg-orange-500 hover:bg-orange-600"
-                  >
-                    S'inscrire
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => handleJoinEvent(event.id)}
+                      className="bg-orange-500 hover:bg-orange-600"
+                    >
+                      S'inscrire
+                    </Button>
+                    {user?.role === 'admin' && new Date(event.event_date) < new Date() && (
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={async () => {
+                          if (window.confirm('Supprimer cet événement passé ?')) {
+                            try {
+                              await apiClient.delete(`/club/events/${event.id}`);
+                              toast.success('Événement supprimé');
+                              loadEvents();
+                            } catch (error) {
+                              toast.error('Erreur lors de la suppression');
+                            }
+                          }
+                        }}
+                      >
+                        🗑️ Supprimer
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
