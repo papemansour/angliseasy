@@ -190,7 +190,7 @@ const KidDashboard = () => {
                     {videos.map((video) => (
                       <Card 
                         key={video.id} 
-                        className="border-4 border-pink-300 hover:border-pink-500 transition-all transform hover:scale-105 cursor-pointer bg-white shadow-lg"
+                        className="border-4 border-purple-300 hover:border-purple-500 transition-all transform hover:scale-105 hover:rotate-2 cursor-pointer bg-gradient-to-br from-pink-50 to-purple-50 shadow-lg"
                         onClick={() => {
                           if (video.video_url.includes('youtube.com') || video.video_url.includes('youtu.be')) {
                             window.open(video.video_url, '_blank');
