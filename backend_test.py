@@ -101,10 +101,15 @@ class MyKalamaEnglishBackendTester:
                         if user.get('email') == 'proftest.flashcards@mykalamaenglish.com':
                             logger.info(f"✅ Using existing test teacher: {user.get('email')}")
                             self.test_teacher_id = user.get('id')
+                            # Try to get the actual password from the user record
+                            temp_password = user.get('temporary_password')
+                            if not temp_password:
+                                # Try common patterns
+                                temp_password = f"Teacher{user.get('id', '')[:8]}"
                             return {
                                 "id": user.get('id'),
                                 "email": user.get('email'),
-                                "password": user.get('temporary_password', 'TeacherPassword123')
+                                "password": temp_password
                             }
             
             teacher_data = {
