@@ -685,3 +685,6 @@ async def send_admin_notification(user_email: str, first_name: str, last_name: s
 
 async def send_password_reset_email(to_email: str, user_name: str, temporary_password: str) -> bool:
     return await email_service.send_password_reset_email(to_email, user_name, temporary_password)
+
+async def send_registration_confirmation_email(to_email: str, first_name: str, last_name: str) -> bool:
+    return await email_service.send_registration_confirmation_email(to_email, first_name, last_name)
