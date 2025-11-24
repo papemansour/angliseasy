@@ -29,23 +29,25 @@ export const CurrencyProvider = ({ children }) => {
     localStorage.setItem('currency', newCurrency);
   };
 
-  const formatPrice = (eurPrice) => {
+  const formatPrice = (eurPrice, fcfaPrice = null) => {
     if (currency === 'EUR') {
       return `${eurPrice}€`;
     } else {
-      const fcfaPrice = Math.round(eurPrice * EUR_TO_FCFA);
-      return `${fcfaPrice.toLocaleString()} FCFA`;
+      // Use provided FCFA price if available, otherwise convert from EUR
+      const finalFcfaPrice = fcfaPrice !== null ? fcfaPrice : Math.round(eurPrice * EUR_TO_FCFA);
+      return `${finalFcfaPrice.toLocaleString()} FCFA`;
     }
   };
 
-  const formatPriceWithSmallFCFA = (eurPrice) => {
+  const formatPriceWithSmallFCFA = (eurPrice, fcfaPrice = null) => {
     if (currency === 'EUR') {
       return `${eurPrice}€`;
     } else {
-      const fcfaPrice = Math.round(eurPrice * EUR_TO_FCFA);
+      // Use provided FCFA price if available, otherwise convert from EUR
+      const finalFcfaPrice = fcfaPrice !== null ? fcfaPrice : Math.round(eurPrice * EUR_TO_FCFA);
       return (
         <>
-          {fcfaPrice.toLocaleString()} <span className="text-xs">FCFA</span>
+          {finalFcfaPrice.toLocaleString()} <span className="text-xs">FCFA</span>
         </>
       );
     }
