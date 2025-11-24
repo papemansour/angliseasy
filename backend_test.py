@@ -864,13 +864,12 @@ startxref
             
             # 2. Add flashcards to set
             flashcards = [
-                {"french_word": "Bonjour", "english_word": "Hello", "image_url": "/images/hello.jpg"},
-                {"french_word": "Au revoir", "english_word": "Goodbye", "image_url": "/images/goodbye.jpg"},
-                {"french_word": "Merci", "english_word": "Thank you", "image_url": "/images/thanks.jpg"}
+                {"question": "Bonjour", "answer": "Hello", "set_id": self.test_flashcard_set_id},
+                {"question": "Au revoir", "answer": "Goodbye", "set_id": self.test_flashcard_set_id},
+                {"question": "Merci", "answer": "Thank you", "set_id": self.test_flashcard_set_id}
             ]
             
             for flashcard in flashcards:
-                flashcard["set_id"] = self.test_flashcard_set_id
                 async with self.session.post(f"{BACKEND_URL}/teacher/add-flashcard", json=flashcard, headers=headers) as response:
                     if response.status == 200:
                         logger.info(f"✅ Flashcard added: {flashcard['french_word']}")
