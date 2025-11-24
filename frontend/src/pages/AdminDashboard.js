@@ -448,6 +448,15 @@ const AdminDashboard = () => {
               <FileText className="w-6 h-6" />
               <span className="text-xs font-semibold">📝 Questions Test</span>
             </TabsTrigger>
+            
+            <TabsTrigger 
+              value="trash" 
+              data-testid="admin-tab-trash"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-red-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-red-50 border-2 border-red-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <Trash2 className="w-6 h-6" />
+              <span className="text-xs font-semibold">🗑️ Poubelle</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="pending">
