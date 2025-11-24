@@ -224,8 +224,8 @@ const KidDashboard = () => {
             </Card>
           </TabsContent>
 
-          {/* Mon Pack Tab */}
-          <TabsContent value="pack">
+          {/* Gifts Tab */}
+          <TabsContent value="gifts">
             <Card className="border-4 border-teal-400 bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 shadow-xl">
               <CardHeader className="bg-gradient-to-r from-green-400 via-teal-500 to-cyan-600 rounded-t-xl">
                 <CardTitle className="text-3xl text-white flex items-center gap-2">
