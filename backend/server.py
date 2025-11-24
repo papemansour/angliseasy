@@ -209,6 +209,7 @@ class ClubEvent(BaseModel):
     duration_minutes: int
     max_participants: int
     participants: list = []
+    event_link: str = ""  # NEW: Lien vers l'événement (Zoom, Meet, etc.)
     created_by: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
@@ -218,6 +219,7 @@ class ClubEventCreate(BaseModel):
     event_date: str  # ISO format
     duration_minutes: int
     max_participants: int
+    event_link: str = ""  # NEW: Lien vers l'événement
 
 # ============ UTILITIES ============
 
