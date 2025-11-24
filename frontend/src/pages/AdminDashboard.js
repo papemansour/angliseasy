@@ -1560,6 +1560,11 @@ const AdminDashboard = () => {
             <TestQuestionsManager />
           </TabsContent>
 
+          {/* Trash Tab */}
+          <TabsContent value="trash">
+            <AdminTrash />
+          </TabsContent>
+
         </Tabs>
       </div>
     </div>
