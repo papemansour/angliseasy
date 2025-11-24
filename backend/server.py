@@ -794,6 +794,7 @@ async def assign_teacher(student_id: str, teacher_id: str, current_user: dict = 
 
 @api_router.delete("/admin/delete-student/{student_id}")
 async def delete_student(student_id: str, current_user: dict = Depends(get_current_user)):
+    """Admin soft-deletes a student - moves to trash"""
     if current_user['role'] != 'admin':
         raise HTTPException(status_code=403, detail="Admin access required")
     
@@ -801,20 +802,20 @@ async def delete_student(student_id: str, current_user: dict = Depends(get_curre
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
     
-    # Delete student from database
+    # Add deletion metadata
+    student['deleted_at'] = datetime.now(timezone.utc).isoformat()
+    student['deleted_by'] = current_user['id']
+    
+    # Move to trash collection
+    await db.deleted_users.insert_one(student)
+    
+    # Delete from main collection
     await db.users.delete_one({"id": student_id})
     
-    # Also delete related data (test results, messages, etc.)
-    await db.test_results.delete_many({"user_id": student_id})
-    await db.messages.delete_many({
-        "$or": [
-            {"from_user_id": student_id},
-            {"to_user_id": student_id}
-        ]
-    })
+    # NOTE: We keep related data for potential restoration
     
-    logger.info(f"Student deleted: {student['email']}")
-    return {"message": "Student deleted successfully"}
+    logger.info(f"Student soft-deleted: {student['email']}")
+    return {"message": "Student moved to trash successfully"}
 
 @api_router.post("/admin/restrict-student/{student_id}")
 async def restrict_student(student_id: str, current_user: dict = Depends(get_current_user)):
