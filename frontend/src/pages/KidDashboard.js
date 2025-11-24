@@ -317,7 +317,7 @@ const KidDashboard = () => {
         .animate-wiggle {
           animation: wiggle 1s ease-in-out infinite;
         }
-      </style>
+      `}</style>
     </div>
   );
 };
