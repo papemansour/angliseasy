@@ -151,8 +151,8 @@ const KidDashboard = () => {
           {/* Games Tab */}
           <TabsContent value="games">
             <div className="space-y-4">
-              <Card className="border-4 border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50 shadow-xl">
-                <CardHeader className="bg-gradient-to-r from-yellow-300 to-orange-300 rounded-t-xl">
+              <Card className="border-4 border-orange-400 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 shadow-xl">
+                <CardHeader className="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 rounded-t-xl">
                   <CardTitle className="text-3xl text-white flex items-center gap-2">
                     <Trophy className="w-8 h-8" />
                     Mes Jeux Super Fun ! 🎉
