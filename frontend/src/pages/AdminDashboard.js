@@ -437,6 +437,15 @@ const AdminDashboard = () => {
               <Send className="w-6 h-6" />
               <span className="text-xs font-semibold">💬 Messages</span>
             </TabsTrigger>
+            
+            <TabsTrigger 
+              value="test-questions" 
+              data-testid="admin-tab-test-questions"
+              className="h-24 data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-500 data-[state=active]:to-sky-600 data-[state=active]:text-white data-[state=active]:shadow-xl data-[state=active]:scale-105 bg-white hover:bg-blue-50 border-2 border-blue-200 rounded-xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer"
+            >
+              <FileText className="w-6 h-6" />
+              <span className="text-xs font-semibold">📝 Questions Test</span>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="pending">
