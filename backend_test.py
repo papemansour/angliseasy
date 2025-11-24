@@ -954,8 +954,7 @@ startxref
                                 score_data = {
                                     "assignment_id": games[0].get("id"),
                                     "score": 85,
-                                    "total_cards": 3,
-                                    "time_spent": 120
+                                    "total": 3
                                 }
                                 
                                 async with self.session.post(f"{BACKEND_URL}/student/submit-game-score", json=score_data, headers=student_headers) as response:
