@@ -248,11 +248,11 @@ const KidDashboard = () => {
                     <p className="text-gray-600">Cours super fun pour les enfants !</p>
                   </div>
                   
-                  <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-xl p-6 mb-6">
+                  <div className="bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 rounded-xl p-6 mb-6 border-4 border-orange-300">
                     <div className="text-center">
-                      <p className="text-sm text-gray-600 mb-2">Prix par mois</p>
-                      <div className="text-5xl font-bold text-orange-600 mb-2">18€</div>
-                      <p className="text-xs text-gray-500">ou 10,000 FCFA</p>
+                      <p className="text-sm font-bold text-purple-700 mb-2">Prix par mois</p>
+                      <div className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-2">18€</div>
+                      <p className="text-xs font-semibold text-purple-600">ou 10,000 FCFA</p>
                     </div>
                   </div>
 
