@@ -1545,6 +1545,11 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
 
+          {/* Test Questions Tab */}
+          <TabsContent value="test-questions">
+            <TestQuestionsManager />
+          </TabsContent>
+
         </Tabs>
       </div>
     </div>
