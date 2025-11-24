@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Backend Testing for My KALAMA ENGLISH
-Tests for Kalamathèque endpoints and security functionality
+Comprehensive tests for all backend functionality including new features
 """
 
 import asyncio
@@ -26,7 +26,7 @@ ADMIN_EMAIL = "admin@mykalamaenglish.com"
 ADMIN_PASSWORD = "adminco"
 KALAMATHEQUE_ACCESS_CODE = "Digika"
 
-class KalamathequeBackendTester:
+class MyKalamaEnglishBackendTester:
     def __init__(self):
         self.session = None
         self.admin_token = None
