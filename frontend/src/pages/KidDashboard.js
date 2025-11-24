@@ -167,8 +167,8 @@ const KidDashboard = () => {
 
           {/* Videos Tab */}
           <TabsContent value="videos">
-            <Card className="border-4 border-pink-400 bg-gradient-to-br from-pink-50 to-purple-50 shadow-xl">
-              <CardHeader className="bg-gradient-to-r from-pink-400 to-purple-400 rounded-t-xl">
+            <Card className="border-4 border-purple-400 bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-600 rounded-t-xl">
                 <CardTitle className="text-3xl text-white flex items-center gap-2">
                   <Play className="w-8 h-8" />
                   Mes Vidéos Magiques ! ✨
