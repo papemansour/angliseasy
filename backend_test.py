@@ -912,7 +912,7 @@ startxref
             for flashcard in flashcards:
                 async with self.session.post(f"{BACKEND_URL}/teacher/add-flashcard", json=flashcard, headers=headers) as response:
                     if response.status == 200:
-                        logger.info(f"✅ Flashcard added: {flashcard['french_word']}")
+                        logger.info(f"✅ Flashcard added: {flashcard['question']}")
                     else:
                         error_text = await response.text()
                         logger.error(f"❌ Failed to add flashcard: {response.status} - {error_text}")
