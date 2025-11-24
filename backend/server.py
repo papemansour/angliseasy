@@ -2777,6 +2777,222 @@ async def get_club_leaderboard():
     leaderboard = await db.club_posts.aggregate(pipeline).to_list(10)
     return leaderboard
 
+# ============ GAMES & FLASHCARDS ENDPOINTS ============
+
+@api_router.post("/teacher/create-flashcard-set")
+async def create_flashcard_set(data: dict, current_user: dict = Depends(get_current_user)):
+    """Teacher creates a new flashcard set"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    flashcard_set = {
+        "id": str(uuid4()),
+        "teacher_id": current_user['id'],
+        "title": data['title'],
+        "description": data.get('description', ''),
+        "flashcards": [],
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.flashcard_sets.insert_one(flashcard_set)
+    return {"message": "Flashcard set created", "set_id": flashcard_set['id']}
+
+@api_router.post("/teacher/add-flashcard")
+async def add_flashcard(data: dict, current_user: dict = Depends(get_current_user)):
+    """Add a flashcard to a set"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    flashcard = {
+        "id": str(uuid4()),
+        "question": data['question'],
+        "answer": data['answer']
+    }
+    
+    result = await db.flashcard_sets.update_one(
+        {"id": data['set_id'], "teacher_id": current_user['id']},
+        {"$push": {"flashcards": flashcard}}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Flashcard set not found")
+    
+    return {"message": "Flashcard added"}
+
+@api_router.get("/teacher/my-flashcard-sets")
+async def get_teacher_flashcard_sets(current_user: dict = Depends(get_current_user)):
+    """Get all flashcard sets created by teacher"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    sets = await db.flashcard_sets.find({"teacher_id": current_user['id']}, {"_id": 0}).to_list(100)
+    return sets
+
+@api_router.delete("/teacher/delete-flashcard-set/{set_id}")
+async def delete_flashcard_set(set_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a flashcard set"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    result = await db.flashcard_sets.delete_one({"id": set_id, "teacher_id": current_user['id']})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Flashcard set not found")
+    
+    return {"message": "Flashcard set deleted"}
+
+@api_router.post("/teacher/assign-game")
+async def assign_game(data: dict, current_user: dict = Depends(get_current_user)):
+    """Assign a game (flashcard or kahoot) to a student"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    assignment = {
+        "id": str(uuid4()),
+        "teacher_id": current_user['id'],
+        "student_id": data['student_id'],
+        "game_type": data['game_type'],  # 'flashcard' or 'kahoot'
+        "game_id": data.get('game_id'),  # flashcard set id
+        "game_url": data.get('game_url'),  # kahoot link
+        "title": data['title'],
+        "assigned_at": datetime.now(timezone.utc).isoformat(),
+        "completed": False,
+        "score": None
+    }
+    
+    await db.game_assignments.insert_one(assignment)
+    return {"message": "Game assigned to student"}
+
+@api_router.get("/teacher/game-scores")
+async def get_teacher_game_scores(current_user: dict = Depends(get_current_user)):
+    """Get all game scores for teacher's students"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    scores = await db.game_assignments.find(
+        {"teacher_id": current_user['id'], "completed": True}, 
+        {"_id": 0}
+    ).to_list(100)
+    
+    # Enrich with student names
+    for score in scores:
+        student = await db.users.find_one({"id": score['student_id']}, {"_id": 0, "first_name": 1, "last_name": 1})
+        if student:
+            score['student_name'] = f"{student['first_name']} {student['last_name']}"
+    
+    return scores
+
+@api_router.get("/student/my-games")
+async def get_student_games(current_user: dict = Depends(get_current_user)):
+    """Get all games assigned to student"""
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    games = await db.game_assignments.find({"student_id": current_user['id']}, {"_id": 0}).to_list(100)
+    
+    # Enrich flashcard games with actual flashcard data
+    for game in games:
+        if game['game_type'] == 'flashcard' and game.get('game_id'):
+            flashcard_set = await db.flashcard_sets.find_one({"id": game['game_id']}, {"_id": 0})
+            if flashcard_set:
+                game['flashcards'] = flashcard_set['flashcards']
+    
+    return games
+
+@api_router.post("/student/submit-game-score")
+async def submit_game_score(data: dict, current_user: dict = Depends(get_current_user)):
+    """Student submits game score"""
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    result = await db.game_assignments.update_one(
+        {"id": data['assignment_id'], "student_id": current_user['id']},
+        {
+            "$set": {
+                "completed": True,
+                "score": data['score'],
+                "total": data['total'],
+                "completed_at": datetime.now(timezone.utc).isoformat()
+            }
+        }
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Assignment not found")
+    
+    return {"message": "Score submitted successfully"}
+
+# ============ TEST QUESTIONS MANAGEMENT (ADMIN) ============
+
+@api_router.get("/test-questions/{level}")
+async def get_test_questions(level: str):
+    """Get test questions for a specific level (public endpoint)"""
+    questions = await db.test_questions.find({"level": level, "active": True}, {"_id": 0}).to_list(100)
+    return questions
+
+@api_router.get("/admin/all-test-questions")
+async def get_all_test_questions(current_user: dict = Depends(get_current_user)):
+    """Get all test questions (admin only)"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    questions = await db.test_questions.find({}, {"_id": 0}).to_list(1000)
+    return questions
+
+@api_router.post("/admin/create-test-question")
+async def create_test_question(data: dict, current_user: dict = Depends(get_current_user)):
+    """Create a new test question"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    question = {
+        "id": str(uuid4()),
+        "level": data['level'],  # beginner, intermediate, advanced
+        "question_type": data['question_type'],  # 'mcq' or 'true_false'
+        "question": data['question'],
+        "options": data.get('options', []),  # for MCQ
+        "correct_answer": data['correct_answer'],
+        "active": True,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.test_questions.insert_one(question)
+    return {"message": "Question created", "question_id": question['id']}
+
+@api_router.put("/admin/update-test-question/{question_id}")
+async def update_test_question(question_id: str, data: dict, current_user: dict = Depends(get_current_user)):
+    """Update a test question"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    update_data = {
+        "question": data['question'],
+        "options": data.get('options', []),
+        "correct_answer": data['correct_answer'],
+        "active": data.get('active', True)
+    }
+    
+    result = await db.test_questions.update_one(
+        {"id": question_id},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Question not found")
+    
+    return {"message": "Question updated"}
+
+@api_router.delete("/admin/delete-test-question/{question_id}")
+async def delete_test_question(question_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a test question"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.test_questions.delete_one({"id": question_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Question not found")
+    
+    return {"message": "Question deleted"}
+
 app.include_router(api_router)
 
 app.add_middleware(
