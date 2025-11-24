@@ -3000,6 +3000,64 @@ async def delete_test_question(question_id: str, current_user: dict = Depends(ge
     
     return {"message": "Question deleted"}
 
+# ============ VIDEOS FOR KIDS ============
+
+@api_router.post("/teacher/assign-video")
+async def assign_video(data: dict, current_user: dict = Depends(get_current_user)):
+    """Teacher assigns video to a student (K-Kid)"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    video = {
+        "id": str(uuid4()),
+        "teacher_id": current_user['id'],
+        "student_id": data['student_id'],
+        "title": data['title'],
+        "description": data.get('description', ''),
+        "video_url": data['video_url'],
+        "assigned_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.student_videos.insert_one(video)
+    return {"message": "Video assigned"}
+
+@api_router.get("/teacher/my-assigned-videos")
+async def get_teacher_assigned_videos(current_user: dict = Depends(get_current_user)):
+    """Get all videos assigned by teacher"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    videos = await db.student_videos.find({"teacher_id": current_user['id']}, {"_id": 0}).to_list(100)
+    
+    # Enrich with student names
+    for video in videos:
+        student = await db.users.find_one({"id": video['student_id']}, {"_id": 0, "first_name": 1, "last_name": 1})
+        if student:
+            video['student_name'] = f"{student['first_name']} {student['last_name']}"
+    
+    return videos
+
+@api_router.delete("/teacher/delete-video/{video_id}")
+async def delete_video(video_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete an assigned video"""
+    if current_user['role'] != 'teacher':
+        raise HTTPException(status_code=403, detail="Teacher access required")
+    
+    result = await db.student_videos.delete_one({"id": video_id, "teacher_id": current_user['id']})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Video not found")
+    
+    return {"message": "Video deleted"}
+
+@api_router.get("/student/my-videos")
+async def get_student_videos(current_user: dict = Depends(get_current_user)):
+    """Get all videos assigned to student"""
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    videos = await db.student_videos.find({"student_id": current_user['id']}, {"_id": 0}).to_list(100)
+    return videos
+
 app.include_router(api_router)
 
 app.add_middleware(
