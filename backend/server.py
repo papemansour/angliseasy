@@ -2735,6 +2735,7 @@ async def create_club_event(event_data: ClubEventCreate, current_user: dict = De
         event_date=datetime.fromisoformat(event_data.event_date),
         duration_minutes=event_data.duration_minutes,
         max_participants=event_data.max_participants,
+        event_link=event_data.event_link,
         created_by=current_user['id']
     )
     
@@ -2745,6 +2746,19 @@ async def create_club_event(event_data: ClubEventCreate, current_user: dict = De
     
     logger.info(f"Club event created by {current_user['id']}: {event.title}")
     return {"message": "Événement créé", "id": event.id}
+
+@api_router.delete("/club/events/{event_id}")
+async def delete_club_event(event_id: str, current_user: dict = Depends(get_current_user)):
+    """Delete a club event (admin only, for past events)"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    result = await db.club_events.delete_one({"id": event_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Événement non trouvé")
+    
+    logger.info(f"Club event deleted by admin: {event_id}")
+    return {"message": "Événement supprimé"}
 
 @api_router.post("/club/events/{event_id}/join")
 async def join_club_event(event_id: str, current_user: dict = Depends(get_current_user)):
