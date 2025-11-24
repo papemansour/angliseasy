@@ -3128,6 +3128,143 @@ async def get_student_videos(current_user: dict = Depends(get_current_user)):
     videos = await db.student_videos.find({"student_id": current_user['id']}, {"_id": 0}).to_list(100)
     return videos
 
+# ============ WEEKEND GIFTS FOR KIDS ============
+
+@api_router.get("/student/weekend-gift")
+async def get_weekend_gift(current_user: dict = Depends(get_current_user)):
+    """Get current weekend gift"""
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    # Get current week number
+    from datetime import datetime
+    week_number = datetime.now(timezone.utc).isocalendar()[1]
+    year = datetime.now(timezone.utc).year
+    
+    # Check if gift already collected this week
+    collected = await db.collected_gifts.find_one({
+        "student_id": current_user['id'],
+        "week_number": week_number,
+        "year": year
+    }, {"_id": 0})
+    
+    # Get gift for this week (rotate through available gifts)
+    gifts = await db.weekend_gifts.find({"active": True}, {"_id": 0}).to_list(100)
+    if not gifts:
+        # Create default gifts if none exist
+        await create_default_gifts()
+        gifts = await db.weekend_gifts.find({"active": True}, {"_id": 0}).to_list(100)
+    
+    gift_index = week_number % len(gifts)
+    gift = gifts[gift_index]
+    gift['is_collected'] = collected is not None
+    
+    return gift
+
+@api_router.post("/student/collect-gift")
+async def collect_gift(data: dict, current_user: dict = Depends(get_current_user)):
+    """Mark gift as collected and add stars"""
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    week_number = datetime.now(timezone.utc).isocalendar()[1]
+    year = datetime.now(timezone.utc).year
+    
+    # Check if already collected
+    existing = await db.collected_gifts.find_one({
+        "student_id": current_user['id'],
+        "week_number": week_number,
+        "year": year
+    })
+    
+    if existing:
+        return {"message": "Gift already collected"}
+    
+    # Get the gift details
+    gift = await db.weekend_gifts.find_one({"id": data['gift_id']}, {"_id": 0})
+    
+    # Save collection
+    collection = {
+        "id": str(uuid4()),
+        "student_id": current_user['id'],
+        "gift_id": data['gift_id'],
+        "word_french": gift['word_french'],
+        "word_english": gift['word_english'],
+        "image_url": gift['image_url'],
+        "week_number": week_number,
+        "year": year,
+        "collected_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.collected_gifts.insert_one(collection)
+    
+    # Add 10 stars to user
+    await db.users.update_one(
+        {"id": current_user['id']},
+        {"$inc": {"stars": 10}}
+    )
+    
+    return {"message": "Gift collected!", "stars_earned": 10}
+
+@api_router.get("/student/my-collected-gifts")
+async def get_collected_gifts(current_user: dict = Depends(get_current_user)):
+    """Get all collected gifts"""
+    if current_user['role'] != 'student':
+        raise HTTPException(status_code=403, detail="Student access required")
+    
+    gifts = await db.collected_gifts.find(
+        {"student_id": current_user['id']},
+        {"_id": 0}
+    ).sort("collected_at", -1).to_list(100)
+    
+    return gifts
+
+async def create_default_gifts():
+    """Create default weekend gifts"""
+    default_gifts = [
+        {
+            "id": str(uuid4()),
+            "word_french": "Chat",
+            "word_english": "Cat",
+            "image_url": "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400",
+            "audio_url": "",
+            "active": True
+        },
+        {
+            "id": str(uuid4()),
+            "word_french": "Chien",
+            "word_english": "Dog",
+            "image_url": "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400",
+            "audio_url": "",
+            "active": True
+        },
+        {
+            "id": str(uuid4()),
+            "word_french": "Papillon",
+            "word_english": "Butterfly",
+            "image_url": "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=400",
+            "audio_url": "",
+            "active": True
+        },
+        {
+            "id": str(uuid4()),
+            "word_french": "Pomme",
+            "word_english": "Apple",
+            "image_url": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=400",
+            "audio_url": "",
+            "active": True
+        },
+        {
+            "id": str(uuid4()),
+            "word_french": "Soleil",
+            "word_english": "Sun",
+            "image_url": "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=400",
+            "audio_url": "",
+            "active": True
+        }
+    ]
+    
+    await db.weekend_gifts.insert_many(default_gifts)
+
 app.include_router(api_router)
 
 app.add_middleware(
