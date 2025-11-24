@@ -1087,6 +1087,53 @@ async def admin_delete_user(user_id: str, current_user: dict = Depends(get_curre
     logger.info(f"User soft-deleted by admin: {user['email']}")
     return {"message": f"{user['role'].capitalize()} moved to trash successfully"}
 
+@api_router.get("/admin/trash")
+async def get_trash(current_user: dict = Depends(get_current_user)):
+    """Get all deleted users (trash)"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    deleted_users = await db.deleted_users.find({}, {"_id": 0}).to_list(1000)
+    return deleted_users
+
+@api_router.post("/admin/restore-user/{user_id}")
+async def restore_user(user_id: str, current_user: dict = Depends(get_current_user)):
+    """Restore a deleted user from trash"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Find user in trash
+    user = await db.deleted_users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found in trash")
+    
+    # Remove deletion metadata
+    user.pop('deleted_at', None)
+    user.pop('deleted_by', None)
+    
+    # Restore to main collection
+    await db.users.insert_one(user)
+    
+    # Remove from trash
+    await db.deleted_users.delete_one({"id": user_id})
+    
+    logger.info(f"User restored by admin: {user['email']}")
+    return {"message": f"{user['role'].capitalize()} restored successfully"}
+
+@api_router.delete("/admin/permanent-delete/{user_id}")
+async def permanent_delete_user(user_id: str, current_user: dict = Depends(get_current_user)):
+    """Permanently delete a user from trash"""
+    if current_user['role'] != 'admin':
+        raise HTTPException(status_code=403, detail="Admin access required")
+    
+    # Delete from trash
+    result = await db.deleted_users.delete_one({"id": user_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found in trash")
+    
+    logger.info(f"User permanently deleted by admin: {user_id}")
+    return {"message": "User permanently deleted"}
+
 # Endpoint en doublon supprimé - le changement de mot de passe se fait via la route ligne 339
 
 # ADMIN: Reset user password (SECURE)
