@@ -394,6 +394,15 @@ const KalamaClub = ({ userRole }) => {
                         />
                       </div>
                     </div>
+                    <div>
+                      <Label>Lien de l'événement (Zoom, Meet, etc.)</Label>
+                      <Input
+                        type="url"
+                        value={newEvent.event_link}
+                        onChange={(e) => setNewEvent({ ...newEvent, event_link: e.target.value })}
+                        placeholder="https://zoom.us/j/123456789"
+                      />
+                    </div>
                     <Button type="submit" className="w-full bg-teal-600 hover:bg-teal-700">Créer</Button>
                   </form>
                 </DialogContent>
