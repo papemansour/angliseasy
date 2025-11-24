@@ -199,7 +199,7 @@ const KidDashboard = () => {
                       >
                         <CardContent className="p-6">
                           <div className="flex items-start gap-4">
-                            <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-purple-500 rounded-full flex items-center justify-center text-3xl shadow-lg flex-shrink-0">
+                            <div className="w-16 h-16 bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 rounded-full flex items-center justify-center text-3xl shadow-lg flex-shrink-0 animate-pulse">
                               🎬
                             </div>
                             <div className="flex-1">
