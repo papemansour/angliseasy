@@ -304,6 +304,78 @@ frontend:
           agent: "testing"
           comment: "✅ PASSED - TTS frontend integration now working. Backend endpoint no longer requires authentication. Direct API testing confirms TTS generates proper base64 MP3 audio data. Frontend React error present but doesn't affect core TTS functionality."
 
+  - task: "Système de jeux et flashcards (NOUVEAU)"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - Complete flashcard system workflow tested successfully. POST /teacher/create-flashcard-set works (creates flashcard sets), POST /teacher/add-flashcard works (adds cards with question/answer), POST /teacher/assign-game works (assigns flashcard games to students), GET /student/my-games works (students can see assigned games with flashcard data), POST /student/submit-game-score works (students can submit scores). Full end-to-end workflow from teacher creating flashcards to student playing and scoring works perfectly."
+
+  - task: "Système de vidéos K-Kid (NOUVEAU)"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - K-Kid video system fully functional. POST /teacher/assign-video works (teachers can assign YouTube videos to K-Kid students with title, description, video_url, thumbnail_url), GET /student/my-videos works (K-Kid students can retrieve all assigned videos). Video assignment and retrieval workflow complete and working correctly."
+
+  - task: "Gestion des questions de test (NOUVEAU)"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - Test question management system working perfectly. POST /admin/create-test-question works for both QCM (multiple choice) and True/False questions. Admin can create questions with level, question_type ('mcq' or 'true_false'), question text, options (for MCQ), and correct_answer. GET /test-questions/{level} works for filtering questions by level (beginner, intermediate, advanced). Question creation and retrieval by level fully functional."
+
+  - task: "Prix EUR vs FCFA indépendants (RÉCENT)"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - Pricing independence system working correctly. GET /pricing retrieves current pricing, POST /admin/update-prices allows admin to update EUR prices independently. Tested changing beginner_eur from 76 to 80 and intermediate_eur from 90 to 95 - changes applied correctly and independently. FCFA prices remain unchanged when EUR prices are modified. Price update and retrieval system fully functional."
+
+  - task: "Dashboard Admin suppression prof"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - Admin user deletion system working perfectly. DELETE /admin/delete-user/{user_id} successfully deletes teachers and students. Tested by creating temporary teacher, deleting via API, and verifying complete removal from database. User deletion includes cleanup of related data (test results, messages, documents, etc.). Admin cannot delete other admins (proper security). Deletion verification confirms user is completely removed from system."
+
+  - task: "Emails (vérifier les logs)"
+    implemented: true
+    working: true
+    file: "server.py, email_service.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        - working: true
+          agent: "testing"
+          comment: "✅ PASSED - Email notification system working and logging correctly. Registration triggers admin notification emails to mykalamaenglish@gmail.com and confirmation emails to students. Backend logs show proper email formatting and content. Example log: 'Email not sent (no SES client). Would send to test.email.notifications@example.com' with full email content including subject '📝 Demande d'inscription reçue - My KALAMA ENGLISH' and properly formatted body. Email system logs all outgoing emails as expected when AWS SES is not configured."
+
   - task: "Kalamathèque Book Reader Interface"
     implemented: true
     working: true
