@@ -114,7 +114,7 @@ const KidDashboard = () => {
       <div className="container mx-auto p-4 md:p-8">
         <Tabs defaultValue="games" className="space-y-6">
           {/* Navigation Cards */}
-          <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-4 h-auto bg-transparent p-0">
+          <TabsList className="grid grid-cols-3 gap-4 h-auto bg-transparent p-0">
             <TabsTrigger 
               value="games" 
               className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-300 data-[state=active]:via-orange-400 data-[state=active]:to-red-500 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-gradient-to-br from-yellow-100 to-orange-100 hover:from-yellow-200 hover:to-orange-200 border-4 border-orange-400 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105 hover:rotate-3"
@@ -132,19 +132,11 @@ const KidDashboard = () => {
             </TabsTrigger>
             
             <TabsTrigger 
-              value="pack" 
-              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-400 data-[state=active]:via-teal-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-gradient-to-br from-green-100 to-teal-100 hover:from-green-200 hover:to-teal-200 border-4 border-teal-400 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105 hover:rotate-3"
+              value="gifts" 
+              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-400 data-[state=active]:via-pink-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 hover:from-yellow-200 hover:via-pink-200 hover:to-purple-200 border-4 border-pink-400 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105 hover:rotate-6"
             >
               <span className="text-5xl animate-wiggle">🎁</span>
-              <span className="text-base font-bold">Mon Pack</span>
-            </TabsTrigger>
-            
-            <TabsTrigger 
-              value="profile" 
-              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-400 data-[state=active]:via-cyan-500 data-[state=active]:to-sky-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-gradient-to-br from-blue-100 to-cyan-100 hover:from-blue-200 hover:to-cyan-200 border-4 border-cyan-400 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105 hover:-rotate-3"
-            >
-              <span className="text-5xl animate-wiggle">👤</span>
-              <span className="text-base font-bold">Profil</span>
+              <span className="text-base font-bold">Cadeaux</span>
             </TabsTrigger>
           </TabsList>
 
