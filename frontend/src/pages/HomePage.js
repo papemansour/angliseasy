@@ -730,8 +730,8 @@ const HomePage = () => {
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3 md:mb-4">Évaluez votre niveau d'anglais</h2>
           <p className="text-center text-sm sm:text-base text-gray-600 mb-8 md:mb-12 px-4">Passez un test gratuit pour connaître votre niveau</p>
 
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
-            <Card className="hover:shadow-xl transition-shadow border-teal-100">
+          <div className="flex md:grid md:grid-cols-3 gap-4 md:gap-8 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4">
+            <Card className="hover:shadow-xl transition-shadow border-teal-100 min-w-[280px] w-[280px] sm:min-w-0 sm:w-auto flex-shrink-0 snap-center">
               <CardHeader>
                 <CardTitle className="text-teal-800">Test Débutant</CardTitle>
                 <CardDescription>Parfait pour ceux qui débutent leur apprentissage</CardDescription>
@@ -746,7 +746,7 @@ const HomePage = () => {
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-xl transition-shadow border-teal-100">
+            <Card className="hover:shadow-xl transition-shadow border-teal-100 min-w-[280px] w-[280px] sm:min-w-0 sm:w-auto flex-shrink-0 snap-center">
               <CardHeader>
                 <CardTitle className="text-teal-800">Test Intermédiaire</CardTitle>
                 <CardDescription>Pour ceux qui ont une bonne base</CardDescription>
@@ -761,7 +761,7 @@ const HomePage = () => {
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-xl transition-shadow border-teal-100">
+            <Card className="hover:shadow-xl transition-shadow border-teal-100 min-w-[280px] w-[280px] sm:min-w-0 sm:w-auto flex-shrink-0 snap-center">
               <CardHeader>
                 <CardTitle className="text-teal-800">Test professionnel</CardTitle>
                 <CardDescription>Pour les utilisateurs expérimentés</CardDescription>
