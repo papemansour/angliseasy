@@ -369,13 +369,7 @@ const StudentDashboard = () => {
                   {/* Price */}
                   <div className="text-center">
                     <div className="text-4xl md:text-5xl font-bold text-teal-600 mb-2">
-                      {user.level === 'kkid' ? '18€' :
-                       user.level === 'beginner' && user.join_kalama_club ? '66,50€' :
-                       user.level === 'beginner' ? '76€' :
-                       user.level === 'intermediate' && user.join_kalama_club ? '85,50€' :
-                       user.level === 'intermediate' ? '90€' :
-                       user.level === 'advanced' && user.join_kalama_club ? '96,90€' :
-                       user.level === 'advanced' ? '102€' : '76€'}
+                      {getPackPrice()}
                     </div>
                     <p className="text-sm text-gray-600">par mois</p>
                     {user.join_kalama_club && (
