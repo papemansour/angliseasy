@@ -30,8 +30,14 @@ class MyKalamaEnglishBackendTester:
     def __init__(self):
         self.session = None
         self.admin_token = None
+        self.teacher_token = None
+        self.student_token = None
         self.test_book_id = None
+        self.test_teacher_id = None
+        self.test_student_id = None
+        self.test_flashcard_set_id = None
         self.test_results = {
+            # Existing Kalamathèque tests
             "file_upload": {"passed": False, "details": []},
             "access_verification": {"passed": False, "details": []},
             "book_creation": {"passed": False, "details": []},
@@ -39,7 +45,17 @@ class MyKalamaEnglishBackendTester:
             "book_deletion": {"passed": False, "details": []},
             "ai_assistant": {"passed": False, "details": []},
             "text_to_speech": {"passed": False, "details": []},
-            "overall_kalamatheque": {"passed": False, "details": []}
+            
+            # New feature tests
+            "flashcard_system": {"passed": False, "details": []},
+            "video_system": {"passed": False, "details": []},
+            "test_questions": {"passed": False, "details": []},
+            "pricing_independence": {"passed": False, "details": []},
+            "admin_delete_user": {"passed": False, "details": []},
+            "email_notifications": {"passed": False, "details": []},
+            
+            # Overall results
+            "overall_backend": {"passed": False, "details": []}
         }
         
     async def __aenter__(self):
