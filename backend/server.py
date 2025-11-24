@@ -1059,9 +1059,11 @@ async def create_notification(user_id: str, notification_type: str, data: dict):
 # Admin delete user (teacher or student)
 @api_router.delete("/admin/delete-user/{user_id}")
 async def admin_delete_user(user_id: str, current_user: dict = Depends(get_current_user)):
+    """Admin soft-deletes a user (student/teacher) - moves to trash"""
     if current_user['role'] != 'admin':
         raise HTTPException(status_code=403, detail="Admin access required")
     
+    # Get the user first
     user = await db.users.find_one({"id": user_id}, {"_id": 0})
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -1069,16 +1071,20 @@ async def admin_delete_user(user_id: str, current_user: dict = Depends(get_curre
     if user['role'] == 'admin':
         raise HTTPException(status_code=403, detail="Cannot delete admin")
     
-    # Delete user and related data
-    await db.users.delete_one({"id": user_id})
-    await db.test_results.delete_many({"user_id": user_id})
-    await db.messages.delete_many({"$or": [{"from_user_id": user_id}, {"to_user_id": user_id}]})
-    await db.documents.delete_many({"$or": [{"teacher_id": user_id}, {"recipient_id": user_id}]})
-    await db.student_homeworks.delete_many({"$or": [{"student_id": user_id}, {"teacher_id": user_id}]})
-    await db.notifications.delete_many({"user_id": user_id})
+    # Add deletion metadata
+    user['deleted_at'] = datetime.now(timezone.utc).isoformat()
+    user['deleted_by'] = current_user['id']
     
-    logger.info(f"User deleted by admin: {user['email']}")
-    return {"message": f"{user['role'].capitalize()} deleted successfully"}
+    # Move to trash collection
+    await db.deleted_users.insert_one(user)
+    
+    # Delete from main collection
+    await db.users.delete_one({"id": user_id})
+    
+    # NOTE: We keep related data for potential restoration
+    
+    logger.info(f"User soft-deleted by admin: {user['email']}")
+    return {"message": f"{user['role'].capitalize()} moved to trash successfully"}
 
 # Endpoint en doublon supprimé - le changement de mot de passe se fait via la route ligne 339
 
