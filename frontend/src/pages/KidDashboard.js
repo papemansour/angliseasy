@@ -117,7 +117,7 @@ const KidDashboard = () => {
           <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-4 h-auto bg-transparent p-0">
             <TabsTrigger 
               value="games" 
-              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-400 data-[state=active]:to-orange-500 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-white hover:bg-yellow-50 border-4 border-yellow-300 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105"
+              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-yellow-300 data-[state=active]:via-orange-400 data-[state=active]:to-red-500 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-gradient-to-br from-yellow-100 to-orange-100 hover:from-yellow-200 hover:to-orange-200 border-4 border-orange-400 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105 hover:rotate-3"
             >
               <span className="text-5xl animate-wiggle">🎮</span>
               <span className="text-base font-bold">Jeux</span>
@@ -125,7 +125,7 @@ const KidDashboard = () => {
             
             <TabsTrigger 
               value="videos" 
-              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-pink-400 data-[state=active]:to-purple-500 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-white hover:bg-pink-50 border-4 border-pink-300 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105"
+              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-pink-400 data-[state=active]:via-purple-500 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-gradient-to-br from-pink-100 to-purple-100 hover:from-pink-200 hover:to-purple-200 border-4 border-purple-400 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105 hover:-rotate-3"
             >
               <span className="text-5xl animate-wiggle">📹</span>
               <span className="text-base font-bold">Vidéos</span>
@@ -133,7 +133,7 @@ const KidDashboard = () => {
             
             <TabsTrigger 
               value="pack" 
-              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-400 data-[state=active]:to-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-white hover:bg-green-50 border-4 border-green-300 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105"
+              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-green-400 data-[state=active]:via-teal-500 data-[state=active]:to-cyan-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-gradient-to-br from-green-100 to-teal-100 hover:from-green-200 hover:to-teal-200 border-4 border-teal-400 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105 hover:rotate-3"
             >
               <span className="text-5xl animate-wiggle">🎁</span>
               <span className="text-base font-bold">Mon Pack</span>
@@ -141,7 +141,7 @@ const KidDashboard = () => {
             
             <TabsTrigger 
               value="profile" 
-              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-400 data-[state=active]:to-cyan-500 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-white hover:bg-blue-50 border-4 border-blue-300 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105"
+              className="h-32 data-[state=active]:bg-gradient-to-br data-[state=active]:from-blue-400 data-[state=active]:via-cyan-500 data-[state=active]:to-sky-600 data-[state=active]:text-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 bg-gradient-to-br from-blue-100 to-cyan-100 hover:from-blue-200 hover:to-cyan-200 border-4 border-cyan-400 rounded-3xl transition-all duration-300 flex flex-col items-center justify-center gap-2 cursor-pointer transform hover:scale-105 hover:-rotate-3"
             >
               <span className="text-5xl animate-wiggle">👤</span>
               <span className="text-base font-bold">Profil</span>
