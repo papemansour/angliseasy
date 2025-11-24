@@ -52,7 +52,8 @@ const KalamaClub = ({ userRole }) => {
     description: '',
     event_date: '',
     duration_minutes: 60,
-    max_participants: 20
+    max_participants: 20,
+    event_link: ''
   });
 
   useEffect(() => {
