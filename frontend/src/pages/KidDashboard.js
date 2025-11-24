@@ -226,65 +226,7 @@ const KidDashboard = () => {
 
           {/* Gifts Tab */}
           <TabsContent value="gifts">
-            <Card className="border-4 border-teal-400 bg-gradient-to-br from-green-50 via-teal-50 to-cyan-50 shadow-xl">
-              <CardHeader className="bg-gradient-to-r from-green-400 via-teal-500 to-cyan-600 rounded-t-xl">
-                <CardTitle className="text-3xl text-white flex items-center gap-2">
-                  <span className="text-4xl">🎁</span>
-                  Mon Super Pack !
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-8">
-                <div className="bg-white rounded-2xl p-6 border-4 border-green-300 shadow-lg mb-6">
-                  <div className="text-center mb-6">
-                    <div className="text-6xl mb-4 animate-bounce">🎈</div>
-                    <h3 className="text-3xl font-bold text-green-700 mb-2">Pack K-Kid</h3>
-                    <p className="text-gray-600">Cours super fun pour les enfants !</p>
-                  </div>
-                  
-                  <div className="bg-gradient-to-r from-yellow-200 via-orange-200 to-red-200 rounded-xl p-6 mb-6 border-4 border-orange-300">
-                    <div className="text-center">
-                      <p className="text-sm font-bold text-purple-700 mb-2">Prix par mois</p>
-                      <div className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mb-2">18€</div>
-                      <p className="text-xs font-semibold text-purple-600">ou 10,000 FCFA</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-gray-700">
-                      <span className="text-2xl">✨</span>
-                      <span>Jeux et flashcards amusants</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-700">
-                      <span className="text-2xl">🎬</span>
-                      <span>Vidéos éducatives</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-700">
-                      <span className="text-2xl">🏆</span>
-                      <span>Badges et récompenses</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-700">
-                      <span className="text-2xl">👨‍🏫</span>
-                      <span>Professeur dédié</span>
-                    </div>
-                  </div>
-
-                  <Button
-                    onClick={() => {
-                      window.open('https://buy.stripe.com/6oE4ho7nw0XT1X2288', '_blank');
-                      triggerConfetti();
-                    }}
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white text-xl py-6 rounded-2xl font-bold shadow-lg transform hover:scale-105 transition-all"
-                  >
-                    <Heart className="w-6 h-6 mr-2" />
-                    Payer maintenant ! 💳
-                  </Button>
-                  
-                  <p className="text-center text-xs text-gray-500 mt-4">
-                    🔒 Paiement sécurisé par Stripe
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            <WeekendGifts onConfetti={triggerConfetti} />
           </TabsContent>
 
           {/* Profile Tab */}
