@@ -296,8 +296,8 @@ const KidDashboard = () => {
 
           {/* Profile Tab */}
           <TabsContent value="profile">
-            <Card className="border-4 border-blue-400 bg-gradient-to-br from-blue-50 to-cyan-50 shadow-xl">
-              <CardHeader className="bg-gradient-to-r from-blue-400 to-cyan-400 rounded-t-xl">
+            <Card className="border-4 border-cyan-400 bg-gradient-to-br from-blue-50 via-cyan-50 to-sky-50 shadow-xl">
+              <CardHeader className="bg-gradient-to-r from-blue-400 via-cyan-500 to-sky-600 rounded-t-xl">
                 <CardTitle className="text-3xl text-white flex items-center gap-2">
                   <Sparkles className="w-8 h-8" />
                   Mon Profil Super Cool ! 🌟
