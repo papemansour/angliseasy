@@ -157,10 +157,15 @@ class MyKalamaEnglishBackendTester:
                         if user.get('email') == 'etudiant.test@example.com':
                             logger.info(f"✅ Using existing test student: {user.get('email')}")
                             self.test_student_id = user.get('id')
+                            # Try to get the actual password from the user record
+                            temp_password = user.get('temporary_password')
+                            if not temp_password:
+                                # Try common patterns
+                                temp_password = f"Kalama{user.get('id', '')[:6]}"
                             return {
                                 "id": user.get('id'),
                                 "email": user.get('email'),
-                                "password": user.get('temporary_password', 'StudentPassword123')
+                                "password": temp_password
                             }
             
             # First register a student
