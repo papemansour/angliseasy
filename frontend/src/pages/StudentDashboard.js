@@ -129,6 +129,41 @@ const StudentDashboard = () => {
     toast.success('Déconnexion réussie');
   };
 
+  // Calculate price dynamically based on level and KALAMA CLUB membership
+  const getPackPrice = () => {
+    if (!pricing || !user) return '76€';
+    
+    const level = user.level;
+    const hasClub = user.join_kalama_club;
+    
+    let basePrice = 0;
+    let discount = 0;
+    
+    switch(level) {
+      case 'kkid':
+        basePrice = pricing.kkid_eur || 30;
+        discount = pricing.kkid_discount || 0;
+        break;
+      case 'beginner':
+        basePrice = pricing.beginner_eur || 76;
+        discount = pricing.beginner_discount || 0;
+        break;
+      case 'intermediate':
+        basePrice = pricing.intermediate_eur || 90;
+        discount = pricing.intermediate_discount || 0;
+        break;
+      case 'advanced':
+        basePrice = pricing.advanced_eur || 102;
+        discount = pricing.advanced_discount || 0;
+        break;
+      default:
+        basePrice = 76;
+    }
+    
+    const finalPrice = basePrice - discount;
+    return `${finalPrice}€`;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
