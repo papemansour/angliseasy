@@ -83,10 +83,10 @@ const KidDashboard = () => {
       )}
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 p-4 shadow-lg">
+      <div className="bg-gradient-to-r from-pink-500 via-purple-500 via-blue-500 to-green-500 p-4 shadow-lg animate-gradient">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-4xl shadow-lg animate-bounce">
+            <div className="w-16 h-16 bg-gradient-to-br from-yellow-300 via-orange-400 to-pink-500 rounded-full flex items-center justify-center text-4xl shadow-2xl animate-bounce border-4 border-white">
               🦄
             </div>
             <div>
@@ -94,15 +94,15 @@ const KidDashboard = () => {
                 Salut {user?.first_name} ! 👋
               </h1>
               <div className="flex items-center gap-2 mt-1">
-                <Star className="w-5 h-5 fill-yellow-300 text-yellow-300" />
-                <span className="text-white font-bold text-lg">{stars} étoiles</span>
+                <Star className="w-5 h-5 fill-yellow-300 text-yellow-300 animate-pulse" />
+                <span className="text-white font-bold text-lg bg-yellow-400 px-3 py-1 rounded-full text-purple-700">{stars} étoiles</span>
               </div>
             </div>
           </div>
           <Button 
             onClick={handleLogout}
             variant="outline"
-            className="bg-white text-purple-600 hover:bg-purple-50 border-2 border-white"
+            className="bg-gradient-to-r from-yellow-300 to-orange-400 text-purple-700 hover:from-orange-400 hover:to-red-400 border-2 border-white font-bold shadow-lg"
           >
             <LogOut className="w-4 h-4 mr-2" />
             Quitter
